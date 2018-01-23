@@ -1,0 +1,21 @@
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.go26.chatapp.viewmodel.ProfileFragmentViewModel"/>
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.go26.chatapp.ui.ProfileFragment">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+</layout>
+
