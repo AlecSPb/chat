@@ -1,0 +1,28 @@
+package com.go26.chatapp.constants
+
+/**
+ * Created by daigo on 2018/01/14.
+ */
+class NetworkConstants {
+    val URL_STORAGE_REFERENCE = ""
+    val FOLDER_STORAGE_IMG = "images"
+
+
+    val LOGIN_REQUEST = 1001
+    val GET_ALL_USERS_REQUEST = 1002
+    val USER_SELECTION_CHANGE_REQUEST = 1003
+    val USER_REMOVED = 1004
+    val USER_ADDED = 1005
+    val CREATE_GROUP = 1006
+    val SEND_MESSAGE_REQUEST = 1007
+    val FETCH_GROUP_MEMBERS_DETAILS = 1008
+    val GO_OFFLINE = 1009
+    val FETCH_GROUPS = 1010
+    val FETCH_CURRENT_USER = 1011
+    val FETCH_MESSAGES = 1012
+    val CHANGE_ADMIN_STATUS = 1013
+    val CREATE_USER_NODE = 1014
+    val CHECK_GROUP_EXISTS = 1015
+    val CREATE_ONE_ON_ONE_GROUP = 1016
+    val DELETE_GROUP_CHAT = 1017
+}
