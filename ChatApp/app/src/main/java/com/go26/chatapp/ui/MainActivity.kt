@@ -9,14 +9,12 @@ import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.contract.MainActivityContract
 import com.go26.chatapp.R
-import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.viewmodel.MainViewModel
 import com.go26.chatapp.databinding.ActivityMainBinding
 import com.go26.chatapp.util.SharedPrefManager
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.iid.FirebaseInstanceId
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
@@ -48,7 +46,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 setViews()
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER)
+        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITY)
 
 //        MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
 //            override fun handleData(obj: Any, requestCode: Int?) {

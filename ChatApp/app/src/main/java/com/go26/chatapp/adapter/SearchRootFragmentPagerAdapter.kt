@@ -1,13 +1,14 @@
 package com.go26.chatapp.adapter
 
+import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.go26.chatapp.ui.SearchCommunityFragment
+import com.go26.chatapp.ui.SearchCommunityNameFragment
 import com.go26.chatapp.ui.SearchLocationFragment
 import android.view.ViewGroup
 import android.support.v4.view.ViewPager
-
+import com.go26.chatapp.ui.SearchUserFragment
 
 
 /**
@@ -17,19 +18,22 @@ class SearchRootFragmentPagerAdapter(val fragment: FragmentManager) : FragmentSt
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
-                return SearchCommunityFragment.newInstance()
+                return SearchCommunityNameFragment.newInstance()
             }
             1 -> {
                 return SearchLocationFragment.newInstance()
             }
+            2 -> {
+                return SearchUserFragment.newInstance()
+            }
             else -> {
-                return SearchCommunityFragment.newInstance()
+                return SearchCommunityNameFragment.newInstance()
             }
         }
     }
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getPageTitle(position: Int): CharSequence {
@@ -39,6 +43,9 @@ class SearchRootFragmentPagerAdapter(val fragment: FragmentManager) : FragmentSt
             }
             1 -> {
                 return "場所"
+            }
+            2 -> {
+                return "ユーザー"
             }
             else -> {
                 return "コミュニティ"
@@ -67,4 +74,5 @@ class SearchRootFragmentPagerAdapter(val fragment: FragmentManager) : FragmentSt
             trans.commit()
         }
     }
+
 }

@@ -61,7 +61,7 @@ class ChatRoomsFragment : Fragment() {
 //                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
 //                }
 //            }
-//        }, currentUser?.uid, NetworkConstants().FETCH_CURRENT_USER)
+//        }, currentUser?.uid, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITY)
     }
 
     private fun fetchMyCommunities() {
