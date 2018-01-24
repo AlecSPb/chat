@@ -336,7 +336,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                     fragmentManager.beginTransaction().remove(this@NewCommunityFragment).commit()
                 }
 
-            }, newCommunity, NetworkConstants().CREATE_GROUP)
+            }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
         } else {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }

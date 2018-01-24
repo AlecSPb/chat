@@ -1,5 +1,7 @@
 package com.go26.chatapp.model
 
+import java.io.Serializable
+
 /**
  * Created by daigo on 2018/01/13.
  */
@@ -15,4 +17,4 @@ data class UserModel(var uid: String? = null,
                      var last_seen_message_timestamp: String? = null,
                      var admin: Boolean? = null,
                      var delete_till: String? = null,
-                     var active: Boolean? = null)
+                     var active: Boolean? = null) : Serializable

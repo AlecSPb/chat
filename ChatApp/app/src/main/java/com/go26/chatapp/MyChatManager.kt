@@ -269,6 +269,71 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
     }
 
+    fun searchCommunityName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnaphot: DataSnapshot) {
+                if (dataSnaphot.exists()) {
+                    val foundCommunityList = DataConstants.foundCommunityList
+                    foundCommunityList?.clear()
+                    dataSnaphot.children.forEach { it ->
+                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
+                            if (searchWords == it.name) {
+                                foundCommunityList?.add(it)
+                            }
+                        }
+                    }
+                    callback?.handleData(true, requestType)
+                }
+            }
+        }
+
+        communityRef?.addListenerForSingleValueEvent(listener)
+    }
+
+//    fun searchCommunityLocation(callback: NotifyMeInterface?, requestType: Int?, searchWords: String) {
+//        val listener = object : ValueEventListener {
+//            override fun onCancelled(databaseError: DatabaseError) {}
+//            override fun onDataChange(dataSnaphot: DataSnapshot) {
+//                if (dataSnaphot.exists()) {
+//                    val communityList: ArrayList<CommunityModel> = ArrayList()
+//                    dataSnaphot.children.forEach { it ->
+//                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
+//                            if (searchWords == it.name) {
+//                                communityList.add(it)
+//                            }
+//                        }
+//                    }
+//                    callback?.handleData(communityList, requestType)
+//                }
+//            }
+//        }
+//
+//        communityRef?.addListenerForSingleValueEvent(listener)
+//    }
+
+    fun searchUserName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
+        // Making a copy of listener
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnaphot: DataSnapshot) {
+                if (dataSnaphot.exists()) {
+                    val foundUserList = DataConstants.foundUserList
+                    foundUserList?.clear()
+                    dataSnaphot.children.forEach { it ->
+                        it.getValue<UserModel>(UserModel::class.java)?.let {
+                            if (searchWords == it.name) {
+                               foundUserList?.add(it)
+                            }
+                        }
+                    }
+                    callback?.handleData(true, requestType)
+                }
+            }
+        }
+
+        userRef?.addListenerForSingleValueEvent(listener)
+    }
 
     fun updateFCMTokenAndDeviceId(context: Context, token: String) {
         var deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
@@ -363,7 +428,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
             override fun onCancelled(databaseError: DatabaseError) {}
             override fun onDataChange(dataSnaphot: DataSnapshot) {
                 if (dataSnaphot.exists()) {
-                    var userList: ArrayList<UserModel> = ArrayList()
+                    val userList: ArrayList<UserModel> = ArrayList()
                     dataSnaphot.children.forEach { it ->
                         it.getValue<UserModel>(UserModel::class.java)?.let {
                             if (!SecurePrefs(context!!).get(PrefConstants().USER_ID).equals(it.uid)) {

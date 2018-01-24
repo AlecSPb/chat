@@ -20,6 +20,9 @@ class SearchRootFragmentViewModel(val view: SearchRootFragmentContract) {
             1 -> {
                 searchHint.set("場所")
             }
+            2 -> {
+                searchHint.set("ユーザー")
+            }
         }
     }
 

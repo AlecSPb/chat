@@ -3,14 +3,11 @@ package com.go26.chatapp.ui
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -29,7 +26,6 @@ import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.MessageModel
 import com.go26.chatapp.model.UserModel
-import com.go26.chatapp.util.MyTextUtil
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
@@ -122,7 +118,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                             getLastMessageAndUpdateUnreadCount()
                         }
 
-                    }, NetworkConstants().FETCH_GROUP_MEMBERS_DETAILS, communityId)
+                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, communityId)
                 }
 
 
