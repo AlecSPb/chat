@@ -21,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.CommunityJoinRequestActivity" />
-        <activity android:name=".ui.FriendRequestActivity"/>
+        <activity android:name=".ui.search.CommunityJoinRequestActivity" />
+        <activity android:name=".ui.search.FriendRequestActivity" />
+        <activity android:name=".ui.RequestsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,10 +1,6 @@
 package com.go26.chatapp.viewmodel
 
 import android.support.v4.app.FragmentActivity
-import android.support.v4.app.FragmentTransaction
-import android.view.View
-import com.go26.chatapp.R
-import com.go26.chatapp.ui.SearchRootFragment
 
 /**
  * Created by daigo on 2018/01/12.

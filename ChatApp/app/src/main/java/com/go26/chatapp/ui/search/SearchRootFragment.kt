@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui
+package com.go26.chatapp.ui.search
 
 
 import android.content.Context

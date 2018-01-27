@@ -159,7 +159,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
 
-                        DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
+//                        DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
 
                         Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
                         fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
@@ -201,8 +201,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
 //                    user2 = DataConstants.userMap?.get(user2Id)!!
 //                    if (user2.online!!) {
 //                        tv_last_seen.setText("Online")
-//                    } else if (user2.last_seen_online != null) {
-//                        tv_last_seen.setText(MyTextUtil().getTimestamp(user2.last_seen_online!!.toLong()))
+//                    } else if (user2.lastSeenOnline != null) {
+//                        tv_last_seen.setText(MyTextUtil().getTimestamp(user2.lastSeenOnline!!.toLong()))
 //                    } else {
 //                        tv_last_seen.visibility = View.GONE
 //                    }
@@ -283,7 +283,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                          //User2 node is not there so create one.
                          user2.email = "sky.wall.treasure@gmail.com"
                          user2.name = "Sky Wall Treasure"
-                         user2.image_url = "https://lh6.googleusercontent.com/-x8DMU8TwQWU/AAAAAAAAAAI/AAAAAAAALQA/waA51g0k3GA/s96-c/photo.jpg"
+                         user2.imageUrl = "https://lh6.googleusercontent.com/-x8DMU8TwQWU/AAAAAAAAAAI/AAAAAAAALQA/waA51g0k3GA/s96-c/photo.jpg"
                          user2.uid = user2Id
                          user2.group = hashMapOf()*/
 
@@ -360,7 +360,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private fun readMessagesFromFirebase(communityId: String) {
         val currentCommunity = DataConstants.communityMap?.get(communityId)
         var time = Calendar.getInstance().timeInMillis
-        var deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.delete_till!!
+        var deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference
 
         val itemCount = 10

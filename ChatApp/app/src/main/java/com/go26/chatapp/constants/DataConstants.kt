@@ -10,11 +10,13 @@ import com.go26.chatapp.model.UserModel
 class DataConstants {
 
     companion object {
-        var userList: ArrayList<UserModel>? = ArrayList()
-        var selectedUserList: ArrayList<UserModel>? = ArrayList()
+        var userList: ArrayList<UserModel> = arrayListOf()
+        var selectedUserList: ArrayList<UserModel> = arrayListOf()
         var mapList: MutableMap<String, UserModel> = mutableMapOf()
-        var myCommunities: ArrayList<CommunityModel>? = ArrayList()
+        var myCommunities: MutableList<CommunityModel> = mutableListOf()
         var currentUser: UserModel? = UserModel()
+        var myFriends: MutableList<UserModel> = mutableListOf()
+        var myFriendsMap: MutableMap<String, UserModel> = mutableMapOf()
 
         /**
          * Chat
@@ -24,10 +26,19 @@ class DataConstants {
         var userMap: MutableMap<String, UserModel>? = mutableMapOf()
         var communityMembersMap: MutableMap<String, ArrayList<UserModel>>? = mutableMapOf()
 
-//        // Search
-        var foundCommunityList: ArrayList<CommunityModel>? = ArrayList()
-        var foundUserList: ArrayList<UserModel>? = ArrayList()
-//        var foundCommunityMap: MutableMap<String, CommunityModel>? = mutableMapOf()
-//        var foundUserMap: MutableMap<String, UserModel>? = mutableMapOf()
+        // Search
+        var foundCommunityList: ArrayList<CommunityModel>? = arrayListOf()
+        var foundUserList: ArrayList<UserModel>? = arrayListOf()
+
+        // Request
+        var myFriendRequests: MutableList<UserModel> = mutableListOf()
+        var myCommunityRequests: MutableList<CommunityModel> = mutableListOf()
+        var friendRequests: MutableList<UserModel> = mutableListOf()
+        var communityRequestsList: MutableList<Pair<String, UserModel>> = mutableListOf()
+
+        var myFriendRequestsMap: MutableMap<String, UserModel> = mutableMapOf()
+        var myCommunityRequestsMap: MutableMap<String, CommunityModel> = mutableMapOf()
+        var friendRequestsMap: MutableMap<String, UserModel> = mutableMapOf()
+        var communityRequestsMap: MutableMap<String, MutableList<UserModel>> = mutableMapOf()
     }
 }

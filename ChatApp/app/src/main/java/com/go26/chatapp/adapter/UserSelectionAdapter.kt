@@ -27,7 +27,7 @@ class UserSelectionAdapter(context: Context, var callback: NotifyMeInterface) : 
 
         holder.tvName.text = user?.name
 
-        loadRoundImage(holder.ivProfile, user?.image_url!!)
+        loadRoundImage(holder.ivProfile, user?.imageUrl!!)
         holder.ivSelected.visibility = View.VISIBLE
 
         holder.ivSelected.setOnClickListener {

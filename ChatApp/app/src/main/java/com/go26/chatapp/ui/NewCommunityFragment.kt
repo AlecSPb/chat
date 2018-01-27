@@ -72,8 +72,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
             DataConstants.communityMap?.get(communityId!!)?.members?.forEach { member ->
                 DataConstants.userMap?.get(member.value.uid)!!.admin = member.value.admin
-                DataConstants.userMap?.get(member.value.uid)!!.delete_till = member.value.delete_till
-                DataConstants.userMap?.get(member.value.uid)!!.unread_community_count = member.value.unread_community_count
+                DataConstants.userMap?.get(member.value.uid)!!.deleteTill = member.value.deleteTill
+                DataConstants.userMap?.get(member.value.uid)!!.unreadCommunityCount = member.value.unreadCommunityCount
                 selectedUserList?.add(DataConstants.userMap?.get(member.value.uid)!!)
             }
 
@@ -107,7 +107,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         btn_creategroup.setOnClickListener(this)
         tv_no_of_participants.setText("" + selectedUserList?.size!! + " Participants")
         label_hint.setOnClickListener(this)
-        label_hint.setText("Add akash.nidhi@interactionone.com to the community")
+        label_hint.setText("Add akash.nidhi@interactionone.com to the communities")
     }
 //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 //
@@ -261,7 +261,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                     }, communityId, DataConstants.userMap?.get("9f19bxizDuYx95PfkBe3N7uamu92"))
                 } else {
-                    Toast.makeText(context, "Akash is already in the community", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Akash is already in the communities", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -273,7 +273,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                         DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
 
-                        Toast.makeText(context, "You have been exited from community", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "You have been exited from communities", Toast.LENGTH_LONG).show()
                         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                         fragmentManager.beginTransaction().remove(this@NewCommunityFragment).commit()
                     }

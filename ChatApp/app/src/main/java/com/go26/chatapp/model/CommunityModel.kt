@@ -10,5 +10,6 @@ data class CommunityModel(var name: String? = null,
                           var communityId: String? = null,
                           var communityDeleted: Boolean? = null,
                           var community: Boolean? = null,
+                          var joinRequests: HashMap<String, Boolean> = hashMapOf(),
                           var lastMessage: MessageModel? = MessageModel(),
                           var members: HashMap<String, UserModel> = hashMapOf()) : Serializable

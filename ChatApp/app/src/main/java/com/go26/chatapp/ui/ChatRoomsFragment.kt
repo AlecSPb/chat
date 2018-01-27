@@ -49,8 +49,9 @@ class ChatRoomsFragment : Fragment() {
         activity.supportActionBar?.title = "Chat"
 
 //        MyChatManager.setmContext(context)
-
-        fetchMyCommunities()
+        if (myCommunities.size != 0) {
+            fetchMyCommunities()
+        }
 
 //        MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
 //            override fun handleData(obj: Any, requestCode: Int?) {
@@ -61,20 +62,20 @@ class ChatRoomsFragment : Fragment() {
 //                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
 //                }
 //            }
-//        }, currentUser?.uid, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITY)
+//        }, currentUser?.uid, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS)
     }
 
     private fun fetchMyCommunities() {
 //        MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
 //            override fun handleData(obj: Any, requestCode: Int?) {
 //                myCommunities?.clear()
-//                for (community in communityMap!!) {
-//                    if (!community.value.community!!) {
-//                        if (!community.value.lastMessage?.sender_id.equals("")) {
-//                            myCommunities?.add(community.value)
+//                for (communities in communityMap!!) {
+//                    if (!communities.value.communities!!) {
+//                        if (!communities.value.lastMessage?.sender_id.equals("")) {
+//                            myCommunities?.add(communities.value)
 //                        }
 //                    } else {
-//                        myCommunities?.add(community.value)
+//                        myCommunities?.add(communities.value)
 //                    }
 //
 //                }
@@ -100,17 +101,6 @@ class ChatRoomsFragment : Fragment() {
 //
 //        }, NetworkConstants().FETCH_GROUPS, currentUser, isSingleEvent = false)
 
-        myCommunities?.clear()
-        for (community in communityMap!!) {
-            if (!community.value.community!!) {
-                if (!community.value.lastMessage?.sender_id.equals("")) {
-                    myCommunities?.add(community.value)
-                }
-            } else {
-                myCommunities?.add(community.value)
-            }
-
-        }
         //sort DataConstants.myGroups
         Collections.sort<CommunityModel>(myCommunities) { o1, o2 ->
             if(o1.lastMessage?.timestamp.equals("") && o2.lastMessage?.timestamp.equals("")){

@@ -1,12 +1,12 @@
 package com.go26.chatapp.ui
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.*
 
 import com.go26.chatapp.R
@@ -41,7 +41,7 @@ class ContactsFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.add_community -> {
+            R.id.create_community -> {
                 val createCommunityFragment = CreateCommunityFragment.newInstance()
                 val fragmentManager: FragmentManager = activity.supportFragmentManager
                 val fragmentTransaction = fragmentManager.beginTransaction()
@@ -50,11 +50,17 @@ class ContactsFragment : Fragment() {
                 fragmentTransaction.commit()
                 return true
             }
+            R.id.requests -> {
+                val intent = Intent(context, RequestsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             else -> {
                 return false
             }
         }
     }
+
     companion object {
 
         fun newInstance(): ContactsFragment {

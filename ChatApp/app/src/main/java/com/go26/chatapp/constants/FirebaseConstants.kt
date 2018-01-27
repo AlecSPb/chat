@@ -5,20 +5,25 @@ package com.go26.chatapp.constants
  */
 class FirebaseConstants {
     val USERS = "users"
-    val COMMUNITY = "community"
+    val FRIENDS = "friends"
+    val FRIEND_REQUESTS = "friendRequests"
+    val MY_FRIEND_REQUESTS = "myFriendRequests"
+    val MY_COMMUNITY_REQUESTS = "myCommunityRequests"
+    val COMMUNITY = "communities"
+    val JOIN_REQUESTS = "joinRequests"
     val MESSAGES = "messages"
     val ONLINE = "online"
     val MEMBERS = "members"
-    val UNREAD_COMMUNITY_COUNT = "unread_community_count"
+    val UNREAD_COMMUNITY_COUNT = "unreadCommunityCount"
     /**
-     * last_seen_message_timestamp
+     * lastSeenMessageTimestamp
      */
-    val L_S_M_T = "last_seen_message_timestamp"
+    val L_S_M_T = "lastSeenMessageTimestamp"
     val LAST_MESSAGE = "lastMessage"
     val IMAGE_URL = "imageUrl"
     val NAME = "name"
     val ADMIN = "admin"
-    val DELETE_TILL_TIMESTAMP = "delete_till"
+    val DELETE_TILL_TIMESTAMP = "deleteTill"
 
     val TYPE = "type"
     val CHAT = "chat"

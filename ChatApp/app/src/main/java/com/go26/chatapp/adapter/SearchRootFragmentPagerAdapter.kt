@@ -1,14 +1,13 @@
 package com.go26.chatapp.adapter
 
-import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.go26.chatapp.ui.SearchCommunityNameFragment
-import com.go26.chatapp.ui.SearchLocationFragment
+import com.go26.chatapp.ui.search.SearchCommunityNameFragment
+import com.go26.chatapp.ui.search.SearchLocationFragment
 import android.view.ViewGroup
 import android.support.v4.view.ViewPager
-import com.go26.chatapp.ui.SearchUserFragment
+import com.go26.chatapp.ui.search.SearchUserFragment
 
 
 /**
