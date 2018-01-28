@@ -92,14 +92,16 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         } else {
             // Group Creation Page
             btn_creategroup.text = "Create Group"
-            adapter = ParticipantsAdapter(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    tv_no_of_participants.setText("" + selectedUserList?.size!! + " Participants")
-                }
+            if (selectedUserList.size != 0) {
+                adapter = ParticipantsAdapter(object : NotifyMeInterface {
+                    override fun handleData(obj: Any, requestCode: Int?) {
+                        tv_no_of_participants.setText("" + selectedUserList?.size!! + " Participants")
+                    }
 
-            }, AppConstants().CREATION, "23")
-            participants.adapter = adapter
-            tv_exit_group.visibility = View.GONE
+                }, AppConstants().CREATION, "23")
+                participants.adapter = adapter
+                tv_exit_group.visibility = View.GONE
+            }
         }
 
         iv_profile.setOnClickListener(this)
@@ -246,26 +248,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                 fragmentManager.beginTransaction().remove(this).commit()
             }
 
-            R.id.label_hint -> {
-                if (!DataConstants.communityMap?.get(communityId!!)?.members?.containsKey("9f19bxizDuYx95PfkBe3N7uamu92")!!) {
-                    MyChatManager.addMemberToACommunity(object : NotifyMeInterface {
-                        override fun handleData(obj: Any, requestCode: Int?) {
-                            selectedUserList?.add(DataConstants.userMap?.get("9f19bxizDuYx95PfkBe3N7uamu92")!!)
-                            /*     adapter = ParticipantsAdapter(obj : NotifyMeInterface {
-                                     override fun handleData(`obj`: Any, requestCode: Int?) {
-                                         tv_no_of_participants.setText("" + selectedUserList?.size!! + " Participants")
-                                     }
-                                 }, AppConstants.CREATION, communityId!!)*/
-                            adapter?.notifyDataSetChanged()
-                        }
-
-                    }, communityId, DataConstants.userMap?.get("9f19bxizDuYx95PfkBe3N7uamu92"))
-                } else {
-                    Toast.makeText(context, "Akash is already in the communities", Toast.LENGTH_LONG).show()
-                }
-            }
-
-
             R.id.tv_exit_group -> {
                 MyChatManager.setmContext(context)
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
@@ -314,10 +296,11 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         val communityMembers: HashMap<String, UserModel> = hashMapOf()
 
 
-        for (user in selectedUserList!!) {
-            communityMembers.put(user.uid!!, user)
+        if (selectedUserList.size != 0) {
+            for (user in selectedUserList) {
+                communityMembers.put(user.uid!!, user)
+            }
         }
-
 
         communityMembers.put(adminUserModel?.uid!!, adminUserModel)
 

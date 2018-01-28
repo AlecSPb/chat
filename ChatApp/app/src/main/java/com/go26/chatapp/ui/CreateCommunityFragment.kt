@@ -17,6 +17,7 @@ import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.UserListAdapter
 import com.go26.chatapp.adapter.UserSelectionAdapter
+import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.DataConstants.Companion.selectedUserList
 import com.go26.chatapp.constants.DataConstants.Companion.userList
 import com.go26.chatapp.constants.NetworkConstants
@@ -46,23 +47,8 @@ class CreateCommunityFragment : Fragment(), View.OnClickListener {
         rvUserList = view?.findViewById(R.id.rv_user_list)
         rvSelectedUser = view?.findViewById(R.id.rv_selected_user)
 
-        if (userList?.size == 0) {
-            MyChatManager.getAllUsersFromFirebase(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    userList = obj as ArrayList<UserModel>
-                    selectedUserList?.clear()
-                    rvUserList?.layoutManager = LinearLayoutManager(context)
-                    adapter = UserListAdapter(context, userSelectionInterface)
-                    rvUserList?.adapter = adapter
-
-                    rvSelectedUser?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                    secondaryAdapter = UserSelectionAdapter(context, userRemovedFromSelection)
-                    rvSelectedUser?.adapter = secondaryAdapter
-
-                }
-            }, NetworkConstants().GET_ALL_USERS_REQUEST)
-        } else {
-            selectedUserList?.clear()
+        if (myFriends.size != 0) {
+            selectedUserList.clear()
             rvUserList?.layoutManager = LinearLayoutManager(context)
             adapter = UserListAdapter(context, userSelectionInterface)
             rvUserList?.adapter = adapter
@@ -71,26 +57,25 @@ class CreateCommunityFragment : Fragment(), View.OnClickListener {
             secondaryAdapter = UserSelectionAdapter(context, userRemovedFromSelection)
             rvSelectedUser?.adapter = secondaryAdapter
         }
+
         val nextText: TextView? = view?.findViewById(R.id.tv_next)
         nextText?.setOnClickListener(this)
-
-
     }
 
     private var userSelectionInterface = object : NotifyMeInterface {
         override fun handleData(obj: Any, requestCode: Int?) {
             when (requestCode) {
                 NetworkConstants().USER_REMOVED -> {
-                    selectedUserList?.remove(obj as UserModel)
+                    selectedUserList.remove(obj as UserModel)
                     secondaryAdapter?.notifyDataSetChanged()
                 }
                 NetworkConstants().USER_ADDED -> {
-                    selectedUserList?.add(obj as UserModel)
+                    selectedUserList.add(obj as UserModel)
                     secondaryAdapter?.notifyDataSetChanged()
                 }
 
             }
-            if (selectedUserList?.size!! > 0) {
+            if (selectedUserList.size > 0) {
                 rvSelectedUser?.visibility = View.VISIBLE
             } else {
                 rvSelectedUser?.visibility = View.GONE
@@ -112,7 +97,7 @@ class CreateCommunityFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.tv_next -> {
-                if (selectedUserList?.size!! > 1 && selectedUserList?.size!! <= 6) {
+                if (selectedUserList.size <= 6) {
                     val newGroupFragment = NewCommunityFragment.newInstance()
                     val fragmentManager: FragmentManager = activity.supportFragmentManager
                     val fragmentTransaction = fragmentManager.beginTransaction()
@@ -120,7 +105,7 @@ class CreateCommunityFragment : Fragment(), View.OnClickListener {
                     fragmentTransaction.addToBackStack(null)
                     fragmentTransaction.commit()
                 } else {
-                    Toast.makeText(context, "Number of members should be more than 2 and less than 7", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Number of members should be less than 7", Toast.LENGTH_LONG).show()
                 }
 
             }
