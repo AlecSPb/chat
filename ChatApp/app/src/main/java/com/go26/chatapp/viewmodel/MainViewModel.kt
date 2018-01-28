@@ -7,7 +7,7 @@ import com.go26.chatapp.R
 import com.go26.chatapp.ui.ChatRoomsFragment
 import com.go26.chatapp.ui.ContactsFragment
 import com.go26.chatapp.ui.ProfileFragment
-import com.go26.chatapp.ui.SearchFragment
+import com.go26.chatapp.ui.search.SearchFragment
 
 /**
  * Created by daigo on 2018/01/10.

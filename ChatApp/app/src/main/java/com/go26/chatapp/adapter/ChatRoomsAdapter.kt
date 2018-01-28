@@ -26,20 +26,20 @@ class ChatRoomsAdapter(val context: Context) : RecyclerView.Adapter<UserRowViewH
 
     override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
         var user2 = UserModel()
-        val community = DataConstants.myCommunities?.get(position)
+        val community = DataConstants.myCommunities.get(position)
 
-        if (community?.community!!) {
-            holder.tvName.text = community?.name
+        if (community.community!!) {
+            holder.tvName.text = community.name
 
-            if (!community?.lastMessage?.message?.isEmpty()!!) {
+            if (!community.lastMessage?.message?.isEmpty()!!) {
                 holder.tvEmail.text = userMap?.get(community?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + community?.lastMessage?.message
             } else {
-                holder.tvEmail.text = "No messages in the community"
+                holder.tvEmail.text = "No messages in the communities"
             }
 
-            if (community.members.get(currentUser?.uid!!)?.unread_community_count!! > 0) {
+            if (community.members.get(currentUser?.uid!!)?.unreadCommunityCount!! > 0) {
                 holder.tvUnreadCount.visibility = View.VISIBLE
-                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unread_community_count!!.toString()
+                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCommunityCount!!.toString()
             } else {
                 holder.tvUnreadCount.visibility = View.GONE
             }
@@ -58,20 +58,20 @@ class ChatRoomsAdapter(val context: Context) : RecyclerView.Adapter<UserRowViewH
 
             holder.tvName.text = user2.name!!
 
-            if (!community?.lastMessage?.message?.isEmpty()!!) {
+            if (!community.lastMessage?.message?.isEmpty()!!) {
                 holder.tvEmail.text = userMap?.get(community?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + community?.lastMessage?.message
             } else {
                 holder.tvEmail.text = "No messages"
             }
 
-            if (community.members.get(currentUser?.uid!!)?.unread_community_count!! > 0) {
+            if (community.members.get(currentUser?.uid!!)?.unreadCommunityCount!! > 0) {
                 holder.tvUnreadCount.visibility = View.VISIBLE
-                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unread_community_count!!.toString()
+                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCommunityCount!!.toString()
             } else {
                 holder.tvUnreadCount.visibility = View.GONE
             }
 
-            loadRoundImage(holder.ivProfile, user2?.image_url!!)
+            loadRoundImage(holder.ivProfile, user2?.imageUrl!!)
 
         }
 
@@ -94,6 +94,6 @@ class ChatRoomsAdapter(val context: Context) : RecyclerView.Adapter<UserRowViewH
 
     }
 
-    override fun getItemCount(): Int = DataConstants.myCommunities?.size!!
+    override fun getItemCount(): Int = DataConstants.myCommunities.size
 
 }

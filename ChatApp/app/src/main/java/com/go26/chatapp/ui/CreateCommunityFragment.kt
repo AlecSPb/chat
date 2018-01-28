@@ -48,8 +48,8 @@ class CreateCommunityFragment : Fragment(), View.OnClickListener {
 
         if (userList?.size == 0) {
             MyChatManager.getAllUsersFromFirebase(object : NotifyMeInterface {
-                override fun handleData(`asv`: Any, requestCode: Int?) {
-                    userList = `asv` as ArrayList<UserModel>
+                override fun handleData(obj: Any, requestCode: Int?) {
+                    userList = obj as ArrayList<UserModel>
                     selectedUserList?.clear()
                     rvUserList?.layoutManager = LinearLayoutManager(context)
                     adapter = UserListAdapter(context, userSelectionInterface)

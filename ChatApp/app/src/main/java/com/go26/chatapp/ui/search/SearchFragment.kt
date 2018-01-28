@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui
+package com.go26.chatapp.ui.search
 
 
 import android.os.Bundle
@@ -10,7 +10,6 @@ import com.go26.chatapp.R
 import com.go26.chatapp.viewmodel.SearchFragmentViewModel
 import com.go26.chatapp.databinding.FragmentSearchBinding
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search_root.*
 
 
 class SearchFragment : Fragment() {

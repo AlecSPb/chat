@@ -31,7 +31,7 @@ class UserListAdapter(context: Context,
         holder.tvName.text = user?.name
         holder.tvEmail.text = user?.email
 
-        loadRoundImage(holder.ivProfile, user?.image_url!!)
+        loadRoundImage(holder.ivProfile, user?.imageUrl!!)
 
 
         if (user.online != null && user.online!!) {

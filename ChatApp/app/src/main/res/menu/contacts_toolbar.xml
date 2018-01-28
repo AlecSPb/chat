@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/add_community"
+        android:id="@+id/create_community"
         android:title="add"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/ic_create_community"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/requests"
+        android:title="申請"
+        android:icon="@drawable/ic_request"
         app:showAsAction="always"/>
 </menu>

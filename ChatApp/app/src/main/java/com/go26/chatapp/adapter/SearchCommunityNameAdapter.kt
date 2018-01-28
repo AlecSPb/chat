@@ -18,7 +18,7 @@ class SearchCommunityNameAdapter(private val foundCommunityList: ArrayList<Commu
     : RecyclerView.Adapter<SearchCommunityNameAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
-            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_search, parent, false), itemClick)
+            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.communityName.text = foundCommunityList[position].name

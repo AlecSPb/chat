@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.go26.chatapp.ui.SearchCommunityNameFragment">
+    tools:context="com.go26.chatapp.ui.search.SearchCommunityNameFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_community_recycler_view"

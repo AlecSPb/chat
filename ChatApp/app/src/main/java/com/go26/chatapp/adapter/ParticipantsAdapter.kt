@@ -27,9 +27,9 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
             holder.tvName.text = user?.name
             holder.tvEmail.text = user?.email
 
-            loadRoundImage(holder.ivProfile, user?.image_url!!)
+            loadRoundImage(holder.ivProfile, user?.imageUrl!!)
 
-            //Only admin get to see overflow menu of community members
+            //Only admin get to see overflow menu of communities members
             if (DataConstants.communityMap?.get(groupId)?.members?.get(DataConstants.currentUser?.uid)?.admin!!) {
                 holder.ivOverflow.visibility = View.VISIBLE
             } else {

@@ -10,6 +10,18 @@ import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityMembersMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityMessageMap
+import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsList
+import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
+import com.go26.chatapp.constants.DataConstants.Companion.friendRequests
+import com.go26.chatapp.constants.DataConstants.Companion.friendRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
+import com.go26.chatapp.constants.DataConstants.Companion.myCommunityRequests
+import com.go26.chatapp.constants.DataConstants.Companion.myCommunityRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequests
+import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.myFriends
+import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
@@ -26,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @SuppressLint("StaticFieldLeak")
@@ -143,7 +156,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                         mutableData.value = userModel
                     } else {
                         val newUserData: HashMap<String, Any?> = hashMapOf()
-                        newUserData.put("imageUrl", userModel?.image_url)
+                        newUserData.put("imageUrl", userModel?.imageUrl)
                         newUserData.put("name", userModel?.name)
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
@@ -176,10 +189,10 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
     /**
      * Function to fetch current user
      */
-    fun fetchCurrentUser(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+    fun fetchCurrentUser(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?, isSingleEvent: Boolean) {
         try {
             if (userRef != null && userModel?.uid != null) {
-                userRef?.child(userModel.uid)?.addValueEventListener(object : ValueEventListener {
+                val listenerForSingle = object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
                         callback?.handleData(false, requestType)
                     }
@@ -191,8 +204,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                                 if (it) {
                                     currentUser = user
                                     SharedPrefManager.getInstance(context!!).savePreferences(PrefConstants().USER_DATA, gson.toJson(currentUser))
-                                    fetchMyCommunities(callback, requestType, user, true)
-//                                    callback?.handleData(true, requestType)
+                                    callback?.handleData(true, requestType)
                                 } else {
                                     userRef?.child(user.uid)?.removeEventListener(this)
                                 }
@@ -200,7 +212,34 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                         }
 
                     }
-                })
+                }
+
+                val listener = object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError?) {
+                        callback?.handleData(false, requestType)
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot?) {
+                        val user: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
+                        user?.let {
+                            it.online?.let {
+                                if (it) {
+                                    currentUser = user
+                                    SharedPrefManager.getInstance(context!!).savePreferences(PrefConstants().USER_DATA, gson.toJson(currentUser))
+                                } else {
+                                    userRef?.child(user.uid)?.removeEventListener(this)
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                if (isSingleEvent) {
+                    userRef?.child(userModel.uid)?.addListenerForSingleValueEvent(listenerForSingle)
+                } else {
+                    userRef?.child(userModel.uid)?.addValueEventListener(listener)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -210,13 +249,52 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
     /**
      * This function gets all the groups in which user is present.
      */
-    fun fetchMyCommunities(callback: NotifyMeInterface?, requestType: Int?, userModel: UserModel?, isSingleEvent: Boolean) {
+    fun fetchMyCommunities(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
 
-        var i: Int = userModel?.community?.size!!
-        if (i == 0) {
-//            //No Groups
-            callback?.handleData(true, requestType)
-        }
+//        var i: Int = userModel?.communities?.size!!
+//        if (i == 0) {
+////            //No Groups
+//            callback?.handleData(true, requestType)
+//        }
+
+//        val listenerForSingle = object : ValueEventListener {
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                Log.e("", "")
+//            }
+//
+//            override fun onDataChange(communitySnapshot: DataSnapshot) {
+//                if (communitySnapshot.exists()) {
+//                    val communityModel: CommunityModel = communitySnapshot.getValue<CommunityModel>(CommunityModel::class.java)!!
+//                    val memberList: ArrayList<UserModel> = arrayListOf()
+//                    if (!communityModel.communityDeleted!!) {
+//                        for (member in communityModel.members) {
+//                            memberList.add(member.value)
+//                        }
+//                        communityMembersMap?.put(communityModel.communityId!!, memberList)
+//                        communityMessageMap?.put(communityModel.communityId!!, arrayListOf())
+//                        communityMap?.put(communityModel.communityId!!, communityModel)
+//
+//                        // fcm
+////                        FirebaseMessaging.getInstance().subscribeToTopic(communityModel.communityId!!)
+//                    }
+//                }
+//                i--
+//                if (i <= 0) {
+//                    myCommunities?.clear()
+//                    for (community in communityMap!!) {
+//                        if (!community.value.community!!) {
+//                            if (!community.value.lastMessage?.sender_id.equals("")) {
+//                                myCommunities?.add(community.value)
+//                            }
+//                        } else {
+//                            myCommunities?.add(community.value)
+//                        }
+//                    }
+//                    fetchMyFriends(callback, userModel, requestType, isSingleEvent)
+//                }
+//            }
+//        }
+
         communityListener = object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.e("", "")
@@ -226,59 +304,387 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                 if (communitySnapshot.exists()) {
                     val communityModel: CommunityModel = communitySnapshot.getValue<CommunityModel>(CommunityModel::class.java)!!
                     val memberList: ArrayList<UserModel> = arrayListOf()
-                    if (!communityModel.communityDeleted!!) {
-                        for (member in communityModel.members) {
-                            memberList.add(member.value)
+                    //
+                    //
+                    // 退会した場合とコミュニティがなくなった場合除外する処理を加える
+                    if (currentUser?.communities != null) {
+                        var isMyCommunity = false
+                        for (myCommunity in currentUser?.communities!!) {
+                            isMyCommunity = (myCommunity.key == communityModel.communityId)
                         }
-                        communityMembersMap?.put(communityModel.communityId!!, memberList)
-                        communityMessageMap?.put(communityModel.communityId!!, arrayListOf())
-                        communityMap?.put(communityModel.communityId!!, communityModel)
+                        if (isMyCommunity) {
+                            if (!communityModel.communityDeleted!!) {
+                                for (member in communityModel.members) {
+                                    memberList.add(member.value)
+                                }
+                                communityMembersMap?.put(communityModel.communityId!!, memberList)
+                                communityMessageMap?.put(communityModel.communityId!!, arrayListOf())
+                                communityMap?.put(communityModel.communityId!!, communityModel)
 
-                        // fcm
+                                myCommunities.clear()
+                                if (communityMap != null) {
+                                    myCommunities = communityMap?.values?.toMutableList()!!
+                                }
+                                // 自分がadminの場合 communityのjoin requestを保存
+                                if (communityModel.members[currentUser?.uid]?.admin != null) {
+                                    fetchCommunityRequests(communityModel)
+                                }
+//                        for (community in communityMap!!) {
+//                            if (!community.value.community!!) {
+//                                if (!community.value.lastMessage?.sender_id.equals("")) {
+//                                    myCommunities?.add(community.value)
+//                                }
+//                            } else {
+//                                myCommunities?.add(community.value)
+//                            }
+//                        }
+
+                                // fcm
 //                        FirebaseMessaging.getInstance().subscribeToTopic(communityModel.communityId!!)
+                            }
+                        }
                     }
-
                 }
+            }
+        }
+
+//        val myCommunitiesListenerForSingle = object : ValueEventListener {
+//            override fun onCancelled(databaseError: DatabaseError) {
+//                Log.e("", "")
+//            }
+//
+//            override fun onDataChange(myCommunitiesSnapshot: DataSnapshot) {
+//                if (myCommunitiesSnapshot.exists()) {
+//                    myCommunitiesSnapshot.children.forEach { it ->
+//                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
+//                            communityRef?.child(it.communityId)?.addListenerForSingleValueEvent(listenerForSingle)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+        val myCommunitiesListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
+
+            override fun onDataChange(myCommunitiesSnapshot: DataSnapshot) {
+                communityMembersMap?.clear()
+                communityMessageMap?.clear()
+                communityMap?.clear()
+                myCommunities.clear()
+                if (myCommunitiesSnapshot.exists()) {
+                    myCommunitiesSnapshot.children.forEach { it ->
+                        communityRef?.child(it.key)?.removeEventListener(communityListener)
+                        communityRef?.child(it.key)?.addValueEventListener(communityListener)
+                    }
+                }
+                callback?.handleData(true, requestType)
+            }
+        }
+
+//        if (isSingleEvent) {
+//            userRef?.child("communities")?.addListenerForSingleValueEvent(myCommunitiesListenerForSingle)
+//        } else {
+//            userRef?.child("communities")?.addValueEventListener(myCommunitiesListener)
+//        }
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().COMMUNITY)?.addValueEventListener(myCommunitiesListener)
+
+//        if (i <= 0 && !isSingleEvent) {
+//            callback?.handleData(true, requestType)
+//        }
+
+    }
+
+    fun fetchMyFriends(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+//        var i: Int = userModel?.friends?.size!!
+//        if (i == 0) {
+//            callback?.handleData(true, requestType)
+//        }
+//        // Making a copy of listener
+//        val listenerForSingle = object : ValueEventListener {
+//            override fun onCancelled(databaseError: DatabaseError) {}
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    val friend: UserModel? = dataSnapshot.getValue<UserModel>(UserModel::class.java)
+//                    if (friend != null) {
+//                        myFriends.add(friend)
+//                    }
+//                }
 //                i--
 //                if (i <= 0) {
 //                    callback?.handleData(true, requestType)
 //                }
+//            }
+//        }
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val friend: UserModel? = dataSnapshot.getValue<UserModel>(UserModel::class.java)
+                    if (friend != null) {
+                        myFriendsMap[friend.uid!!] = friend
+                        myFriends.clear()
+                        myFriends = myFriendsMap.values.toMutableList()
+                    }
+                }
             }
         }
 
+        val myFriendsListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
 
-
-        for (community in userModel.community) {
-
-            if (community.value) {
-//                if (isSingleEvent) {
-//                    communityRef?.child(community.key)?.addListenerForSingleValueEvent(communityListener)
-//                } else {
-//                    communityRef?.child(community.key)?.addValueEventListener(communityListener)
-//                }
-                communityRef?.child(community.key)?.addValueEventListener(communityListener)
-                i--
-
-            } else {
-                i--
+            override fun onDataChange(myFriendsSnapshot: DataSnapshot) {
+                myFriendsMap.clear()
+                myFriends.clear()
+                if (myFriendsSnapshot.exists()) {
+                    myFriendsSnapshot.children.forEach { it ->
+                        userRef?.child(it.key)?.removeEventListener(listener)
+                        userRef?.child(it.key)?.addValueEventListener(listener)
+                    }
+                }
+                callback?.handleData(true, requestType)
             }
         }
-        if (i <= 0) {
-            callback?.handleData(true, requestType)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addValueEventListener(myFriendsListener)
+
+    }
+
+    fun fetchFriendRequests(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val user: UserModel? = dataSnapshot.getValue<UserModel>(UserModel::class.java)
+                    if (user != null) {
+                        if (currentUser?.friendRequests != null) {
+                            var isFriendRequests = false
+                            for (request in currentUser?.friendRequests!!) {
+                                isFriendRequests = (request.key == user.uid)
+                            }
+
+                            if (isFriendRequests) {
+                                friendRequestsMap[user.uid!!] = user
+
+                            } else {
+                                friendRequestsMap.remove(user.uid)
+                                // friendRequestsにない場合 リスナーを外す
+                                userRef?.child(user.uid)?.removeEventListener(this)
+                            }
+                        } else {
+                            friendRequestsMap.remove(user.uid)
+                            // friendRequestsにない場合 リスナーを外す
+                            userRef?.child(user.uid)?.removeEventListener(this)
+                        }
+                        friendRequests.clear()
+                        friendRequests = friendRequestsMap.values.toMutableList()
+                    }
+                }
+            }
         }
 
+        val friendRequestsListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
+
+            override fun onDataChange(friendRequestsSnapshot: DataSnapshot) {
+                friendRequestsMap.clear()
+                friendRequests.clear()
+                if (friendRequestsSnapshot.exists()) {
+                    friendRequestsSnapshot.children.forEach { it ->
+                        userRef?.child(it.key)?.removeEventListener(listener)
+                        userRef?.child(it.key)?.addValueEventListener(listener)
+                    }
+                }
+//                callback?.handleData(true, requestType)
+            }
+        }
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIEND_REQUESTS)?.addValueEventListener(friendRequestsListener)
+
+    }
+
+    fun fetchMyFriendRequests(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val user: UserModel? = dataSnapshot.getValue<UserModel>(UserModel::class.java)
+                    if (user != null) {
+                        if (currentUser?.myFriendRequests != null) {
+                            var isMyFriendRequests = false
+                            for (request in currentUser?.myFriendRequests!!) {
+                                isMyFriendRequests = (request.key == user.uid)
+                            }
+                            if (isMyFriendRequests) {
+                                myFriendRequestsMap[user.uid!!] = user
+                                myFriendRequests.clear()
+                                myFriendRequests = myFriendRequestsMap.values.toMutableList()
+                            } else {
+                                userRef?.child(user.uid)?.removeEventListener(this)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        val myFriendRequestsListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
+
+            override fun onDataChange(myFriendRequestsSnapshot: DataSnapshot) {
+                myFriendRequestsMap.clear()
+                myFriendRequests.clear()
+                if (myFriendRequestsSnapshot.exists()) {
+                    myFriendRequestsSnapshot.children.forEach { it ->
+                        userRef?.child(it.key)?.removeEventListener(listener)
+                        userRef?.child(it.key)?.addValueEventListener(listener)
+                    }
+                }
+//                callback?.handleData(true, requestType)
+            }
+        }
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().MY_FRIEND_REQUESTS)?.addValueEventListener(myFriendRequestsListener)
+
+    }
+
+    fun fetchMyCommunityRequests(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val community: CommunityModel? = dataSnapshot.getValue<CommunityModel>(CommunityModel::class.java)
+                    if (community != null) {
+                        var isMyCommunityRequests = false
+                        for (request in currentUser?.myCommunityRequests!!) {
+                            isMyCommunityRequests = (request.key == community.communityId)
+                        }
+                        if (isMyCommunityRequests) {
+                            myCommunityRequestsMap[community.communityId!!] = community
+                            myCommunityRequests.clear()
+                            myCommunityRequests = myCommunityRequestsMap.values.toMutableList()
+                        } else {
+                            communityRef?.child(community.communityId)?.removeEventListener(this)
+                        }
+                    }
+                }
+            }
+        }
+
+        val myCommunityRequestsListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
+
+            override fun onDataChange(myCommunityRequestsSnapshot: DataSnapshot) {
+                myCommunityRequestsMap.clear()
+                myCommunityRequests.clear()
+                if (myCommunityRequestsSnapshot.exists()) {
+                    myCommunityRequestsSnapshot.children.forEach { it ->
+                        communityRef?.child(it.key)?.removeEventListener(listener)
+                        communityRef?.child(it.key)?.addValueEventListener(listener)
+                    }
+                }
+//                callback?.handleData(true, requestType)
+            }
+        }
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().MY_COMMUNITY_REQUESTS)?.addValueEventListener(myCommunityRequestsListener)
+
+    }
+
+    fun fetchCommunityRequests(communityModel: CommunityModel?) {
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val user: UserModel? = dataSnapshot.getValue<UserModel>(UserModel::class.java)
+                    if (user != null) {
+                        var isCommunityRequests = false
+                        for (community in myCommunities) {
+                            for (request in community.joinRequests) {
+                                isCommunityRequests = (request.key == user.uid)
+                            }
+                        }
+                        if (isCommunityRequests) {
+                            if (communityRequestsMap[communityModel?.communityId] == null) {
+                                communityRequestsMap[communityModel?.communityId!!] = mutableListOf(user)
+                            } else {
+                                for (requestUser in communityRequestsMap[communityModel?.communityId]!!) {
+                                    if (requestUser.uid == user.uid) {
+                                        communityRequestsMap[communityModel?.communityId]?.remove(requestUser)
+                                    }
+                                }
+                                communityRequestsMap[communityModel?.communityId]?.add(user)
+                            }
+
+                            for (communityRequest in communityRequestsList) {
+                                if (communityRequest.first == communityModel?.communityId) {
+                                    communityRequestsList.remove(communityRequest)
+                                }
+                            }
+                            for (communityRequest in communityRequestsMap[communityModel?.communityId]!!) {
+                                val pair = Pair(communityModel?.communityId!!, communityRequest)
+                                communityRequestsList.add(pair)
+                            }
+                        } else {
+                            userRef?.child(user.uid)?.removeEventListener(this)
+                        }
+                    }
+                }
+            }
+        }
+
+        val communityRequestsListener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e("", "")
+            }
+
+            override fun onDataChange(communityRequestsSnapshot: DataSnapshot) {
+                communityRequestsMap.clear()
+                communityRequestsList.clear()
+                if (communityRequestsSnapshot.exists()) {
+                    communityRequestsSnapshot.children.forEach { it ->
+                        userRef?.child(it.key)?.removeEventListener(listener)
+                        userRef?.child(it.key)?.addValueEventListener(listener)
+                    }
+                }
+            }
+        }
+        communityRef?.child(communityModel?.communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.addListenerForSingleValueEvent(communityRequestsListener)
     }
 
     fun searchCommunityName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
         val listener = object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {}
-            override fun onDataChange(dataSnaphot: DataSnapshot) {
-                if (dataSnaphot.exists()) {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
                     val foundCommunityList = DataConstants.foundCommunityList
                     foundCommunityList?.clear()
-                    dataSnaphot.children.forEach { it ->
+                    dataSnapshot.children.forEach { it ->
                         it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
-                            if (searchWords == it.name) {
+                            // 自分が所属しているコミュニティは除外
+                            var isMyCommunity = false
+                            if (myCommunities.size != 0) {
+                                for (community: CommunityModel in myCommunities) {
+                                    isMyCommunity = (community.communityId == it.communityId)
+                                }
+                            }
+                            if (searchWords == it.name && !isMyCommunity) {
                                 foundCommunityList?.add(it)
                             }
                         }
@@ -316,14 +722,28 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         // Making a copy of listener
         val listener = object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {}
-            override fun onDataChange(dataSnaphot: DataSnapshot) {
-                if (dataSnaphot.exists()) {
-                    val foundUserList = DataConstants.foundUserList
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
                     foundUserList?.clear()
-                    dataSnaphot.children.forEach { it ->
+                    dataSnapshot.children.forEach { it ->
                         it.getValue<UserModel>(UserModel::class.java)?.let {
-                            if (searchWords == it.name) {
-                               foundUserList?.add(it)
+                            // フレンド除外
+                            if (currentUser?.friends != null) {
+                                var isMyFriends = false
+                                for (friend in currentUser?.friends!!) {
+                                    isMyFriends = (friend.key == it.uid)
+                                }
+                                if (!isMyFriends) {
+                                    // 自分は除外
+                                    if (searchWords == it.name && it.uid != currentUser?.uid) {
+                                        foundUserList?.add(it)
+                                    }
+                                }
+                            } else {
+                                // 自分は除外
+                                if (searchWords == it.name && it.uid != currentUser?.uid) {
+                                    foundUserList?.add(it)
+                                }
                             }
                         }
                     }
@@ -333,6 +753,69 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         }
 
         userRef?.addListenerForSingleValueEvent(listener)
+    }
+
+    fun sendCommunityJoinRequest(callback: NotifyMeInterface?, user: UserModel, community: CommunityModel, requestType: Int?) {
+
+        communityRef?.child(community.communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.child(user.uid)?.setValue(true)
+        userRef?.child(user.uid)?.child(FirebaseConstants().MY_COMMUNITY_REQUESTS)?.child(community.communityId)?.setValue(true)
+
+        callback?.handleData(true, requestType)
+    }
+
+    fun sendFriendRequest(callback: NotifyMeInterface?, currentUser: UserModel, user: UserModel, requestType: Int?) {
+
+        userRef?.child(user.uid)?.child(FirebaseConstants().FRIEND_REQUESTS)?.child(currentUser.uid)?.setValue(true)
+        userRef?.child(currentUser.uid)?.child(FirebaseConstants().MY_FRIEND_REQUESTS)?.child(user.uid)?.setValue(true)
+
+        callback?.handleData(true, requestType)
+    }
+
+    fun confirmCommunityJoinRequest(callback: NotifyMeInterface?, uid: String, communityId: String, requestType: Int?) {
+        communityRef?.child(communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.child(uid)?.removeValue()
+        userRef?.child(uid)?.child(FirebaseConstants().MY_COMMUNITY_REQUESTS)?.child(communityId)?.removeValue()
+
+        if (communityRequestsMap.isNotEmpty()) {
+            for (user in communityRequestsMap[communityId]!!) {
+                if (user.uid == uid) {
+                    addMemberToACommunity(callback, communityId, user)
+                }
+            }
+        }
+//        userRef?.child(uid)?.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onCancelled(p0: DatabaseError?) {}
+//            override fun onDataChange(p0: DataSnapshot?) {
+//                val user: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
+//                if (user != null) {
+//                    addMemberToACommunity(callback, communityId, user)
+//                }
+//            }
+//        })
+    }
+
+    fun disconfirmCommunityJoinRequest(callback: NotifyMeInterface?, uid: String, communityId: String, requestType: Int?) {
+        communityRef?.child(communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.child(uid)?.removeValue()
+        userRef?.child(uid)?.child(FirebaseConstants().MY_COMMUNITY_REQUESTS)?.child(communityId)?.removeValue()
+
+        callback?.handleData(true, requestType)
+    }
+
+    fun confirmFriendRequest(callback: NotifyMeInterface?, myId: String, userId: String, requestType: Int?) {
+        userRef?.child(userId)?.child(FirebaseConstants().MY_FRIEND_REQUESTS)?.child(myId)?.removeValue()
+        userRef?.child(myId)?.child(FirebaseConstants().FRIEND_REQUESTS)?.child(userId)?.removeValue()
+
+        userRef?.child(userId)?.child(FirebaseConstants().FRIENDS)?.child(myId)?.setValue(true)
+        userRef?.child(myId)?.child(FirebaseConstants().FRIENDS)?.child(userId)?.setValue(true)
+
+        callback?.handleData(true, requestType)
+    }
+
+    fun disconfirmFriendRequest(callback: NotifyMeInterface?, myId: String, userId: String, requestType: Int?) {
+
+        userRef?.child(userId)?.child(FirebaseConstants().MY_FRIEND_REQUESTS)?.child(myId)?.removeValue()
+        userRef?.child(myId)?.child(FirebaseConstants().FRIEND_REQUESTS)?.child(userId)?.removeValue()
+
+        callback?.handleData(true, requestType)
     }
 
     fun updateFCMTokenAndDeviceId(context: Context, token: String) {
@@ -380,8 +863,8 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                     if (p == null) {
                         mutableData.setValue(userModel)
                     } else {
-                        var newUserData: HashMap<String, Any?> = hashMapOf();
-                        newUserData.put("imageUrl", userModel?.image_url)
+                        var newUserData: HashMap<String, Any?> = hashMapOf()
+                        newUserData.put("imageUrl", userModel?.imageUrl)
                         newUserData.put("name", userModel?.name)
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
@@ -426,10 +909,10 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         // Making a copy of listener
         val listener = object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {}
-            override fun onDataChange(dataSnaphot: DataSnapshot) {
-                if (dataSnaphot.exists()) {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
                     val userList: ArrayList<UserModel> = ArrayList()
-                    dataSnaphot.children.forEach { it ->
+                    dataSnapshot.children.forEach { it ->
                         it.getValue<UserModel>(UserModel::class.java)?.let {
                             if (!SecurePrefs(context!!).get(PrefConstants().USER_ID).equals(it.uid)) {
                                 userList.add(it)
@@ -446,7 +929,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
     }
 
     /**
-     * This function creates a community in the firebase and adds an entry of community id under users and set it to
+     * This function creates a communities in the firebase and adds an entry of communities id under users and set it to
      * true.
      */
     fun createCommunity(callback: NotifyMeInterface?, community: CommunityModel, requestType: Int?) {
@@ -456,14 +939,14 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         val time = Calendar.getInstance().timeInMillis
 
         for (user in community.members) {
-            user.value.community = hashMapOf()
+            user.value.communities = hashMapOf()
             user.value.email = null
-            user.value.image_url = null
+            user.value.imageUrl = null
             user.value.name = null
             user.value.online = null
-            user.value.unread_community_count = 0
-            user.value.last_seen_message_timestamp = time.toString()
-            user.value.delete_till = time.toString()
+            user.value.unreadCommunityCount = 0
+            user.value.lastSeenMessageTimestamp = time.toString()
+            user.value.deleteTill = time.toString()
         }
 
         communityRef?.child(communityId)?.setValue(community)
@@ -477,7 +960,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
 
     /**
-     * This function sends messages to a community
+     * This function sends messages to a communities
      */
     fun sendMessageToACommunity(callback: NotifyMeInterface?, requestType: Int?, communityId: String?,
                                 messageModel: MessageModel?) {
@@ -504,13 +987,13 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                             }
 
                             override fun doTransaction(mutabledata: MutableData?): Transaction.Result {
-                                if (mutabledata?.getValue<UserModel>(UserModel::class.java)?.unread_community_count == null) {
+                                if (mutabledata?.getValue<UserModel>(UserModel::class.java)?.unreadCommunityCount == null) {
                                     var p = mutabledata?.getValue<UserModel>(UserModel::class.java)
-                                    p?.unread_community_count = 0
+                                    p?.unreadCommunityCount = 0
                                     mutabledata?.setValue(p)
                                 } else {
                                     var p = mutabledata.getValue<UserModel>(UserModel::class.java)
-                                    p?.unread_community_count = p?.unread_community_count as Int + 1
+                                    p?.unreadCommunityCount = p?.unreadCommunityCount as Int + 1
                                     mutabledata.setValue(p)
                                 }
 
@@ -525,6 +1008,9 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
     fun fetchCommunityMembersDetails(callback: NotifyMeInterface?, requestType: Int?, communityId: String?) {
         var i: Int = communityMembersMap?.get(communityId)?.size!!
+        if (i == 0) {
+            callback?.handleData(false, requestType)
+        }
         for (member in communityMembersMap?.get(communityId)!!) {
             userRef?.child(member.uid)?.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError?) {
@@ -605,15 +1091,23 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
          communityRef?.child(communityId)?.child(FirebaseConstants.MEMBERS)?.
                  child(sCurrentUser?.uid)?.child(FirebaseConstants.L_S_M_T)?.setValue(lastMessageModel.timestamp)*/
 
-        val groupMember: HashMap<String, Any?> = hashMapOf()
-        groupMember.put(FirebaseConstants().UNREAD_COMMUNITY_COUNT, 0)
-        groupMember.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
+        var isMyCommunity = false
+        if (currentUser?.communities != null) {
+            for (community in currentUser?.communities!!) {
+                isMyCommunity = (community.key == groupId)
+            }
+            if (isMyCommunity) {
+                val groupMember: HashMap<String, Any?> = hashMapOf()
+                groupMember.put(FirebaseConstants().UNREAD_COMMUNITY_COUNT, 0)
+                groupMember.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
 
 
-        communityRef?.child(groupId)?.child(FirebaseConstants().MEMBERS)?.
-                child(currentUser?.uid)?.updateChildren(groupMember);
-        lastMessageModel.read_status = hashMapOf()
-        communityRef?.child(groupId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
+                communityRef?.child(groupId)?.child(FirebaseConstants().MEMBERS)?.
+                        child(currentUser?.uid)?.updateChildren(groupMember);
+                lastMessageModel.read_status = hashMapOf()
+                communityRef?.child(groupId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
+            }
+        }
     }
 
 
@@ -641,7 +1135,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
     fun removeMemberFromCommunity(callback: NotifyMeInterface?, communityId: String?, userId: String?) {
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
-        userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.setValue(false)
+        userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.removeValue()
         callback?.handleData(true, 1)
     }
 
@@ -650,14 +1144,14 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
         val time = Calendar.getInstance().timeInMillis
 
-        userModel?.community = hashMapOf()
+        userModel?.communities = hashMapOf()
         userModel?.email = null
-        userModel?.image_url = null
+        userModel?.imageUrl = null
         userModel?.name = null
         userModel?.online = null
-        userModel?.unread_community_count = 0
-        userModel?.last_seen_message_timestamp = time.toString()
-        userModel?.delete_till = time.toString()
+        userModel?.unreadCommunityCount = 0
+        userModel?.lastSeenMessageTimestamp = time.toString()
+        userModel?.deleteTill = time.toString()
 
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.setValue(userModel)
 
@@ -669,7 +1163,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
      *
      * Create a groupID of these two by calling getHash(uid1,uid2)
      *
-     * Create a community with 2 members, community flag set to false. Then add community id in user1, user2 to be true
+     * Create a communities with 2 members, communities flag set to false. Then add communities id in user1, user2 to be true
      *
      * Then add the message under the MESSAGE->GROUPID.
      */
@@ -686,14 +1180,14 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         val time = Calendar.getInstance().timeInMillis
 
         for (user in community.members) {
-            user.value.community = hashMapOf()
+            user.value.communities = hashMapOf()
             user.value.email = null
-            user.value.image_url = null
+            user.value.imageUrl = null
             user.value.name = null
             user.value.online = null
-            user.value.unread_community_count = 0
-            user.value.last_seen_message_timestamp = time.toString()
-            user.value.delete_till = time.toString()
+            user.value.unreadCommunityCount = 0
+            user.value.lastSeenMessageTimestamp = time.toString()
+            user.value.deleteTill = time.toString()
         }
 
         communityRef?.child(newCommunityId)?.setValue(community)
@@ -708,7 +1202,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
     }
 
     /**
-     * Check if a community exists or not
+     * Check if a communities exists or not
      */
     fun checkIfCommunityExists(callback: NotifyMeInterface, communityId: String, requestType: Int) {
         try {
@@ -771,7 +1265,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
         FirebaseDatabase.getInstance().reference.child(".info/connected")
         val onlineRef = FirebaseDatabase.getInstance().reference.child(".info/connected")
         val currentUserRef = FirebaseDatabase.getInstance().reference.child("/users/" + currentUser?.uid + "/online")
-        val lastSeenRef = FirebaseDatabase.getInstance().reference.child("/users/" + currentUser?.uid + "/last_seen_online")
+        val lastSeenRef = FirebaseDatabase.getInstance().reference.child("/users/" + currentUser?.uid + "/lastSeenOnline")
 
         onlineRef?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

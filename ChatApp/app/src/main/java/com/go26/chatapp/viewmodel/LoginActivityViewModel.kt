@@ -44,7 +44,7 @@ class LoginActivityViewModel(val view: LoginActivityContract, val context: Conte
                         userModel?.uid = user?.uid
                         userModel?.name = user?.displayName
                         userModel?.email = user?.email
-                        userModel?.image_url = user?.photoUrl.toString()
+                        userModel?.imageUrl = user?.photoUrl.toString()
                         userModel?.online = true
                         SharedPrefManager.getInstance(context).savePreferences(PrefConstants().USER_DATA, Gson().toJson(userModel))
                         user?.let { SecurePrefs(context).put(PrefConstants().USER_ID, it.uid) }

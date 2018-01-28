@@ -16,11 +16,11 @@ import com.go26.chatapp.util.MyViewUtils
  */
 class SearchUserAdapter(private val foundUserList: ArrayList<UserModel>, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<SearchUserAdapter.SearchViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
-            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_search, parent, false), itemClick)
+            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.communityName.text = foundUserList[position].name
-        MyViewUtils.loadRoundImage(holder.profileImage, foundUserList[position].image_url!!)
+        MyViewUtils.loadRoundImage(holder.profileImage, foundUserList[position].imageUrl!!)
         holder.setUp(position)
     }
 
