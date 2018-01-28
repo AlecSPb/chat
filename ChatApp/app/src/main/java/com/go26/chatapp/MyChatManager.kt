@@ -311,6 +311,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                         var isMyCommunity = false
                         for (myCommunity in currentUser?.communities!!) {
                             isMyCommunity = (myCommunity.key == communityModel.communityId)
+                            if (isMyCommunity) break
                         }
                         if (isMyCommunity) {
                             if (!communityModel.communityDeleted!!) {
@@ -341,8 +342,12 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
 
                                 // fcm
 //                        FirebaseMessaging.getInstance().subscribeToTopic(communityModel.communityId!!)
+                            } else {
+                                communityRef?.child(communityModel.communityId)?.removeEventListener(communityListener)
                             }
                         }
+                    } else {
+                        communityRef?.child(communityModel.communityId)?.removeEventListener(communityListener)
                     }
                 }
             }
@@ -468,6 +473,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                             var isFriendRequests = false
                             for (request in currentUser?.friendRequests!!) {
                                 isFriendRequests = (request.key == user.uid)
+                                if (isFriendRequests) break
                             }
 
                             if (isFriendRequests) {
@@ -524,6 +530,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                             var isMyFriendRequests = false
                             for (request in currentUser?.myFriendRequests!!) {
                                 isMyFriendRequests = (request.key == user.uid)
+                                if (isMyFriendRequests) break
                             }
                             if (isMyFriendRequests) {
                                 myFriendRequestsMap[user.uid!!] = user
@@ -571,6 +578,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                         var isMyCommunityRequests = false
                         for (request in currentUser?.myCommunityRequests!!) {
                             isMyCommunityRequests = (request.key == community.communityId)
+                            if (isMyCommunityRequests) break
                         }
                         if (isMyCommunityRequests) {
                             myCommunityRequestsMap[community.communityId!!] = community
@@ -618,6 +626,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                         for (community in myCommunities) {
                             for (request in community.joinRequests) {
                                 isCommunityRequests = (request.key == user.uid)
+                                if (isCommunityRequests) break
                             }
                         }
                         if (isCommunityRequests) {
@@ -682,6 +691,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                             if (myCommunities.size != 0) {
                                 for (community: CommunityModel in myCommunities) {
                                     isMyCommunity = (community.communityId == it.communityId)
+                                    if (isMyCommunity) break
                                 }
                             }
                             if (searchWords == it.name && !isMyCommunity) {
@@ -732,6 +742,7 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                                 var isMyFriends = false
                                 for (friend in currentUser?.friends!!) {
                                     isMyFriends = (friend.key == it.uid)
+                                    if (isMyFriends) break
                                 }
                                 if (!isMyFriends) {
                                     // 自分は除外
@@ -782,15 +793,6 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
                 }
             }
         }
-//        userRef?.child(uid)?.addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onCancelled(p0: DatabaseError?) {}
-//            override fun onDataChange(p0: DataSnapshot?) {
-//                val user: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
-//                if (user != null) {
-//                    addMemberToACommunity(callback, communityId, user)
-//                }
-//            }
-//        })
     }
 
     fun disconfirmCommunityJoinRequest(callback: NotifyMeInterface?, uid: String, communityId: String, requestType: Int?) {
@@ -1134,8 +1136,8 @@ ref.updateChildren(updatedUserData, new Firebase.CompletionListener() {
     }
 
     fun removeMemberFromCommunity(callback: NotifyMeInterface?, communityId: String?, userId: String?) {
-        communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
         userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.removeValue()
+        communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
         callback?.handleData(true, 1)
     }
 

@@ -26,7 +26,7 @@ class ChatRoomsAdapter(val context: Context) : RecyclerView.Adapter<UserRowViewH
 
     override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
         var user2 = UserModel()
-        val community = DataConstants.myCommunities.get(position)
+        val community = DataConstants.myCommunities[position]
 
         if (community.community!!) {
             holder.tvName.text = community.name

@@ -21,13 +21,13 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
             UserRowViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
 
     override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
-        val user = DataConstants.selectedUserList?.get(position)
+        val user = DataConstants.selectedUserList[position]
 
         try {
-            holder.tvName.text = user?.name
-            holder.tvEmail.text = user?.email
+            holder.tvName.text = user.name
+            holder.tvEmail.text = user.email
 
-            loadRoundImage(holder.ivProfile, user?.imageUrl!!)
+            loadRoundImage(holder.ivProfile, user.imageUrl!!)
 
             //Only admin get to see overflow menu of communities members
             if (DataConstants.communityMap?.get(groupId)?.members?.get(DataConstants.currentUser?.uid)?.admin!!) {
@@ -89,14 +89,14 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
                 when (type) {
                     AppConstants().CREATION -> {
                         holder.llOverflowItems.visibility = View.GONE
-                        DataConstants.selectedUserList?.remove(user)
+                        DataConstants.selectedUserList.remove(user)
                         notifyDataSetChanged()
                         callback.handleData(true, 1)
                     }
 
                     AppConstants().DETAILS -> {
                         holder.llOverflowItems.visibility = View.GONE
-                        DataConstants.selectedUserList?.remove(user)
+                        DataConstants.selectedUserList.remove(user)
                         MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 if (obj as Boolean) {
@@ -121,7 +121,7 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
 
     }
 
-    override fun getItemCount(): Int = DataConstants.selectedUserList?.size!!
+    override fun getItemCount(): Int = DataConstants.selectedUserList.size
 
 
 }

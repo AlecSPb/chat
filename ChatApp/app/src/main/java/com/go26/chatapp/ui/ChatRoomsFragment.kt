@@ -36,9 +36,14 @@ class ChatRoomsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        setViews()
+//        setViews()
     }
 
+    override fun onStart() {
+        super.onStart()
+        setViews()
+
+    }
     private fun setViews() {
 
         //actionbar
