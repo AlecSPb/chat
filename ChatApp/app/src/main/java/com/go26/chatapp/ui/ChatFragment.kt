@@ -162,6 +162,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 //                        DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
 
                         Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
+                        fragmentManager.popBackStack()
                         fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
                     }
 
