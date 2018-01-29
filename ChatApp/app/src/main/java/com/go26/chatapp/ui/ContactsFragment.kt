@@ -6,11 +6,18 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.*
+import com.go26.chatapp.MyChatManager
+import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
-
+import com.go26.chatapp.adapter.CommunityContactsAdapter
+import com.go26.chatapp.adapter.FriendContactsAdapter
+import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import com.go26.chatapp.constants.NetworkConstants
+import kotlinx.android.synthetic.main.fragment_contacts.*
 
 
 class ContactsFragment : Fragment() {
@@ -18,9 +25,28 @@ class ContactsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view: View? = inflater?.inflate(R.layout.fragment_contacts, container, false)
+
+        return inflater?.inflate(R.layout.fragment_contacts, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews(view)
-        return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
+            override fun handleData(obj: Any, requestCode: Int?) {
+                setCommunityContactsAdapter()
+            }
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
+
+        MyChatManager.fetchMyFriends(object : NotifyMeInterface {
+            override fun handleData(obj: Any, requestCode: Int?) {
+                setFriendContactsAdapter()
+            }
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
     }
 
     private fun setViews(view: View?) {
@@ -31,7 +57,16 @@ class ContactsFragment : Fragment() {
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.title = "Contacts"
         setHasOptionsMenu(true)
+    }
 
+    private fun setCommunityContactsAdapter() {
+        contacts_community_recycler_view.layoutManager = LinearLayoutManager(context)
+        contacts_community_recycler_view.adapter = CommunityContactsAdapter(context)
+    }
+
+    private fun setFriendContactsAdapter() {
+        contacts_friend_recycler_view.layoutManager = LinearLayoutManager(context)
+        contacts_friend_recycler_view.adapter = FriendContactsAdapter(context)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

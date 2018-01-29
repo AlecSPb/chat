@@ -79,14 +79,14 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 Log.d("fetch my communities", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS)
+        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyFriends(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my friends", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS)
+        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyCommunityRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {

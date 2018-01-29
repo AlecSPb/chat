@@ -40,5 +40,9 @@ class DataConstants {
         var myCommunityRequestsMap: MutableMap<String, CommunityModel> = mutableMapOf()
         var friendRequestsMap: MutableMap<String, UserModel> = mutableMapOf()
         var communityRequestsMap: MutableMap<String, MutableList<UserModel>> = mutableMapOf()
+
+        // contacts
+        var communityList: MutableList<CommunityModel> = mutableListOf()
+        var friendList: MutableList<UserModel> = mutableListOf()
     }
 }

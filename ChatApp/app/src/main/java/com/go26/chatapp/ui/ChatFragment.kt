@@ -3,6 +3,7 @@ package com.go26.chatapp.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -62,7 +63,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
         return inflater!!.inflate(R.layout.fragment_chat, container, false)
     }
 
