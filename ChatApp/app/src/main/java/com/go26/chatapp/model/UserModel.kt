@@ -21,4 +21,5 @@ data class UserModel(var uid: String? = null,
                      var lastSeenMessageTimestamp: String? = null,
                      var admin: Boolean? = null,
                      var deleteTill: String? = null,
+                     var joinTime: String? = null,
                      var active: Boolean? = null) : Serializable

@@ -22,7 +22,6 @@ import com.go26.chatapp.adapter.ChatRecyclerAdapter
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
-import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
 import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.MessageModel
@@ -37,12 +36,13 @@ import java.util.*
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.model.ChatRoomModel
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
     var adapter: ChatRecyclerAdapter? = null
-    var communityId: String? = ""
-    var position: Int? = 0
+    var chatRoomModel: ChatRoomModel? = null
+    var id: String? = ""
     var progressBar: ProgressBar? = null
     var mFirebaseDatabaseReference: DatabaseReference? = null
     var mLinearLayoutManager: LinearLayoutManager? = null
@@ -86,9 +86,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
             return@setOnKeyListener true
         }
 
-        communityId = arguments.getString(AppConstants().COMMUNITY_ID)
-        position = arguments.getInt(AppConstants().POSITION)
-        type = arguments.getString(AppConstants().CHAT_TYPE)
+        chatRoomModel = arguments.getSerializable("chatRoomModel") as ChatRoomModel
+        id = chatRoomModel?.id
+        type = chatRoomModel?.type
         tv_loadmore.setOnClickListener(this)
 
         //actionbar
@@ -97,7 +97,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         // コミュニティ作成者は退会出来ない
-        if (communityMap?.get(communityId!!)?.members?.get(currentUser?.uid)?.admin == null) {
+        if (communityMap?.get(id!!)?.members?.get(currentUser?.uid)?.admin == null) {
             setHasOptionsMenu(true)
         }
 
@@ -106,8 +106,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
         when (type) {
             AppConstants().COMMUNITY_CHAT -> {
 
-                if (communityId != null) {
-                    activity.supportActionBar?.title = myCommunities?.get(position!!)?.name
+                if (id != null) {
+                    if (communityMap!![id!!] != null) {
+                        activity.supportActionBar?.title = communityMap!![id!!]?.name
+                    }
                     mLinearLayoutManager = LinearLayoutManager(context)
                     mLinearLayoutManager!!.setStackFromEnd(true)
                     //  chat_messages_recycler.layoutManager = mLinearLayoutManager
@@ -117,11 +119,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
                     MyChatManager.fetchCommunityMembersDetails(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            readMessagesFromFirebase(communityId!!)
+                            readMessagesFromFirebase(id!!)
                             getLastMessageAndUpdateUnreadCount()
                         }
 
-                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, communityId)
+                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, id)
                 }
 
 
@@ -162,14 +164,14 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
 
-//                        DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
+//                        DataConstants.communityMap?.get(id)?.members?.remove(DataConstants.currentUser?.uid)
 
                         Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
                         fragmentManager.popBackStack()
                         fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
                     }
 
-                }, communityId, DataConstants.currentUser?.uid)
+                }, id, DataConstants.currentUser?.uid)
                 return true
             }
             else -> {
@@ -194,13 +196,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
      * Then add the message under the MESSAGE->GROUPID.
      */
 //    private fun checkIfGroupExistsOrNot() {
-//        communityId = MyTextUtil().getHash(currentUser?.uid!!, user2Id)
+//        id = MyTextUtil().getHash(currentUser?.uid!!, user2Id)
 //
 //        MyChatManager.checkIfCommunityExists(object : NotifyMeInterface {
 //            override fun handleData(obj: Any, requestCode: Int?) {
 //                if (obj as Boolean) {
 //                    //Exists so fetch the data
-//                    readMessagesFromFirebase(communityId!!)
+//                    readMessagesFromFirebase(id!!)
 //                    tv_last_seen.visibility = View.VISIBLE
 //                    user2 = DataConstants.userMap?.get(user2Id)!!
 //                    if (user2.online!!) {
@@ -223,7 +225,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 //                }
 //            }
 //
-//        }, communityId!!, NetworkConstants().CHECK_GROUP_EXISTS)
+//        }, id!!, NetworkConstants().CHECK_GROUP_EXISTS)
 //
 //
 //    }
@@ -234,11 +236,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
             override fun handleData(obj: Any, requestCode: Int?) {
                 val lastMessage: MessageModel? = obj as MessageModel
                 if (lastMessage != null) {
-                    MyChatManager.updateUnReadCountLastSeenMessageTimestamp(communityId, lastMessage)
+                    MyChatManager.updateUnReadCountLastSeenMessageTimestamp(id, lastMessage)
                 }
             }
 
-        }, NetworkConstants().FETCH_MESSAGES, communityId)
+        }, NetworkConstants().FETCH_MESSAGES, id)
     }
 
     override fun onClick(v: View?) {
@@ -308,7 +310,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         MyChatManager.createOneOnOneChatCommunity(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 communityIsPresent = true
-                readMessagesFromFirebase(communityId!!)
+                readMessagesFromFirebase(id!!)
                 btnSend.visibility = View.VISIBLE
                 if (message != null) {
                     sendMessageToCommunity(message)
@@ -324,7 +326,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val cal: Calendar = Calendar.getInstance()
         val read_status_temp: HashMap<String, Boolean> = hashMapOf()
 
-        /*   for (member in groupMembersMap?.get(communityId!!)!!) {
+        /*   for (member in groupMembersMap?.get(id!!)!!) {
                if (member.uid == sCurrentUser?.uid) {
                    read_status_temp.put(member.uid!!, true)
                } else {
@@ -350,7 +352,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
             }
 
-        }, NetworkConstants().SEND_MESSAGE_REQUEST, communityId, messageModel)
+        }, NetworkConstants().SEND_MESSAGE_REQUEST, id, messageModel)
     }
 
     override fun onStop() {
@@ -515,14 +517,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     companion object {
 
-        fun newInstance(communityId: String, chatType: String,
-                        userId: String, position: Int): ChatFragment {
+        fun newInstance(chatRoomModel: ChatRoomModel): ChatFragment {
             val fragment = ChatFragment()
             val args = Bundle()
-            args.putString(AppConstants().COMMUNITY_ID, communityId)
-            args.putString(AppConstants().CHAT_TYPE, chatType)
-            args.putString(AppConstants().USER_ID, userId)
-            args.putInt(AppConstants().POSITION, position)
+            args.putSerializable("chatRoomModel", chatRoomModel)
             fragment.arguments = args
             return fragment
         }

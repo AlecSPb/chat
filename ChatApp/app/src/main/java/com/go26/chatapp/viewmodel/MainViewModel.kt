@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.go26.chatapp.contract.MainActivityContract
 import com.go26.chatapp.R
+import com.go26.chatapp.model.ChatRoomModel
 import com.go26.chatapp.ui.ChatRoomsFragment
 import com.go26.chatapp.ui.ContactsFragment
 import com.go26.chatapp.ui.ProfileFragment
@@ -55,7 +56,7 @@ class MainViewModel(private val activity: AppCompatActivity, val view: MainActiv
 //                } else {
 //                    fragmentManager.beginTransaction().replace(R.id.fragment,f).commit()
 //                }
-                val chatRoomsFragment = ChatRoomsFragment.newInstance()
+                val chatRoomsFragment = ChatRoomsFragment.newInstance(false, ChatRoomModel())
                 fragmentManager.beginTransaction().replace(R.id.fragment, chatRoomsFragment).commit()
                 return true
             }
