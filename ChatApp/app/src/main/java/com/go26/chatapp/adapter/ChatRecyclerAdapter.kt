@@ -22,7 +22,7 @@ import com.google.firebase.database.Query
 /**
  * Created by daigo on 2018/01/18.
  */
-class ChatRecyclerAdapter(var communityId: String, var context: Context, var ref: Query)  :
+class ChatRecyclerAdapter(var context: Context, var ref: Query)  :
         FirebaseRecyclerAdapter<MessageModel, ChatRecyclerAdapter.ViewHolder>(
                 MessageModel::class.java, R.layout.item_chat_row,
                 ChatRecyclerAdapter.ViewHolder::class.java, ref) {
@@ -66,28 +66,8 @@ class ChatRecyclerAdapter(var communityId: String, var context: Context, var ref
 
     }
 
-    /* override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ChatMessagesRecyclerAdapter.ViewHolder =
-              ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent?.context),
-                      R.layout.item_chat_row, parent, false)
-              )*/
-
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder =
             ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_chat_row, parent, false))
-
-
-    override fun getItem(position: Int): MessageModel {
-        return super.getItem(position)
-    }
-
-    override fun getItemCount(): Int {
-        return super.getItemCount()
-    }
-
-    /*  override fun getItemCount(): Int {
-          *//**//*  if (MyChatManager.getChatMessages(mKey) == null) return 0
-          else return MyChatManager.getChatMessages(mKey)!!.size*//**//*
-        return messageList.size
-    } */
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var llParent = itemView.findViewById(R.id.ll_parent) as LinearLayout

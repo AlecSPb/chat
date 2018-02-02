@@ -69,9 +69,9 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 //                holder.tvEmail.text = "No messages in the communities"
 //            }
 //
-//            if (community.members.get(currentUser?.uid!!)?.unreadCommunityCount!! > 0) {
+//            if (community.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
 //                holder.tvUnreadCount.visibility = View.VISIBLE
-//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCommunityCount!!.toString()
+//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
 //            } else {
 //                holder.tvUnreadCount.visibility = View.GONE
 //            }
@@ -96,9 +96,9 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 //                holder.tvEmail.text = "No messages"
 //            }
 //
-//            if (community.members.get(currentUser?.uid!!)?.unreadCommunityCount!! > 0) {
+//            if (community.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
 //                holder.tvUnreadCount.visibility = View.VISIBLE
-//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCommunityCount!!.toString()
+//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
 //            } else {
 //                holder.tvUnreadCount.visibility = View.GONE
 //            }

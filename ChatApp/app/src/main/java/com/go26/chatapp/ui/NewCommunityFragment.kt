@@ -73,7 +73,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             DataConstants.communityMap?.get(communityId!!)?.members?.forEach { member ->
                 DataConstants.userMap?.get(member.value.uid)!!.admin = member.value.admin
                 DataConstants.userMap?.get(member.value.uid)!!.deleteTill = member.value.deleteTill
-                DataConstants.userMap?.get(member.value.uid)!!.unreadCommunityCount = member.value.unreadCommunityCount
+                DataConstants.userMap?.get(member.value.uid)!!.unreadCount = member.value.unreadCount
                 selectedUserList?.add(DataConstants.userMap?.get(member.value.uid)!!)
             }
 

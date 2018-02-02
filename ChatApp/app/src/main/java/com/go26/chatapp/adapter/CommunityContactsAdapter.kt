@@ -40,7 +40,7 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<User
             val list: MutableList<String> = mutableListOf("トーク")
             MaterialDialog.Builder(context).items(list).itemsCallback { _, _, _, _ ->
                 val chatRoomModel = ChatRoomModel(community.communityId!!, community.name!!, community.imageUrl!!,
-                        community.lastMessage?.message!!, community.members[currentUser?.uid]?.unreadCommunityCount!!, AppConstants().COMMUNITY_CHAT)
+                        community.lastMessage?.message!!, community.members[currentUser?.uid]?.unreadCount!!, AppConstants().COMMUNITY_CHAT)
                 MyChatManager.hasChatRoom(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         if (obj as Boolean) {

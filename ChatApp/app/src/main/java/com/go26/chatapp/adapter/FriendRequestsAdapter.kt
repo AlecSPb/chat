@@ -12,9 +12,12 @@ import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants
+import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.NetworkConstants
+import com.go26.chatapp.model.FriendModel
 import com.go26.chatapp.model.UserModel
 import com.go26.chatapp.util.MyViewUtils
+import java.util.HashMap
 
 /**
  * Created by daigo on 2018/01/24.
@@ -27,16 +30,24 @@ class FriendRequestsAdapter(private val friendRequests: MutableList<UserModel>, 
         holder.userName.text = friendRequests[position].name
         MyViewUtils.loadRoundImage(holder.profileImage, friendRequests[position].imageUrl!!)
         holder.confirmButton.visibility = View.VISIBLE
+
         holder.confirmButton.setOnClickListener {
             holder.confirmButton.visibility = View.INVISIBLE
             holder.disconfirmButton.visibility = View.INVISIBLE
+
+            val friendModel = FriendModel(friendDeleted = false)
+            val members: HashMap<String, UserModel> = hashMapOf()
+            members.put(currentUser?.uid!!, currentUser!!)
+            members.put(friendRequests[position].uid!!, friendRequests[position])
+
+            friendModel.members = members
 
             MyChatManager.confirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     holder.isConfirmed.visibility = View.VISIBLE
                     holder.isConfirmed.text = "承認済み"
                 }
-            }, DataConstants.currentUser?.uid!!, friendRequests[position].uid!!, NetworkConstants().CONFIRM_REQUEST)
+            }, DataConstants.currentUser?.uid!!, friendRequests[position].uid!!, friendModel, NetworkConstants().CONFIRM_REQUEST)
 
         }
         holder.disconfirmButton.visibility = View.VISIBLE
