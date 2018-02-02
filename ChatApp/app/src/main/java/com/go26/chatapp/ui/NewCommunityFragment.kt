@@ -315,8 +315,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             MyChatManager.createCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Toast.makeText(context, "Group has been created successful", Toast.LENGTH_SHORT).show()
-                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    fragmentManager.beginTransaction().remove(this@NewCommunityFragment).commit()
+//                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
                 }
 
             }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
