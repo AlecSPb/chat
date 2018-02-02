@@ -31,4 +31,5 @@ class NetworkConstants {
     val FETCH_REQUESTS = 1022
     val CONFIRM_REQUEST = 1023
     val DISCONFIRM_REQUEST = 1024
+    val CHECK_CHAT_ROOMS_EXISTS = 1025
 }

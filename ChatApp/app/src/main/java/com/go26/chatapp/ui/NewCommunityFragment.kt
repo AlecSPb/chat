@@ -73,7 +73,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             DataConstants.communityMap?.get(communityId!!)?.members?.forEach { member ->
                 DataConstants.userMap?.get(member.value.uid)!!.admin = member.value.admin
                 DataConstants.userMap?.get(member.value.uid)!!.deleteTill = member.value.deleteTill
-                DataConstants.userMap?.get(member.value.uid)!!.unreadCommunityCount = member.value.unreadCommunityCount
+                DataConstants.userMap?.get(member.value.uid)!!.unreadCount = member.value.unreadCount
                 selectedUserList?.add(DataConstants.userMap?.get(member.value.uid)!!)
             }
 
@@ -172,8 +172,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 //                val mimeType = getMimeType(resultUri, this) + ";base64,"//data:image/jpeg;base64,
 //                val s = img + mimeType + getBase64EncodedImage(resultUri, this) as String
 //                //callProfilePictureApi(s)
-//                if (communityId != null) {
-//                    sendFileFirebase(storageRef, resultUri!!, communityId!!)
+//                if (id != null) {
+//                    sendFileFirebase(storageRef, resultUri!!, id!!)
 //                }
 //                iv_profile.setImageURI(resultUri)
 //            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -310,13 +310,13 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
         if (isValid) {
 
-            //sendFileFirebase(storageRef, resultUri!!, communityId!!)
+            //sendFileFirebase(storageRef, resultUri!!, id!!)
 
             MyChatManager.createCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Toast.makeText(context, "Group has been created successful", Toast.LENGTH_SHORT).show()
-                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    fragmentManager.beginTransaction().remove(this@NewCommunityFragment).commit()
+//                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
                 }
 
             }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
@@ -328,9 +328,9 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
     }
 
 
-//    private fun sendFileFirebase(storageReference: StorageReference?, file: File, communityId: String) {
+//    private fun sendFileFirebase(storageReference: StorageReference?, file: File, id: String) {
 //        if (storageReference != null) {
-//            var mFirebaseDatabaseReference: DatabaseReference? = FirebaseDatabase.getInstance().reference.child(FirebaseConstants().COMMUNITY).child(communityId)
+//            var mFirebaseDatabaseReference: DatabaseReference? = FirebaseDatabase.getInstance().reference.child(FirebaseConstants().COMMUNITY).child(id)
 //            val uploadTask = storageReference.putFile(Uri.fromFile(file))
 //            uploadTask.addOnFailureListener { e -> Log.e("", "onFailure sendFileFirebase " + e.message) }.addOnSuccessListener { taskSnapshot ->
 //                Log.i("", "onSuccess sendFileFirebase")
@@ -343,7 +343,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 //
 //    }
 
-//    fun sendFileFirebase(storageReference: StorageReference?, file: Uri, communityId: String) {
+//    fun sendFileFirebase(storageReference: StorageReference?, file: Uri, id: String) {
 //        if (storageReference != null) {
 //
 //            val name = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
@@ -356,7 +356,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 //
 //                // val chatModel = MessageModel(tfUserModel.getUserId(), ffUserModel.getUserId(), ffUserModel, Calendar.getInstance().time.time.toString() + "", fileModel)
 //                FirebaseDatabase.getInstance().reference.child(FirebaseConstants().COMMUNITY).
-//                        child(communityId).child(FirebaseConstants().IMAGE_URL)?.setValue(downloadUrl.toString())
+//                        child(id).child(FirebaseConstants().IMAGE_URL)?.setValue(downloadUrl.toString())
 //                Toast.makeText(context, "Group Image Updated successful", Toast.LENGTH_LONG).show()
 //            }
 //        } else {

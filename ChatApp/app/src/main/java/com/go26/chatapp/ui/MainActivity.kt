@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
 //                var i = 0
 //                for (group in DataConstants.communityMap!!) {
 //                    if (group.value.members.containsKey(currentUser?.uid!!)) {
-//                        i += group.value.members.get(currentUser?.uid)?.unreadCommunityCount!!
+//                        i += group.value.members.get(currentUser?.uid)?.unreadCount!!
 //                    }
 //
 //                }

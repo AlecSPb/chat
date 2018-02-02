@@ -1,6 +1,7 @@
 package com.go26.chatapp.constants
 
 import com.go26.chatapp.model.CommunityModel
+import com.go26.chatapp.model.FriendModel
 import com.go26.chatapp.model.MessageModel
 import com.go26.chatapp.model.UserModel
 
@@ -43,6 +44,6 @@ class DataConstants {
 
         // contacts
         var communityList: MutableList<CommunityModel> = mutableListOf()
-        var friendList: MutableList<UserModel> = mutableListOf()
+        var friendList: MutableList<FriendModel> = mutableListOf()
     }
 }

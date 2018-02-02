@@ -14,7 +14,8 @@ class FirebaseConstants {
     val MESSAGES = "messages"
     val ONLINE = "online"
     val MEMBERS = "members"
-    val UNREAD_COMMUNITY_COUNT = "unreadCommunityCount"
+    val UNREAD_COMMUNITY_COUNT = "unreadCount"
+    val CHAT_ROOMS = "chatRooms"
     /**
      * lastSeenMessageTimestamp
      */

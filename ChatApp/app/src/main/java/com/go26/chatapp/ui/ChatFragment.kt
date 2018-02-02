@@ -12,17 +12,14 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.go26.chatapp.InfiniteFirebaseRecyclerAdapter
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
-import com.go26.chatapp.ViewHolders.ViewHolder
 import com.go26.chatapp.adapter.ChatRecyclerAdapter
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
-import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
 import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.MessageModel
@@ -37,12 +34,13 @@ import java.util.*
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.model.ChatRoomModel
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
     var adapter: ChatRecyclerAdapter? = null
-    var communityId: String? = ""
-    var position: Int? = 0
+    var chatRoomModel: ChatRoomModel? = null
+    var id: String? = ""
     var progressBar: ProgressBar? = null
     var mFirebaseDatabaseReference: DatabaseReference? = null
     var mLinearLayoutManager: LinearLayoutManager? = null
@@ -52,9 +50,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
     val IMAGE_GALLERY_REQUEST = 1
     val IMAGE_CAMERA_REQUEST = 2
     val PLACE_PICKER_REQUEST = 3
-
-    var user2: UserModel = UserModel()
-    var user2Id: String = ""
 
     var communityIsPresent: Boolean = false
 
@@ -86,9 +81,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
             return@setOnKeyListener true
         }
 
-        communityId = arguments.getString(AppConstants().COMMUNITY_ID)
-        position = arguments.getInt(AppConstants().POSITION)
-        type = arguments.getString(AppConstants().CHAT_TYPE)
+        chatRoomModel = arguments.getSerializable("chatRoomModel") as ChatRoomModel
+        id = chatRoomModel?.id
+        type = chatRoomModel?.type
         tv_loadmore.setOnClickListener(this)
 
         //actionbar
@@ -96,49 +91,43 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        // コミュニティ作成者は退会出来ない
-        if (communityMap?.get(communityId!!)?.members?.get(currentUser?.uid)?.admin == null) {
-            setHasOptionsMenu(true)
-        }
+        activity.supportActionBar?.title = chatRoomModel?.name
+
+        mLinearLayoutManager = LinearLayoutManager(context)
+        mLinearLayoutManager!!.stackFromEnd = true
+
+        progressBar?.visibility = View.VISIBLE
+        btnSend.setOnClickListener(this)
 
         MyChatManager.setmContext(context)
 
         when (type) {
             AppConstants().COMMUNITY_CHAT -> {
 
-                if (communityId != null) {
-                    activity.supportActionBar?.title = myCommunities?.get(position!!)?.name
-                    mLinearLayoutManager = LinearLayoutManager(context)
-                    mLinearLayoutManager!!.setStackFromEnd(true)
-                    //  chat_messages_recycler.layoutManager = mLinearLayoutManager
-
-                    progressBar?.visibility = View.VISIBLE
-                    btnSend.setOnClickListener(this)
-
+                // コミュニティ作成者は退会出来ない
+                if (communityMap?.get(id!!)?.members?.get(currentUser?.uid)?.admin == null) {
+                    setHasOptionsMenu(true)
+                }
+                if (id != null) {
                     MyChatManager.fetchCommunityMembersDetails(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            readMessagesFromFirebase(communityId!!)
+                            readMessagesFromFirebase()
                             getLastMessageAndUpdateUnreadCount()
                         }
 
-                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, communityId)
+                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, id)
                 }
-
-
             }
 
-            AppConstants().ONE_ON_ONE_CHAT -> {
-                mLinearLayoutManager = LinearLayoutManager(context)
-                mLinearLayoutManager!!.setStackFromEnd(true)
-                btnSend.setOnClickListener(this)
-
-                btnSend.visibility = View.GONE
-                user2Id = arguments.getString(AppConstants().USER_ID)
-                val userModel = DataConstants.userMap?.get(user2Id)
-                activity.supportActionBar?.title = userModel?.name
-
-//                checkIfGroupExistsOrNot();
-
+            AppConstants().FRIEND_CHAT -> {
+                if (id != null) {
+                    MyChatManager.fetchFriendMembersDetails(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            readMessagesFromFirebase()
+                            getLastMessageAndUpdateUnreadCount()
+                        }
+                    }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS)
+                }
             }
         }
 
@@ -162,14 +151,14 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
 
-//                        DataConstants.communityMap?.get(communityId)?.members?.remove(DataConstants.currentUser?.uid)
+//                        DataConstants.communityMap?.get(id)?.members?.remove(DataConstants.currentUser?.uid)
 
                         Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
                         fragmentManager.popBackStack()
                         fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
                     }
 
-                }, communityId, DataConstants.currentUser?.uid)
+                }, id, DataConstants.currentUser?.uid)
                 return true
             }
             else -> {
@@ -178,67 +167,16 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * Check if group exists, if exists then download the chat data.
-     * If group doesn't exists, then wait till the first message is sent.
-     *
-     *
-     * When first message is sent.
-     *
-     * Check if user2 node is present or not, if not create user2 node. Then,
-     *
-     * Create a groupID of these two by calling getHash(uid1,uid2)
-     *
-     * Create a group with 2 members, group flag set to false. Then add group id in user1, user2 to be true
-     *
-     * Then add the message under the MESSAGE->GROUPID.
-     */
-//    private fun checkIfGroupExistsOrNot() {
-//        communityId = MyTextUtil().getHash(currentUser?.uid!!, user2Id)
-//
-//        MyChatManager.checkIfCommunityExists(object : NotifyMeInterface {
-//            override fun handleData(obj: Any, requestCode: Int?) {
-//                if (obj as Boolean) {
-//                    //Exists so fetch the data
-//                    readMessagesFromFirebase(communityId!!)
-//                    tv_last_seen.visibility = View.VISIBLE
-//                    user2 = DataConstants.userMap?.get(user2Id)!!
-//                    if (user2.online!!) {
-//                        tv_last_seen.setText("Online")
-//                    } else if (user2.lastSeenOnline != null) {
-//                        tv_last_seen.setText(MyTextUtil().getTimestamp(user2.lastSeenOnline!!.toLong()))
-//                    } else {
-//                        tv_last_seen.visibility = View.GONE
-//                    }
-//                    communityIsPresent = true
-//                } else {
-//                    //Doesn't exists wait till first message is sent (Do nothing)
-//                    user2 = DataConstants.userMap?.get(user2Id)!!
-//                    MyChatManager.createOrUpdateUserNode(object : NotifyMeInterface {
-//                        override fun handleData(obj: Any, requestCode: Int?) {
-//                            user2 = obj as UserModel
-//                            //createCommunityOfTwo(user2, null)
-//                        }
-//                    }, user2, NetworkConstants().CREATE_USER_NODE)
-//                }
-//            }
-//
-//        }, communityId!!, NetworkConstants().CHECK_GROUP_EXISTS)
-//
-//
-//    }
-
-
     fun getLastMessageAndUpdateUnreadCount() {
         MyChatManager.fetchLastMessageFromCommunity(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 val lastMessage: MessageModel? = obj as MessageModel
                 if (lastMessage != null) {
-                    MyChatManager.updateUnReadCountLastSeenMessageTimestamp(communityId, lastMessage)
+                    MyChatManager.updateCommunityUnReadCountLastSeenMessageTimestamp(id, lastMessage)
                 }
             }
 
-        }, NetworkConstants().FETCH_MESSAGES, communityId)
+        }, NetworkConstants().FETCH_MESSAGES, id)
     }
 
     override fun onClick(v: View?) {
@@ -246,7 +184,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
             R.id.btnSend -> {
                 val message: String = et_chat.text.toString()
                 if (!message.isEmpty()) {
-                    sendMessage(message!!)
+                    sendMessage(message)
                 }
             }
 
@@ -258,41 +196,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    /**
-     * Check if group exists, if exists then download the chat data.
-     * If group doesn't exists, then wait till the first message is sent.
-     *
-     *
-     * When first message is sent.
-     *
-     * Check if user2 node is present or not, if not create user2 node. Then,
-     *
-     * Create a groupID of these two by calling getHash(uid1,uid2)
-     *
-     * Create a group with 2 members, group flag set to false. Then add group id in user1, user2 to be true
-     *
-     * Then add the message under the MESSAGE->GROUPID.
-     */
-    fun sendMessage(message: String) {
+    private fun sendMessage(message: String) {
 
         when (type) {
-            AppConstants().ONE_ON_ONE_CHAT -> {
-                if (communityIsPresent) {
-                    sendMessageToCommunity(message)
-                } else {
-                    /* if (DataConstants.userMap?.containsKey(user2Id)!!) {
-                         user2 = DataConstants.userMap?.get(user2Id)!!
-                         //createCommunityOfTwo(sCurrentUser, user2)
-                     } else {
-                         //User2 node is not there so create one.
-                         user2.email = "sky.wall.treasure@gmail.com"
-                         user2.name = "Sky Wall Treasure"
-                         user2.imageUrl = "https://lh6.googleusercontent.com/-x8DMU8TwQWU/AAAAAAAAAAI/AAAAAAAALQA/waA51g0k3GA/s96-c/photo.jpg"
-                         user2.uid = user2Id
-                         user2.group = hashMapOf()*/
-
-
-                }
+            AppConstants().FRIEND_CHAT -> {
+                sendMessageToFriend(message)
             }
 
             AppConstants().COMMUNITY_CHAT -> {
@@ -303,37 +211,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun createCommunityOfTwo(user2: UserModel, message: String?) {
-
-        MyChatManager.createOneOnOneChatCommunity(object : NotifyMeInterface {
-            override fun handleData(obj: Any, requestCode: Int?) {
-                communityIsPresent = true
-                readMessagesFromFirebase(communityId!!)
-                btnSend.visibility = View.VISIBLE
-                if (message != null) {
-                    sendMessageToCommunity(message)
-                }
-
-
-            }
-
-        }, user2Id, user2, NetworkConstants().CREATE_ONE_ON_ONE_GROUP)
-    }
-
     private fun sendMessageToCommunity(message: String) {
         val cal: Calendar = Calendar.getInstance()
-        val read_status_temp: HashMap<String, Boolean> = hashMapOf()
-
-        /*   for (member in groupMembersMap?.get(communityId!!)!!) {
-               if (member.uid == sCurrentUser?.uid) {
-                   read_status_temp.put(member.uid!!, true)
-               } else {
-                   read_status_temp.put(member.uid!!, false)
-               }
-           }*/
+        val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
 
         val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
-                read_status = read_status_temp)
+                read_status = readStatusTemp)
 
         MyChatManager.sendMessageToACommunity(object : NotifyMeInterface {
 
@@ -341,16 +224,27 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 et_chat.setText("")
                 adapter?.notifyDataSetChanged()
                 chat_messages_recycler.scrollToPosition(adapter?.itemCount!!)
-//                Handler().postDelayed({
-//
-//                    adapter?.notifyDataSetChanged()
-//                    chat_messages_recycler.scrollToPosition(adapter?.itemCount!!)
-//
-//                }, 1000)
-
             }
 
-        }, NetworkConstants().SEND_MESSAGE_REQUEST, communityId, messageModel)
+        }, NetworkConstants().SEND_MESSAGE_REQUEST, id, messageModel)
+    }
+
+    private fun sendMessageToFriend(message: String) {
+        val cal: Calendar = Calendar.getInstance()
+        val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
+
+        val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
+                read_status = readStatusTemp)
+
+        MyChatManager.sendMessageToAFriend(object : NotifyMeInterface {
+
+            override fun handleData(obj: Any, requestCode: Int?) {
+                et_chat.setText("")
+                adapter?.notifyDataSetChanged()
+                chat_messages_recycler.scrollToPosition(adapter?.itemCount!!)
+            }
+
+        }, NetworkConstants().SEND_MESSAGE_REQUEST, id, messageModel)
     }
 
     override fun onStop() {
@@ -358,55 +252,18 @@ class ChatFragment : Fragment(), View.OnClickListener {
         getLastMessageAndUpdateUnreadCount()
     }
 
-
-    var newAdapter: InfiniteFirebaseRecyclerAdapter<MessageModel, ViewHolder>? = null
-
-    private fun readMessagesFromFirebase(communityId: String) {
-        val currentCommunity = DataConstants.communityMap?.get(communityId)
-        var time = Calendar.getInstance().timeInMillis
-        var deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
+    private fun readMessagesFromFirebase() {
+//        val currentCommunity = DataConstants.communityMap?.get(id)
+//        var time = Calendar.getInstance().timeInMillis
+//        var deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference
 
         val itemCount = 10
 
         val ref: Query = mFirebaseDatabaseReference?.child(FirebaseConstants().MESSAGES)
-                ?.child(communityId)!!
+                ?.child(id)!!
 
-        adapter = ChatRecyclerAdapter(communityId, context, ref)
-
-//        newAdapter = object : InfiniteFirebaseRecyclerAdapter<MessageModel, ViewHolder>(MessageModel::class.java, R.layout.item_chat_row, ViewHolder::class.java, ref, itemCount, deleteTill, chat_messages_recycler) {
-//            override fun populateViewHolder(viewHolder: ViewHolder?, model: MessageModel?, position: Int) {
-//                val viewHolder = viewHolder as ViewHolder
-//                val chatMessage = model!!
-//
-//                if (chatMessage.sender_id.toString() == currentUser?.uid) {
-//                    viewHolder.llParent.gravity = Gravity.END
-////                    viewHolder.llChild.background =
-////                            ContextCompat.getDrawable(context, R.drawable.chat_bubble_grey_sender)
-//                    viewHolder.name.text = "You"
-//                } else {
-//                    viewHolder.llParent.gravity = Gravity.START
-//                    viewHolder.name.text = DataConstants.userMap?.get(chatMessage.sender_id!!)?.name
-////                    viewHolder.llChild.background = ContextCompat.getDrawable(viewHolder.llParent.context, R.drawable.chat_bubble_grey)
-//                }
-//                viewHolder.message.text = chatMessage.message
-//                try {
-//                    viewHolder.timestamp.text = MyTextUtil().getTimestamp(chatMessage.timestamp?.toLong()!!)
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//
-//
-//
-//                viewHolder.rlName.layoutParams.width = viewHolder.message.layoutParams.width
-//            }
-//
-//            override fun getItemCount(): Int {
-//                return super.getItemCount()
-//            }
-//
-//        }
-
+        adapter = ChatRecyclerAdapter(context, ref)
 
         chat_messages_recycler.setLayoutManager(mLinearLayoutManager)
         //chat_messages_recycler.setAdapter(firebaseAdapter)
@@ -420,22 +277,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (IsRecyclerViewAtTop() && newState == RecyclerView.SCROLL_STATE_IDLE) {
-
 //                    newAdapter?.more()
                 }
             }
-
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-
-
-            }
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {}
         })
-
-
     }
 
     private fun IsRecyclerViewAtTop(): Boolean {
-        return if (chat_messages_recycler.getChildCount() == 0) true else chat_messages_recycler.getChildAt(0).getTop() == 0
+        return if (chat_messages_recycler.childCount == 0) true else chat_messages_recycler.getChildAt(0).top == 0
     }
 
 //    protected override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -515,14 +365,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     companion object {
 
-        fun newInstance(communityId: String, chatType: String,
-                        userId: String, position: Int): ChatFragment {
+        fun newInstance(chatRoomModel: ChatRoomModel): ChatFragment {
             val fragment = ChatFragment()
             val args = Bundle()
-            args.putString(AppConstants().COMMUNITY_ID, communityId)
-            args.putString(AppConstants().CHAT_TYPE, chatType)
-            args.putString(AppConstants().USER_ID, userId)
-            args.putInt(AppConstants().POSITION, position)
+            args.putSerializable("chatRoomModel", chatRoomModel)
             fragment.arguments = args
             return fragment
         }

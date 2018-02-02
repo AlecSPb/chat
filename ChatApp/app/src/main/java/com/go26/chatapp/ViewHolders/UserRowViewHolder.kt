@@ -17,7 +17,6 @@ class UserRowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var tvEmail = itemView.findViewById(R.id.tv_email) as TextView
     var layout = itemView.findViewById(R.id.rl_parent) as RelativeLayout
     var ivSelected = itemView.findViewById(R.id.iv_selected) as AppCompatImageView
-    var viewOnlineStatus = itemView.findViewById(R.id.view_online_status) as TextView
     var tvUnreadCount = itemView.findViewById(R.id.tv_unreadcount) as TextView
     var ivOverflow = itemView.findViewById(R.id.iv_overflow) as AppCompatImageView
     var llOverflowItems = itemView.findViewById(R.id.ll_otheritems) as LinearLayout
