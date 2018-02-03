@@ -15,7 +15,7 @@ import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 /**
  * Created by daigo on 2018/01/14.
  */
-class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var groupId: String) : RecyclerView.Adapter<UserRowViewHolder>() {
+class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var communityId: String) : RecyclerView.Adapter<UserRowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UserRowViewHolder =
             UserRowViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
@@ -30,7 +30,7 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
             loadRoundImage(holder.ivProfile, user.imageUrl!!)
 
             //Only admin get to see overflow menu of communities members
-            if (DataConstants.communityMap?.get(groupId)?.members?.get(DataConstants.currentUser?.uid)?.admin!!) {
+            if (DataConstants.communityMap?.get(communityId)?.members?.get(DataConstants.currentUser?.uid)?.admin!!) {
                 holder.ivOverflow.visibility = View.VISIBLE
             } else {
                 holder.ivOverflow.visibility = View.INVISIBLE
@@ -79,7 +79,7 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
                             holder.labelAdmin.visibility = View.GONE
 
                         }
-                        MyChatManager.changeAdminStatusOfUser(null, groupId, user.uid, user.admin!!)
+                        MyChatManager.changeAdminStatusOfUser(null, communityId, user.uid, user.admin!!)
                     }
                 }
 
@@ -104,7 +104,7 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
                                 }
                             }
 
-                        }, groupId, user.uid)
+                        }, communityId, user.uid)
                     }
                 }
 

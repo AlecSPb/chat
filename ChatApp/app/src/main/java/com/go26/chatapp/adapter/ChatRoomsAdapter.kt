@@ -127,7 +127,7 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 //    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivProfile = itemView.findViewById(R.id.iv_profile) as AppCompatImageView
+        var ivProfile = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
         var tvName = itemView.findViewById(R.id.tv_name) as TextView
         var tvEmail = itemView.findViewById(R.id.tv_email) as TextView
         var layout = itemView.findViewById(R.id.rl_parent) as RelativeLayout

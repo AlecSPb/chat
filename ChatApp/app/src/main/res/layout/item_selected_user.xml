@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/iv_profile"
+        android:id="@+id/profile_image_view"
         android:layout_centerHorizontal="true"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -20,7 +20,7 @@
         android:layout_height="24dp"
         android:layout_marginLeft="-16dp"
         android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@+id/iv_profile"
+        android:layout_toRightOf="@+id/profile_image_view"
         android:visibility="visible"
         app:srcCompat="@drawable/item_white_uncheck" />
 
@@ -34,7 +34,7 @@
         android:maxLines="2"
         android:minLines="2"
         android:textColor="@color/black"
-        android:layout_below="@+id/iv_profile"
+        android:layout_below="@+id/profile_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
