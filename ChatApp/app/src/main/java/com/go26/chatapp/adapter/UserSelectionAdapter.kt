@@ -40,7 +40,7 @@ class UserSelectionAdapter(context: Context, var callback: NotifyMeInterface) : 
     override fun getItemCount(): Int = selectedUserList?.size!!
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivProfile = itemView.findViewById(R.id.iv_profile) as AppCompatImageView
+        var ivProfile = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
         var tvName = itemView.findViewById(R.id.tv_name) as TextView
         var layout = itemView.findViewById(R.id.rl_parent) as RelativeLayout
         var ivSelected = itemView.findViewById(R.id.iv_selected) as AppCompatImageView

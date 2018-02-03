@@ -40,7 +40,7 @@ tools:context="com.go26.chatapp.ui.ContactsFragment">
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_no_of_participants"
+            android:id="@+id/participants_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_header"
