@@ -29,9 +29,6 @@ class EditCommunityFragment : Fragment() {
         val id = arguments.getString("id")
         communityModel = communityMap!![id]
 
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.GONE
         return inflater!!.inflate(R.layout.fragment_edit_community, container, false)
     }
 
@@ -40,6 +37,10 @@ class EditCommunityFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity

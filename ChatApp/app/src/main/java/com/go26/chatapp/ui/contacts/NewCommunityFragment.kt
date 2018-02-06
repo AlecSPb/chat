@@ -47,10 +47,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                               savedInstanceState: Bundle?): View? {
 //        storageRef = storage.getReferenceFromUrl(NetworkConstants().URL_STORAGE_REFERENCE).child(NetworkConstants().FOLDER_STORAGE_IMG)
 
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.GONE
-
         return inflater!!.inflate(R.layout.fragment_new_community, container, false)
     }
 
@@ -59,6 +55,10 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity

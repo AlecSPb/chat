@@ -1258,6 +1258,7 @@ object MyChatManager {
 
     fun removeMemberFromCommunity(callback: NotifyMeInterface?, communityId: String?, userId: String?) {
         userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.removeValue()
+        userRef?.child(userId)?.child(FirebaseConstants().CHAT_ROOMS)?.child(communityId)?.removeValue()
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
         callback?.handleData(true, 1)
     }

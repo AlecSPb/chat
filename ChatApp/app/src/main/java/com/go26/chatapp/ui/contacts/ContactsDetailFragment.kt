@@ -34,9 +34,6 @@ class ContactsDetailFragment : Fragment() {
         id = arguments.getString("id")
         type = arguments.getString("type")
 
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.GONE
         return inflater!!.inflate(R.layout.fragment_contacts_detail, container, false)
     }
 
@@ -45,6 +42,9 @@ class ContactsDetailFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
 
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
