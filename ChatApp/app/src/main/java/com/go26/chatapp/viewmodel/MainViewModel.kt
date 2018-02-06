@@ -6,7 +6,7 @@ import com.go26.chatapp.contract.MainActivityContract
 import com.go26.chatapp.R
 import com.go26.chatapp.model.ChatRoomModel
 import com.go26.chatapp.ui.ChatRoomsFragment
-import com.go26.chatapp.ui.ContactsFragment
+import com.go26.chatapp.ui.contacts.ContactsFragment
 import com.go26.chatapp.ui.ProfileFragment
 import com.go26.chatapp.ui.search.SearchFragment
 

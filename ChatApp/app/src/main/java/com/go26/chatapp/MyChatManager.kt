@@ -36,6 +36,7 @@ import com.google.firebase.database.*
 import com.google.gson.Gson
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 @SuppressLint("StaticFieldLeak")
@@ -845,6 +846,18 @@ object MyChatManager {
 
     fun createChatRoom(callback: NotifyMeInterface?, uid: String, chatRoomModel: ChatRoomModel, requestType: Int?) {
         userRef?.child(uid)?.child(FirebaseConstants().CHAT_ROOMS)?.child(chatRoomModel.id)?.setValue(chatRoomModel)
+        callback?.handleData(true, requestType)
+    }
+
+    fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+    }
+
+    fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, communityModel?.name!!)
+        updateMap.put(FirebaseConstants().DESCRIPTION, communityModel.description!!)
+        updateMap.put(FirebaseConstants().LOCATION, communityModel.location!!)
+        communityRef?.child(communityModel.communityId)?.updateChildren(updateMap)
         callback?.handleData(true, requestType)
     }
 

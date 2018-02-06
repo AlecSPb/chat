@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui
+package com.go26.chatapp.ui.contacts
 
 
 import android.content.Context
@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -32,7 +31,6 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.fragment_new_community.*
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NewCommunityFragment : Fragment(), View.OnClickListener {
@@ -117,7 +115,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         var isValid = true
         var errorMessage = "Validation Error"
 
-        val communityName: String = groupname_edittext.text.toString()
+        val communityName: String = community_name_edit_text.text.toString()
 
         if (communityName.isBlank()) {
             isValid = false
@@ -128,13 +126,13 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             errorMessage = "Group name should be more than 2 characters"
         }
 
-        val location: String = location_edittext.text.toString()
+        val location: String = location_text_view.text.toString()
         if (location.isBlank()) {
             isValid = false
             errorMessage = "location is blank"
         }
 
-        val communityDescription: String = description_edittext.text.toString()
+        val communityDescription: String = description_edit_text.text.toString()
         val communityImage = "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/128/groups.png"
         val newCommunity = CommunityModel(communityName, communityImage, communityDeleted = false,
                 community = true, description = communityDescription, location = location)

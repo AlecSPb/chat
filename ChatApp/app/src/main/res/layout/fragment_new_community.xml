@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="com.go26.chatapp.ui.NewCommunityFragment">
+    tools:context="com.go26.chatapp.ui.contacts.NewCommunityFragment">
 
     <include
         android:id="@+id/toolbar"
@@ -23,7 +23,7 @@
 
 
     <EditText
-        android:id="@+id/groupname_edittext"
+        android:id="@+id/community_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
@@ -34,13 +34,13 @@
         android:layout_marginTop="@dimen/dp_16"
         android:layout_toRightOf="@+id/profile_image_view"
         android:layout_toEndOf="@+id/profile_image_view"
-        android:hint="Group Name" />
+        android:hint="Community Name" />
 
     <EditText
-        android:id="@+id/location_edittext"
+        android:id="@+id/location_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/groupname_edittext"
+        android:layout_below="@+id/community_name_edit_text"
         android:inputType="text"
         android:maxLength="10"
         android:layout_marginTop="@dimen/dp_5"
@@ -49,11 +49,11 @@
         android:hint="活動場所" />
 
     <EditText
-        android:id="@+id/description_edittext"
+        android:id="@+id/description_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/group_description_edittext_border"
-        android:layout_below="@+id/location_edittext"
+        android:background="@drawable/description_text_border"
+        android:layout_below="@+id/location_text_view"
         android:gravity="top|start"
         android:textSize="15sp"
         android:maxLength="225"
@@ -71,7 +71,7 @@
         android:id="@+id/invite_friend_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/description_edittext"
+        android:layout_below="@id/description_edit_text"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/dp_16"
