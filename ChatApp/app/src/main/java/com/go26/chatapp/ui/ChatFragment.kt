@@ -58,9 +58,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.GONE
+
         return inflater!!.inflate(R.layout.fragment_chat, container, false)
     }
 
@@ -69,6 +67,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         progressBar?.visibility = View.VISIBLE
 
         // back buttonイベント

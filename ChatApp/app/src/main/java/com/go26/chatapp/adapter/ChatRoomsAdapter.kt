@@ -58,30 +58,30 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 
 //    override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
 //        var user2 = UserModel()
-//        val community = DataConstants.myCommunities[position]
+//        val communityModel = DataConstants.myCommunities[position]
 //
-//        if (community.community!!) {
-//            holder.tvName.text = community.name
+//        if (communityModel.communityModel!!) {
+//            holder.tvName.text = communityModel.name
 //
-//            if (!community.lastMessage?.message?.isEmpty()!!) {
-//                holder.tvEmail.text = userMap?.get(community?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + community?.lastMessage?.message
+//            if (!communityModel.lastMessage?.message?.isEmpty()!!) {
+//                holder.tvEmail.text = userMap?.get(communityModel?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + communityModel?.lastMessage?.message
 //            } else {
 //                holder.tvEmail.text = "No messages in the communities"
 //            }
 //
-//            if (community.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
+//            if (communityModel.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
 //                holder.tvUnreadCount.visibility = View.VISIBLE
-//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
+//                holder.tvUnreadCount.text = communityModel.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
 //            } else {
 //                holder.tvUnreadCount.visibility = View.GONE
 //            }
 //
-//            loadRoundImage(holder.ivProfile, community.imageUrl!!)
+//            loadRoundImage(holder.ivProfile, communityModel.imageUrl!!)
 //
 //
 //        } else {
 //
-//            for (member in community.members) {
+//            for (member in communityModel.members) {
 //                if (member.key != currentUser?.uid) {
 //                    user2 = member.value
 //                }
@@ -90,15 +90,15 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 //
 //            holder.tvName.text = user2.name!!
 //
-//            if (!community.lastMessage?.message?.isEmpty()!!) {
-//                holder.tvEmail.text = userMap?.get(community?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + community?.lastMessage?.message
+//            if (!communityModel.lastMessage?.message?.isEmpty()!!) {
+//                holder.tvEmail.text = userMap?.get(communityModel?.lastMessage?.sender_id!!)?.name?.substring(0, 6) + ": " + communityModel?.lastMessage?.message
 //            } else {
 //                holder.tvEmail.text = "No messages"
 //            }
 //
-//            if (community.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
+//            if (communityModel.members.get(currentUser?.uid!!)?.unreadCount!! > 0) {
 //                holder.tvUnreadCount.visibility = View.VISIBLE
-//                holder.tvUnreadCount.text = community.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
+//                holder.tvUnreadCount.text = communityModel.members.get(currentUser?.uid!!)?.unreadCount!!.toString()
 //            } else {
 //                holder.tvUnreadCount.visibility = View.GONE
 //            }
@@ -110,10 +110,10 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
 //        holder.layout.setOnClickListener({
 //
 //            val chatFragment =
-//                    if (community.community!!) {
-//                        ChatFragment.newInstance(community.communityId!!, AppConstants().COMMUNITY_CHAT)
+//                    if (communityModel.communityModel!!) {
+//                        ChatFragment.newInstance(communityModel.communityId!!, AppConstants().COMMUNITY_CHAT)
 //                    } else {
-//                        ChatFragment.newInstance(community.communityId!!, AppConstants().ONE_ON_ONE_CHAT, user2.uid!!, position)
+//                        ChatFragment.newInstance(communityModel.communityId!!, AppConstants().ONE_ON_ONE_CHAT, user2.uid!!, position)
 //                    }
 //
 //            val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager

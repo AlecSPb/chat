@@ -12,6 +12,8 @@ class FirebaseConstants {
     val COMMUNITY = "communities"
     val JOIN_REQUESTS = "joinRequests"
     val MESSAGES = "messages"
+    val DESCRIPTION = "description"
+    val LOCATION = "location"
     val ONLINE = "online"
     val MEMBERS = "members"
     val UNREAD_COMMUNITY_COUNT = "unreadCount"

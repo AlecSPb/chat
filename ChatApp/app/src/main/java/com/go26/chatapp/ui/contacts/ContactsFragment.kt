@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui
+package com.go26.chatapp.ui.contacts
 
 
 import android.content.Intent
@@ -18,6 +18,7 @@ import com.go26.chatapp.adapter.CommunityContactsAdapter
 import com.go26.chatapp.adapter.FriendContactsAdapter
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.NetworkConstants
+import com.go26.chatapp.ui.RequestsActivity
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 
@@ -26,10 +27,6 @@ class ContactsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.VISIBLE
 
         return inflater?.inflate(R.layout.fragment_contacts, container, false)
     }
@@ -55,6 +52,10 @@ class ContactsFragment : Fragment() {
     }
 
     private fun setViews(view: View?) {
+        //bottomNavigationView　表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.VISIBLE
+
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity

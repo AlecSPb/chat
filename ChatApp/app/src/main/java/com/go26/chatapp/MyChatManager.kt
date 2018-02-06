@@ -36,6 +36,7 @@ import com.google.firebase.database.*
 import com.google.gson.Gson
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 @SuppressLint("StaticFieldLeak")
@@ -848,6 +849,18 @@ object MyChatManager {
         callback?.handleData(true, requestType)
     }
 
+    fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+    }
+
+    fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, communityModel?.name!!)
+        updateMap.put(FirebaseConstants().DESCRIPTION, communityModel.description!!)
+        updateMap.put(FirebaseConstants().LOCATION, communityModel.location!!)
+        communityRef?.child(communityModel.communityId)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
+    }
+
     fun updateFCMTokenAndDeviceId(context: Context, token: String) {
         var deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
         var deviceIdMap: java.util.HashMap<String, String> = hashMapOf()
@@ -1245,6 +1258,7 @@ object MyChatManager {
 
     fun removeMemberFromCommunity(callback: NotifyMeInterface?, communityId: String?, userId: String?) {
         userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.removeValue()
+        userRef?.child(userId)?.child(FirebaseConstants().CHAT_ROOMS)?.child(communityId)?.removeValue()
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
         callback?.handleData(true, 1)
     }
