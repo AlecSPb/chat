@@ -68,6 +68,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         activity.supportActionBar?.title = "Create Community"
         setHasOptionsMenu(true)
 
+//        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         paticipants?.layoutManager = LinearLayoutManager(context)
 
         // Group Creation Page
@@ -217,7 +219,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                 override fun handleData(obj: Any, requestCode: Int?) {
                 }
 
-            }, AppConstants().CREATION, "23")
+            }, AppConstants().CREATION)
             participants_recycler_view.adapter = adapter
         } else {
             participants_recycler_view.visibility = View.GONE
