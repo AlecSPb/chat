@@ -13,6 +13,8 @@ import com.go26.chatapp.constants.DataConstants.Companion.communityMembersMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityMessageMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsList
 import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLocation
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
 import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import com.go26.chatapp.constants.DataConstants.Companion.friendList
 import com.go26.chatapp.constants.DataConstants.Companion.friendRequests
@@ -693,8 +695,7 @@ object MyChatManager {
             override fun onCancelled(databaseError: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    val foundCommunityList = DataConstants.foundCommunityList
-                    foundCommunityList?.clear()
+                    foundCommunityListByName.clear()
                     dataSnapshot.children.forEach { it ->
                         it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
                             // 自分が所属しているコミュニティは除外
@@ -706,7 +707,7 @@ object MyChatManager {
                                 }
                             }
                             if (searchWords == it.name && !isMyCommunity) {
-                                foundCommunityList?.add(it)
+                                foundCommunityListByName.add(it)
                             }
                         }
                     }
@@ -718,26 +719,35 @@ object MyChatManager {
         communityRef?.addListenerForSingleValueEvent(listener)
     }
 
-//    fun searchCommunityLocation(callback: NotifyMeInterface?, requestType: Int?, searchWords: String) {
-//        val listener = object : ValueEventListener {
-//            override fun onCancelled(databaseError: DatabaseError) {}
-//            override fun onDataChange(dataSnaphot: DataSnapshot) {
-//                if (dataSnaphot.exists()) {
-//                    val communityList: ArrayList<CommunityModel> = ArrayList()
-//                    dataSnaphot.children.forEach { it ->
-//                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
-//                            if (searchWords == it.name) {
-//                                communityList.add(it)
-//                            }
-//                        }
-//                    }
-//                    callback?.handleData(communityList, requestType)
-//                }
-//            }
-//        }
-//
-//        communityRef?.addListenerForSingleValueEvent(listener)
-//    }
+    fun searchCommunityLocation(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    foundCommunityListByLocation.clear()
+                    dataSnapshot.children.forEach { it ->
+                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
+                            // 自分が所属しているコミュニティは除外
+                            var isMyCommunity = false
+                            if (myCommunities.size != 0) {
+                                for (community: CommunityModel in myCommunities) {
+                                    isMyCommunity = (community.communityId == it.communityId)
+                                    if (isMyCommunity) break
+                                }
+                            }
+                            if (searchWords == it.location && !isMyCommunity) {
+                                foundCommunityListByLocation.add(it)
+                            }
+                        }
+                    }
+                    callback?.handleData(true, requestType)
+                }
+            }
+        }
+
+        communityRef?.addListenerForSingleValueEvent(listener)
+    }
 
     fun searchUserName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
         // Making a copy of listener
@@ -745,7 +755,7 @@ object MyChatManager {
             override fun onCancelled(databaseError: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    foundUserList?.clear()
+                    foundUserList.clear()
                     dataSnapshot.children.forEach { it ->
                         it.getValue<UserModel>(UserModel::class.java)?.let {
                             // フレンド除外
@@ -758,13 +768,13 @@ object MyChatManager {
                                 if (!isMyFriends) {
                                     // 自分は除外
                                     if (searchWords == it.name && it.uid != currentUser?.uid) {
-                                        foundUserList?.add(it)
+                                        foundUserList.add(it)
                                     }
                                 }
                             } else {
                                 // 自分は除外
                                 if (searchWords == it.name && it.uid != currentUser?.uid) {
-                                    foundUserList?.add(it)
+                                    foundUserList.add(it)
                                 }
                             }
                         }

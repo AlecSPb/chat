@@ -17,7 +17,7 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_join_request)
-        community = DataConstants.foundCommunityList?.let { it[intent.getIntExtra("position", 0)] }
+        community = DataConstants.foundCommunityListByName?.let { it[intent.getIntExtra("position", 0)] }
         setViews()
     }
 

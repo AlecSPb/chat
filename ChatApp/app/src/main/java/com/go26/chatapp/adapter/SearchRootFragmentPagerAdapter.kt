@@ -17,10 +17,10 @@ class SearchRootFragmentPagerAdapter(val fragment: FragmentManager) : FragmentSt
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
-                return SearchCommunityNameFragment.newInstance()
+                return SearchLocationFragment.newInstance()
             }
             1 -> {
-                return SearchLocationFragment.newInstance()
+                return SearchCommunityNameFragment.newInstance()
             }
             2 -> {
                 return SearchUserFragment.newInstance()
@@ -38,16 +38,16 @@ class SearchRootFragmentPagerAdapter(val fragment: FragmentManager) : FragmentSt
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> {
-                return "コミュニティ"
+                return "場所"
             }
             1 -> {
-                return "場所"
+                return "コミュニティ"
             }
             2 -> {
                 return "ユーザー"
             }
             else -> {
-                return "コミュニティ"
+                return "場所"
             }
         }
     }

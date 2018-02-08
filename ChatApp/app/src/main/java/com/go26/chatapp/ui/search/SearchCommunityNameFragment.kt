@@ -28,7 +28,7 @@ class SearchCommunityNameFragment : Fragment() {
 
     private fun setViews() {
         search_community_recycler_view.layoutManager = LinearLayoutManager(context)
-        val adapter = SearchCommunityNameAdapter(DataConstants.foundCommunityList!!) { position ->
+        val adapter = SearchCommunityNameAdapter(DataConstants.foundCommunityListByName!!) { position ->
             val intent = Intent(context, CommunityJoinRequestActivity::class.java)
             intent.putExtra("position", position)
             activity.startActivity(intent)

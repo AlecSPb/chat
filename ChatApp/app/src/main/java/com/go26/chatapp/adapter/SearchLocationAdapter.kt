@@ -12,10 +12,10 @@ import com.go26.chatapp.model.CommunityModel
 import com.go26.chatapp.util.MyViewUtils
 
 /**
- * Created by daigo on 2018/01/23.
+ * Created by daigo on 2018/02/08.
  */
-class SearchCommunityNameAdapter(private val foundCommunityList: MutableList<CommunityModel>, private val itemClick: (Int) -> Unit)
-    : RecyclerView.Adapter<SearchCommunityNameAdapter.SearchViewHolder>() {
+class SearchLocationAdapter(private val foundCommunityList: MutableList<CommunityModel>, private val itemClick: (Int) -> Unit)
+    : RecyclerView.Adapter<SearchLocationAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
             SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community, parent, false), itemClick)

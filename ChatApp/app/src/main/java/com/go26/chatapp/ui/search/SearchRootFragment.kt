@@ -75,25 +75,31 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         search_word_button.setOnClickListener {
-
             if (search_edit_text.text != null) {
                 val searchWord = search_edit_text.text.toString()
 
                 when (search_edit_text.hint.toString()) {
-                    "コミュニティ" -> {
-                        MyChatManager.searchCommunityName(object : NotifyMeInterface {
+                    "活動場所で検索" -> {
+                        MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 val valid: Boolean = obj as Boolean
                                 if (valid) {
                                     reloadAdapter(0)
                                 }
                             }
+                        }, searchWord, NetworkConstants().SEARCH_LOCATION)
+                    }
+                    "コミュニティ名で検索" -> {
+                        MyChatManager.searchCommunityName(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
+                                val valid: Boolean = obj as Boolean
+                                if (valid) {
+                                    reloadAdapter(1)
+                                }
+                            }
                         }, searchWord, NetworkConstants().SEARCH_COMUUNITY)
                     }
-                    "場所" -> {
-                        reloadAdapter(1)
-                    }
-                    "ユーザー" -> {
+                    "ユーザーを検索" -> {
                         MyChatManager.searchUserName(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 val valid: Boolean = obj as Boolean
