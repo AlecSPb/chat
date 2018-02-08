@@ -20,8 +20,6 @@ import com.google.firebase.database.DatabaseReference
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
-    var onlineRef: DatabaseReference? = null
-    var currentUserRef: DatabaseReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +29,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         binding.viewModel = MainViewModel(this, this)
 
         initialFetchData()
-//        setViews()
+        setViews()
     }
 
     private fun initialFetchData() {
@@ -46,24 +44,9 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 fetchData()
-                setViews()
             }
 
         } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
-
-//        MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
-//            override fun handleData(obj: Any, requestCode: Int?) {
-//                var i = 0
-//                for (group in DataConstants.communityMap!!) {
-//                    if (group.value.members.containsKey(currentUser?.uid!!)) {
-//                        i += group.value.members.get(currentUser?.uid)?.unreadCount!!
-//                    }
-//
-//                }
-//            }
-//
-//        }, NetworkConstants().FETCH_GROUPS, currentUser, false)
-
     }
 
     private fun fetchData() {
