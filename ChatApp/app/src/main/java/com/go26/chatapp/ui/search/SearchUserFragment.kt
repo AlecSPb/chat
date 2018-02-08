@@ -29,7 +29,7 @@ class SearchUserFragment : Fragment() {
 
     private fun setViews() {
         search_user_recycler_view.layoutManager = LinearLayoutManager(context)
-        val adapter = SearchUserAdapter(DataConstants.foundUserList!!) { position ->
+        val adapter = SearchUserAdapter(DataConstants.foundUserList) { position ->
             val intent = Intent(context, FriendRequestActivity::class.java)
             intent.putExtra("position", position)
             activity.startActivity(intent)
