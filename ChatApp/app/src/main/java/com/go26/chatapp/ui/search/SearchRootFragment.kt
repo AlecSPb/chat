@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -74,10 +76,11 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        search_word_button.setOnClickListener {
-            if (search_edit_text.text != null) {
-                val searchWord = search_edit_text.text.toString()
+        search_edit_text.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val searchWord = p0.toString()
                 when (search_edit_text.hint.toString()) {
                     "活動場所で検索" -> {
                         MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
@@ -110,12 +113,10 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
                         }, searchWord, NetworkConstants().SEARCH_USER)
                     }
                 }
-                if (activity.currentFocus != null) {
-                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(activity.currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                }
             }
-        }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
     }
 
     override fun reloadAdapter(index: Int) {
