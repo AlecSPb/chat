@@ -70,7 +70,7 @@ class FriendRequestsAdapter(private val friendRequests: MutableList<UserModel>, 
     override fun getItemCount(): Int = friendRequests.size
 
     class RequestViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
-        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image)
+        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view)
         val userName: TextView = itemView.findViewById(R.id.name_text_view)
         val confirmButton: Button = itemView.findViewById(R.id.confirm_button)
         val disconfirmButton: Button = itemView.findViewById(R.id.disconfirm_button)

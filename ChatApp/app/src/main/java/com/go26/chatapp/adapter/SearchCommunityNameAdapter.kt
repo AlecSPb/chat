@@ -36,7 +36,7 @@ class SearchCommunityNameAdapter(private val foundCommunityList: ArrayList<Commu
     override fun getItemCount(): Int = foundCommunityList.size
 
     class SearchViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
-        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image) as AppCompatImageView
+        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
         val communityName: TextView = itemView.findViewById(R.id.name_text_view)
         val location: TextView = itemView.findViewById(R.id.location_text_view)
         val memberCount: TextView = itemView.findViewById(R.id.member_count_text_view)

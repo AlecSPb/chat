@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:srcCompat="@drawable/ic_profile" />
@@ -20,14 +20,14 @@
         android:orientation="vertical"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:layout_toRightOf="@+id/profile_image"
-        android:layout_toEndOf="@+id/profile_image">
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:layout_toEndOf="@+id/profile_image_view">
 
         <TextView
             android:id="@+id/name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:text="User Name"
             android:textColor="@color/black" />
 
@@ -40,17 +40,24 @@
                 android:id="@+id/location_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start" />
+                android:layout_gravity="start"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_8"/>
 
             <TextView
                 android:id="@+id/member_count_text_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_8"
-                android:layout_marginStart="@dimen/dp_8"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="8dp"
+        android:layout_below="@+id/profile_image_view"
+        android:background="@color/inactive_gray"/>
 
 </RelativeLayout>
