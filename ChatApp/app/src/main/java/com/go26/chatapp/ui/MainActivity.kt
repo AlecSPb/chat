@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.WindowManager
 import com.go26.chatapp.BottomNavigationViewHelper
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
@@ -20,8 +21,6 @@ import com.google.firebase.database.DatabaseReference
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
-    var onlineRef: DatabaseReference? = null
-    var currentUserRef: DatabaseReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +29,10 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = MainViewModel(this, this)
 
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         initialFetchData()
-//        setViews()
+        setViews()
     }
 
     private fun initialFetchData() {
@@ -46,24 +47,9 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 fetchData()
-                setViews()
             }
 
         } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
-
-//        MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
-//            override fun handleData(obj: Any, requestCode: Int?) {
-//                var i = 0
-//                for (group in DataConstants.communityMap!!) {
-//                    if (group.value.members.containsKey(currentUser?.uid!!)) {
-//                        i += group.value.members.get(currentUser?.uid)?.unreadCount!!
-//                    }
-//
-//                }
-//            }
-//
-//        }, NetworkConstants().FETCH_GROUPS, currentUser, false)
-
     }
 
     private fun fetchData() {

@@ -1,9 +1,11 @@
 package com.go26.chatapp.adapter
 
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
@@ -15,106 +17,19 @@ import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 /**
  * Created by daigo on 2018/01/14.
  */
-class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var communityId: String) : RecyclerView.Adapter<UserRowViewHolder>() {
+class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String) : RecyclerView.Adapter<ParticipantsAdapter.ParticipantsViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UserRowViewHolder =
-            UserRowViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ParticipantsViewHolder =
+            ParticipantsViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_member, parent, false))
 
-    override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ParticipantsViewHolder, position: Int) {
         val user = DataConstants.selectedUserList[position]
 
         try {
-            holder.tvName.text = user.name
-            holder.tvEmail.text = user.email
+            holder.userName.text = user.name
 
-            loadRoundImage(holder.ivProfile, user.imageUrl!!)
+            loadRoundImage(holder.profileImage, user.imageUrl!!)
 
-            //Only admin get to see overflow menu of communities members
-            if (DataConstants.communityMap?.get(communityId)?.members?.get(DataConstants.currentUser?.uid)?.admin!!) {
-                holder.ivOverflow.visibility = View.VISIBLE
-            } else {
-                holder.ivOverflow.visibility = View.INVISIBLE
-            }
-
-
-
-            if (user.admin != null && user.admin!!) {
-                holder.labelAdmin.visibility = View.VISIBLE
-                holder.tvMakeAdmin.text = "Remove Admin"
-
-            } else {
-                holder.labelAdmin.visibility = View.GONE
-                holder.tvMakeAdmin.text = "Make Admin"
-                user.admin = false
-            }
-
-            holder.ivOverflow.setOnClickListener({
-                holder.llOverflowItems.visibility = View.VISIBLE
-            })
-
-            holder.tvMakeAdmin.setOnClickListener({
-                when (type) {
-                    AppConstants().CREATION -> {
-                        holder.llOverflowItems.visibility = View.GONE
-                        if (holder.tvMakeAdmin.text.equals("Make Admin")) {
-                            user.admin = true
-                            holder.tvMakeAdmin.text = "Remove Admin"
-                            holder.labelAdmin.visibility = View.VISIBLE
-                        } else {
-                            user.admin = false
-                            holder.tvMakeAdmin.text = "Make Admin"
-                            holder.labelAdmin.visibility = View.GONE
-                        }
-                    }
-
-                    AppConstants().DETAILS -> {
-                        holder.llOverflowItems.visibility = View.GONE
-                        if (holder.tvMakeAdmin.text.equals("Make Admin")) {
-                            user.admin = true
-                            holder.tvMakeAdmin.text = "Remove Admin"
-                            holder.labelAdmin.visibility = View.VISIBLE
-                        } else {
-                            user.admin = false
-                            holder.tvMakeAdmin.text = "Make Admin"
-                            holder.labelAdmin.visibility = View.GONE
-
-                        }
-                        MyChatManager.changeAdminStatusOfUser(null, communityId, user.uid, user.admin!!)
-                    }
-                }
-
-            })
-
-            holder.tvRemoveMember.setOnClickListener({
-                when (type) {
-                    AppConstants().CREATION -> {
-                        holder.llOverflowItems.visibility = View.GONE
-                        DataConstants.selectedUserList.remove(user)
-                        notifyDataSetChanged()
-                        callback.handleData(true, 1)
-                    }
-
-                    AppConstants().DETAILS -> {
-                        holder.llOverflowItems.visibility = View.GONE
-                        DataConstants.selectedUserList.remove(user)
-                        MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
-                            override fun handleData(obj: Any, requestCode: Int?) {
-                                if (obj as Boolean) {
-                                    notifyDataSetChanged()
-                                }
-                            }
-
-                        }, communityId, user.uid)
-                    }
-                }
-
-
-            })
-
-
-            holder.layout.setOnClickListener({
-                holder.llOverflowItems.visibility = View.GONE
-            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -123,5 +38,8 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String, var
 
     override fun getItemCount(): Int = DataConstants.selectedUserList.size
 
-
+    class ParticipantsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view)
+        val userName: TextView = itemView.findViewById(R.id.user_name_text_view)
+    }
 }

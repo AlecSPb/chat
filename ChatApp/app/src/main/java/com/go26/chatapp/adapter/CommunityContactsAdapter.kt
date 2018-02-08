@@ -3,15 +3,17 @@ package com.go26.chatapp.adapter
 import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
-import com.go26.chatapp.ViewHolders.UserRowViewHolder
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.communityList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
@@ -25,15 +27,19 @@ import com.go26.chatapp.ui.contacts.ContactsDetailFragment
 /**
  * Created by daigo on 2018/01/14.
  */
-class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<UserRowViewHolder>()  {
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): UserRowViewHolder =
-            UserRowViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
+class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<CommunityContactsAdapter.ContactsViewHolder>()  {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ContactsViewHolder =
+            ContactsViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community, parent, false))
 
-    override fun onBindViewHolder(holder: UserRowViewHolder, position: Int) {
-        holder.tvName.text = communityList[position].name
-        holder.tvName.layout
-        holder.tvEmail.visibility = View.GONE
-        loadRoundImage(holder.ivProfile, communityList[position].imageUrl!!)
+    override fun onBindViewHolder(holder: ContactsViewHolder, position: Int) {
+        holder.communityName.text = communityList[position].name
+
+        holder.location.visibility = View.GONE
+
+        val memberCount = "メンバー: " + communityList[position].memberCount?.toString() + "人"
+        holder.memberCount.text = memberCount
+
+        loadRoundImage(holder.profileImage, communityList[position].imageUrl!!)
 
 
         holder.layout.setOnClickListener({
@@ -79,10 +85,15 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<User
                 }
             }.show()
         })
-
-
     }
 
     override fun getItemCount(): Int = communityList.size
 
+    class ContactsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
+        val communityName: TextView = itemView.findViewById(R.id.name_text_view)
+        val location: TextView = itemView.findViewById(R.id.location_text_view)
+        val memberCount: TextView = itemView.findViewById(R.id.member_count_text_view)
+        val layout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
+    }
 }

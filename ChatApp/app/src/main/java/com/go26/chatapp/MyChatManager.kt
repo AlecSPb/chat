@@ -28,7 +28,6 @@ import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.*
 import com.go26.chatapp.ui.LoginActivity
 import com.go26.chatapp.util.MyTextUtil
-import com.go26.chatapp.util.SecurePrefs
 import com.go26.chatapp.util.SharedPrefManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
@@ -969,6 +968,8 @@ object MyChatManager {
             user.value.deleteTill = time.toString()
         }
 
+        community.memberCount = community.members.size
+
         communityRef?.child(communityId)?.setValue(community)
 
         for (user in community.members) {
@@ -1079,11 +1080,11 @@ object MyChatManager {
 
                             override fun doTransaction(mutabledata: MutableData?): Transaction.Result {
                                 if (mutabledata?.getValue<UserModel>(UserModel::class.java)?.unreadCount == null) {
-                                    var p = mutabledata?.getValue<UserModel>(UserModel::class.java)
+                                    val p = mutabledata?.getValue<UserModel>(UserModel::class.java)
                                     p?.unreadCount = 0
                                     mutabledata?.setValue(p)
                                 } else {
-                                    var p = mutabledata.getValue<UserModel>(UserModel::class.java)
+                                    val p = mutabledata.getValue<UserModel>(UserModel::class.java)
                                     p?.unreadCount = p?.unreadCount as Int + 1
                                     mutabledata.setValue(p)
                                 }
@@ -1110,7 +1111,7 @@ object MyChatManager {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        var userModel: UserModel = snapshot.getValue<UserModel>(UserModel::class.java)!!
+                        val userModel: UserModel = snapshot.getValue<UserModel>(UserModel::class.java)!!
                         userMap?.put(userModel.uid!!, userModel)
                         i--
                         if (i == 0) {
@@ -1150,7 +1151,7 @@ object MyChatManager {
         }
     }
 
-    fun fetchLastMessageFromCommunity(callback: NotifyMeInterface?, requestType: Int?, communityId: String?) {
+    fun fetchLastMessage(callback: NotifyMeInterface?, requestType: Int?, id: String?) {
 
         val listener = object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
@@ -1160,7 +1161,7 @@ object MyChatManager {
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                 if (dataSnapshot?.exists()!!) {
 
-                    var lastMessage: MessageModel = dataSnapshot.children.elementAt(0).getValue<MessageModel>(MessageModel::class.java)!!
+                    val lastMessage: MessageModel = dataSnapshot.children.elementAt(0).getValue<MessageModel>(MessageModel::class.java)!!
 
 
                     callback?.handleData(lastMessage, requestType)
@@ -1170,32 +1171,7 @@ object MyChatManager {
             }
 
         }
-        val lastQuery = messageRef?.child(communityId)?.orderByKey()?.limitToLast(1)
-
-        lastQuery?.addListenerForSingleValueEvent(listener)
-    }
-
-    fun fetchLastMessageFromFriend(callback: NotifyMeInterface?, requestType: Int?, friendId: String?) {
-
-        val listener = object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot?) {
-                if (dataSnapshot?.exists()!!) {
-
-                    var lastMessage: MessageModel = dataSnapshot.children.elementAt(0).getValue<MessageModel>(MessageModel::class.java)!!
-
-
-                    callback?.handleData(lastMessage, requestType)
-                } else {
-                    callback?.handleData(MessageModel(), requestType)
-                }
-            }
-
-        }
-        val lastQuery = messageRef?.child(friendId)?.orderByKey()?.limitToLast(1)
+        val lastQuery = messageRef?.child(id)?.orderByKey()?.limitToLast(1)
 
         lastQuery?.addListenerForSingleValueEvent(listener)
     }
@@ -1209,11 +1185,10 @@ object MyChatManager {
             }
             if (isMyCommunity) {
                 val communityMember: HashMap<String, Any?> = hashMapOf()
-                communityMember.put(FirebaseConstants().UNREAD_COMMUNITY_COUNT, 0)
+                communityMember.put(FirebaseConstants().UNREAD_MESSAGE_COUNT, 0)
                 communityMember.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
-
-
                 communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(communityMember)
+
                 lastMessageModel.read_status = hashMapOf()
                 communityRef?.child(communityId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
@@ -1228,6 +1203,11 @@ object MyChatManager {
                 if (isMyFriend) break
             }
             if (isMyFriend) {
+                val me: HashMap<String, Any?> = hashMapOf()
+                me.put(FirebaseConstants().UNREAD_MESSAGE_COUNT, 0)
+                me.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
+                friendRef?.child(friendId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(me)
+
                 lastMessageModel.read_status = hashMapOf()
                 friendRef?.child(friendId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
@@ -1260,15 +1240,38 @@ object MyChatManager {
         userRef?.child(userId)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.removeValue()
         userRef?.child(userId)?.child(FirebaseConstants().CHAT_ROOMS)?.child(communityId)?.removeValue()
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.removeValue()
-        callback?.handleData(true, 1)
+
+        communityRef?.child(communityId)?.
+                runTransaction(object : Transaction.Handler {
+                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+                        if (p0 != null) {
+                            Log.d("INC", "Firebase member counter increment failed.")
+                        } else {
+                            Log.d("INC", "Firebase member counter increment succeeded.")
+                            callback?.handleData(true, 1)
+                        }
+                    }
+
+                    override fun doTransaction(mutabledata: MutableData?): Transaction.Result {
+                        if (mutabledata?.getValue<CommunityModel>(CommunityModel::class.java)?.memberCount != null) {
+                            val community = mutabledata.getValue<CommunityModel>(CommunityModel::class.java)
+                            community?.memberCount = community?.memberCount as Int - 1
+                            mutabledata.value = community
+                        }
+                        return Transaction.success(mutabledata)
+                    }
+                })
     }
 
-    fun addMemberToACommunity(callback: NotifyMeInterface?, communityId: String?, userModel: UserModel?) {
+    private fun addMemberToACommunity(callback: NotifyMeInterface?, communityId: String?, userModel: UserModel?) {
         //userRef?.child(userModel?.uid)?.child(FirebaseConstants.COMMUNITY)?.child(id)?.setValue(true)
 
         val time = Calendar.getInstance().timeInMillis
 
         userModel?.communities = hashMapOf()
+        userModel?.myFriendRequests?.clear()
+        userModel?.friendRequests?.clear()
+        userModel?.myCommunityRequests?.clear()
         userModel?.email = null
         userModel?.imageUrl = null
         userModel?.name = null
@@ -1280,9 +1283,28 @@ object MyChatManager {
         userModel?.deleteTill = time.toString()
 
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.setValue(userModel)
-
         userRef?.child(userModel?.uid)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.setValue(true)
-        callback?.handleData(true, 1)
+
+        communityRef?.child(communityId)?.
+                runTransaction(object : Transaction.Handler {
+                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+                        if (p0 != null) {
+                            Log.d("INC", "Firebase member counter increment failed.")
+                        } else {
+                            Log.d("INC", "Firebase member counter increment succeeded.")
+                            callback?.handleData(true, 1)
+                        }
+                    }
+
+                    override fun doTransaction(mutabledata: MutableData?): Transaction.Result {
+                        if (mutabledata?.getValue<CommunityModel>(CommunityModel::class.java)?.memberCount != null) {
+                            val community = mutabledata.getValue<CommunityModel>(CommunityModel::class.java)
+                            community?.memberCount = community?.memberCount as Int + 1
+                            mutabledata.value = community
+                        }
+                        return Transaction.success(mutabledata)
+                    }
+                })
     }
 
     fun createOneOnOneChatCommunity(callback: NotifyMeInterface, user2Id: String, user2: UserModel, requestType: Int) {
