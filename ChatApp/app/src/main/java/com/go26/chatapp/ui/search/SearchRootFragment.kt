@@ -1,7 +1,6 @@
 package com.go26.chatapp.ui.search
 
 
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -22,7 +21,6 @@ import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.viewmodel.SearchRootFragmentViewModel
 import com.go26.chatapp.databinding.FragmentSearchRootBinding
 import kotlinx.android.synthetic.main.fragment_search_root.*
-import android.view.inputmethod.InputMethodManager
 
 
 class SearchRootFragment : Fragment(), SearchRootFragmentContract {
@@ -117,6 +115,12 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
 
             override fun afterTextChanged(p0: Editable?) {}
         })
+
+        back_button.setOnClickListener {
+            fragmentManager.beginTransaction().remove(this).commit()
+            fragmentManager.popBackStack()
+        }
+
     }
 
     override fun reloadAdapter(index: Int) {

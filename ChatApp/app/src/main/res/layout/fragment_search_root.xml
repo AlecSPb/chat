@@ -20,6 +20,7 @@
             android:background="#ffffff">
 
             <Button
+                android:id="@+id/back_button"
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="@dimen/dp_30"
                 android:layout_marginLeft="@dimen/dp_8"
