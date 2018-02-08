@@ -1269,6 +1269,9 @@ object MyChatManager {
         val time = Calendar.getInstance().timeInMillis
 
         userModel?.communities = hashMapOf()
+        userModel?.myFriendRequests?.clear()
+        userModel?.friendRequests?.clear()
+        userModel?.myCommunityRequests?.clear()
         userModel?.email = null
         userModel?.imageUrl = null
         userModel?.name = null
