@@ -23,7 +23,6 @@ import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.MessageModel
-import com.go26.chatapp.model.UserModel
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
@@ -170,11 +169,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
     }
 
     fun getLastMessageAndUpdateUnreadCount() {
-        MyChatManager.fetchLastMessageFromCommunity(object : NotifyMeInterface {
+        MyChatManager.fetchLastMessage(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 val lastMessage: MessageModel? = obj as MessageModel
                 if (lastMessage != null) {
-                    MyChatManager.updateCommunityUnReadCountLastSeenMessageTimestamp(id, lastMessage)
+                    if (type == AppConstants().COMMUNITY_CHAT) {
+                        MyChatManager.updateCommunityUnReadCountLastSeenMessageTimestamp(id, lastMessage)
+                    } else if (type ==  AppConstants().FRIEND_CHAT) {
+                        MyChatManager.updateFriendUnReadCountLastSeenMessageTimestamp(id, lastMessage)
+                    }
                 }
             }
 

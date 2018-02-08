@@ -18,10 +18,16 @@ class SearchCommunityNameAdapter(private val foundCommunityList: ArrayList<Commu
     : RecyclerView.Adapter<SearchCommunityNameAdapter.SearchViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
-            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false), itemClick)
+            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.communityName.text = foundCommunityList[position].name
+        if (foundCommunityList[position].location != null) {
+            val location = "活動場所: " + foundCommunityList[position].location
+            holder.location.text = location
+        }
+        val memberCount = "メンバー: " + foundCommunityList[position].memberCount?.toString() + "人"
+        holder.memberCount.text = memberCount
         MyViewUtils.loadRoundImage(holder.profileImage, foundCommunityList[position].imageUrl!!)
 
         holder.setUp(position)
@@ -31,7 +37,9 @@ class SearchCommunityNameAdapter(private val foundCommunityList: ArrayList<Commu
 
     class SearchViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image) as AppCompatImageView
-        val communityName: TextView = itemView.findViewById(R.id.name_text)
+        val communityName: TextView = itemView.findViewById(R.id.name_text_view)
+        val location: TextView = itemView.findViewById(R.id.location_text_view)
+        val memberCount: TextView = itemView.findViewById(R.id.member_count_text_view)
         val layout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
 
         fun setUp(position: Int) {

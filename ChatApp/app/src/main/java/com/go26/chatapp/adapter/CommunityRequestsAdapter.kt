@@ -67,7 +67,7 @@ class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pai
 
     class RequestViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image)
-        val userName: TextView = itemView.findViewById(R.id.name_text)
+        val userName: TextView = itemView.findViewById(R.id.name_text_view)
         val communityName: TextView = itemView.findViewById(R.id.community_name_text)
         val confirmButton: Button = itemView.findViewById(R.id.confirm_button)
         val disconfirmButton: Button = itemView.findViewById(R.id.disconfirm_button)

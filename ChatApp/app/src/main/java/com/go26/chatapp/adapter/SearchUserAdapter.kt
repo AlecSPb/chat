@@ -28,7 +28,7 @@ class SearchUserAdapter(private val foundUserList: ArrayList<UserModel>, private
 
     class SearchViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image) as AppCompatImageView
-        val communityName: TextView = itemView.findViewById(R.id.name_text)
+        val communityName: TextView = itemView.findViewById(R.id.name_text_view)
         val layout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
 
         fun setUp(position: Int) {

@@ -24,7 +24,7 @@
         android:layout_toEndOf="@+id/profile_image">
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
@@ -43,7 +43,7 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginStart="24dp"
                 android:text="拒否"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/confirm_button"
@@ -52,7 +52,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:text="許可"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/isConfirmed_text"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
                 android:layout_marginStart="24dp"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>
