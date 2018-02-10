@@ -11,7 +11,7 @@ import android.view.ViewGroup
 
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.SearchUserAdapter
-import com.go26.chatapp.constants.DataConstants
+import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
 
@@ -28,13 +28,17 @@ class SearchUserFragment : Fragment() {
     }
 
     private fun setViews() {
-        search_user_recycler_view.layoutManager = LinearLayoutManager(context)
-        val adapter = SearchUserAdapter(DataConstants.foundUserList) { position ->
-            val intent = Intent(context, FriendRequestActivity::class.java)
-            intent.putExtra("position", position)
-            activity.startActivity(intent)
+        if (foundUserList.size == 0) {
+            empty_view.visibility = View.VISIBLE
+        } else {
+            search_user_recycler_view.layoutManager = LinearLayoutManager(context)
+            val adapter = SearchUserAdapter(foundUserList) { position ->
+                val intent = Intent(context, FriendRequestActivity::class.java)
+                intent.putExtra("position", position)
+                activity.startActivity(intent)
+            }
+            search_user_recycler_view.adapter = adapter
         }
-        search_user_recycler_view.adapter = adapter
     }
 
     companion object {
