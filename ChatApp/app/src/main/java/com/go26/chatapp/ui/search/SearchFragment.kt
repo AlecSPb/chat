@@ -15,6 +15,7 @@ import com.go26.chatapp.R
 import com.go26.chatapp.adapter.SearchAdapter
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityMap
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.viewmodel.SearchFragmentViewModel
 import com.go26.chatapp.databinding.FragmentSearchBinding
@@ -37,11 +38,12 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews()
-        if (popularCommunityList.size == 0) {
+        if (popularCommunityList.isEmpty()) {
             MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Log.d("fetch popular", "success")
-                    popularCommunityList = popularCommunityList.asReversed()
+                    popularCommunityMap = popularCommunityMap.toSortedMap()
+                    popularCommunityList = popularCommunityMap.values.toMutableList().asReversed()
                     setAdapter()
                 }
             }, NetworkConstants().FETCH_POPULAR_COMMUNITY)

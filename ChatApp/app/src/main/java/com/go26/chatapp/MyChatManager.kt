@@ -27,6 +27,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequestsMap
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityMap
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.*
 import com.go26.chatapp.ui.LoginActivity
@@ -708,7 +709,8 @@ object MyChatManager {
     }
 
     private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
-        popularCommunityList.clear()
+//        popularCommunityList.clear()
+        popularCommunityMap.clear()
         var limit = 3
         var now = 0
 
@@ -725,11 +727,12 @@ object MyChatManager {
             override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                 val community = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
                 if (community != null) {
-                    popularCommunityList.add(community)
+                    popularCommunityMap.put(community.memberCount!!, community)
+//                    popularCommunityList.add(community)
                     now += 1
                 }
                 if (limit == now) {
-                    callback?.handleData(popularCommunityList, requestType)
+                    callback?.handleData(popularCommunityMap, requestType)
                 }
             }
         })
