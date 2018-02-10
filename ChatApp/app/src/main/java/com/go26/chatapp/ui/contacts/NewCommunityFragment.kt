@@ -159,7 +159,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         if (isValid) {
 
             //sendFileFirebase(storageRef, resultUri!!, id!!)
-
             MyChatManager.createCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()

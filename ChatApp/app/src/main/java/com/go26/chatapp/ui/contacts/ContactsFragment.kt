@@ -38,6 +38,7 @@ class ContactsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        MyChatManager.setmContext(context)
         MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 setCommunityContactsAdapter()

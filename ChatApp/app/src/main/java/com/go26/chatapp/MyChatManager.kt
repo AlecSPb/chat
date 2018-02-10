@@ -1270,23 +1270,6 @@ object MyChatManager {
         }
     }
 
-    fun fetchAllUserInformation() {
-        userRef?.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot?) {
-                if (p0?.exists()!!) {
-                    p0.children.forEach { user ->
-                        DataConstants.userMap?.put(user.key/*getValue<UserModel>(UserModel::class.java)?.uid!!*/, user.getValue<UserModel>(UserModel::class.java)!!)
-                    }
-                }
-            }
-
-        })
-    }
-
     fun changeAdminStatusOfUser(callback: NotifyMeInterface?, communityId: String?, userId: String?, isAdmin: Boolean) {
         communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(userId)?.child(FirebaseConstants().ADMIN)?.setValue(isAdmin)
         callback?.handleData(true, NetworkConstants().CHANGE_ADMIN_STATUS)

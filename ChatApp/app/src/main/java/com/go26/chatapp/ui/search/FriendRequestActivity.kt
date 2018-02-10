@@ -52,6 +52,7 @@ class FriendRequestActivity : AppCompatActivity() {
             if (!isRequested) {
                 request_button.text = "申請"
                 request_button.setOnClickListener {
+                    MyChatManager.setmContext(this)
                     MyChatManager.sendFriendRequest(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
                             finish()

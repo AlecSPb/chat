@@ -1,5 +1,6 @@
 package com.go26.chatapp.adapter
 
+import android.content.Context
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,9 +20,9 @@ import com.go26.chatapp.util.MyViewUtils
 /**
  * Created by daigo on 2018/01/24.
  */
-class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pair<String, UserModel>>, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<CommunityRequestsAdapter.RequestViewHolder>() {
+class CommunityRequestsAdapter(private val context: Context, private val communityRequestList: MutableList<Pair<String, UserModel>>) : RecyclerView.Adapter<CommunityRequestsAdapter.RequestViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RequestViewHolder =
-            RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_request, parent, false), itemClick)
+            RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_request, parent, false))
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
         holder.userName.text = communityRequestList[position].second.name
@@ -31,13 +32,13 @@ class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pai
                 holder.communityName.text = myCommunity.name
             }
         }
-//        holder.communityName.text = communityRequestList[position].first
         MyViewUtils.loadRoundImage(holder.profileImage, communityRequestList[position].second.imageUrl!!)
         holder.confirmButton.visibility = View.VISIBLE
         holder.confirmButton.setOnClickListener {
             holder.confirmButton.visibility = View.INVISIBLE
             holder.disconfirmButton.visibility = View.INVISIBLE
 
+            MyChatManager.setmContext(context)
             MyChatManager.confirmCommunityJoinRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     holder.isConfirmed.visibility = View.VISIBLE
@@ -51,6 +52,7 @@ class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pai
             holder.confirmButton.visibility = View.INVISIBLE
             holder.disconfirmButton.visibility = View.INVISIBLE
 
+            MyChatManager.setmContext(context)
             MyChatManager.disconfirmCommunityJoinRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     holder.isConfirmed.visibility = View.VISIBLE
@@ -59,13 +61,12 @@ class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pai
             }, communityRequestList[position].second.uid!!, communityRequestList[position].first, NetworkConstants().DISCONFIRM_REQUEST)
 
         }
-        holder.setUp(position)
 
     }
 
     override fun getItemCount(): Int = communityRequestList.size
 
-    class RequestViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    class RequestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view)
         val userName: TextView = itemView.findViewById(R.id.name_text_view)
         val communityName: TextView = itemView.findViewById(R.id.community_name_text)
@@ -73,9 +74,5 @@ class CommunityRequestsAdapter(private val communityRequestList: MutableList<Pai
         val disconfirmButton: Button = itemView.findViewById(R.id.disconfirm_button)
         val isConfirmed: TextView = itemView.findViewById(R.id.isConfirmed_text)
         val layout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
-
-        fun setUp(position: Int) {
-            layout.setOnClickListener { itemClick(position) }
-        }
     }
 }

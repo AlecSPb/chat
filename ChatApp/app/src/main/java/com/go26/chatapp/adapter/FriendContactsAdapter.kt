@@ -47,6 +47,7 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<UserRow
             holder.layout.setOnClickListener({
                 val list: MutableList<String> = mutableListOf("トーク", "詳細")
                 MaterialDialog.Builder(context).title(friend.name!!).items(list).itemsCallback { _, _, _, text ->
+                    MyChatManager.setmContext(context)
                     if (text == "トーク") {
                         val chatRoomModel = ChatRoomModel(friendList[position].friendId!!, friend.name!!, friend.imageUrl!!,
                                 friendList[position].lastMessage?.message!!, friendList[position].members[DataConstants.currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)

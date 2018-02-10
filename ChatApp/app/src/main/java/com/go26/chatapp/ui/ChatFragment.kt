@@ -148,7 +148,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.leave -> {
-                MyChatManager.setmContext(context)
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
 

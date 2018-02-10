@@ -42,8 +42,6 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.setOnlinePresence()
 //        MyChatManager.updateFCMTokenAndDeviceId(this@MainActivity, FirebaseInstanceId.getInstance().token!!)
 
-        MyChatManager.fetchAllUserInformation()
-
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 fetchData()
