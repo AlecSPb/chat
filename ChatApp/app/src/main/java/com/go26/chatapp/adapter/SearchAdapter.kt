@@ -1,5 +1,6 @@
 package com.go26.chatapp.adapter
 
+import android.content.Context
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,32 +9,33 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.go26.chatapp.R
-import com.go26.chatapp.model.CommunityModel
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.util.MyViewUtils
 
 /**
- * Created by daigo on 2018/01/23.
+ * Created by daigo on 2018/02/09.
  */
-class SearchCommunityNameAdapter(private val foundCommunityList: MutableList<CommunityModel>, private val itemClick: (Int) -> Unit)
-    : RecyclerView.Adapter<SearchCommunityNameAdapter.SearchViewHolder>() {
-
+class SearchAdapter(val context: Context, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>()  {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
             SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.communityName.text = foundCommunityList[position].name
-        if (foundCommunityList[position].location != null) {
-            val location = "活動場所: " + foundCommunityList[position].location
+        holder.communityName.text = popularCommunityList[position].name
+
+        if (popularCommunityList[position].location != null) {
+            val location = "活動場所: " + popularCommunityList[position].location
             holder.location.text = location
         }
-        val memberCount = "メンバー: " + foundCommunityList[position].memberCount?.toString() + "人"
+
+        val memberCount = "メンバー: " + popularCommunityList[position].memberCount?.toString() + "人"
         holder.memberCount.text = memberCount
-        MyViewUtils.loadRoundImage(holder.profileImage, foundCommunityList[position].imageUrl!!)
+
+        MyViewUtils.loadRoundImage(holder.profileImage, popularCommunityList[position].imageUrl!!)
 
         holder.setUp(position)
     }
 
-    override fun getItemCount(): Int = foundCommunityList.size
+    override fun getItemCount(): Int = popularCommunityList.size
 
     class SearchViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
@@ -46,5 +48,4 @@ class SearchCommunityNameAdapter(private val foundCommunityList: MutableList<Com
             layout.setOnClickListener { itemClick(position) }
         }
     }
-
 }

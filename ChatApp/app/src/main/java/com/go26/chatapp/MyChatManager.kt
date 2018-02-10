@@ -13,6 +13,8 @@ import com.go26.chatapp.constants.DataConstants.Companion.communityMembersMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityMessageMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsList
 import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsMap
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLocation
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
 import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import com.go26.chatapp.constants.DataConstants.Companion.friendList
 import com.go26.chatapp.constants.DataConstants.Companion.friendRequests
@@ -24,10 +26,10 @@ import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequests
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequestsMap
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.*
 import com.go26.chatapp.ui.LoginActivity
-import com.go26.chatapp.util.MyTextUtil
 import com.go26.chatapp.util.SharedPrefManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
@@ -216,13 +218,6 @@ object MyChatManager {
      * This function gets all the groups in which user is present.
      */
     fun fetchMyCommunities(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?, isSingleEvent: Boolean) {
-
-//        var i: Int = userModel?.communities?.size!!
-//        if (i == 0) {
-////            //No Groups
-//            callback?.handleData(true, requestType)
-//        }
-
         var communityCount = 0
         var now = 0
 
@@ -688,13 +683,56 @@ object MyChatManager {
         communityRef?.child(communityModel?.communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.addListenerForSingleValueEvent(communityRequestsListener)
     }
 
+    fun fetchPopularCommunity(callback: NotifyMeInterface?, requestType: Int?) {
+        var communityCount = 0
+
+        // communityの数を取得
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    communityCount = dataSnapshot.children.count()
+                    queryPopularCommunity(callback, communityCount, requestType)
+                }
+            }
+        }
+        communityRef?.addListenerForSingleValueEvent(listener)
+    }
+
+    private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
+        popularCommunityList.clear()
+        var limit = 10
+        var now = 0
+
+        if (communityCount < limit) {
+            limit = communityCount
+        }
+
+        communityRef?.orderByChild(FirebaseConstants().MEMBER_COUNT)?.limitToLast(limit)?.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {}
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {}
+            override fun onChildRemoved(p0: DataSnapshot?) {}
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                val community = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
+                if (community != null) {
+                    popularCommunityList.add(community)
+                    now += 1
+                }
+                if (limit == now) {
+                    callback?.handleData(true, requestType)
+                }
+            }
+        })
+    }
+
     fun searchCommunityName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
         val listener = object : ValueEventListener {
             override fun onCancelled(databaseError: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    val foundCommunityList = DataConstants.foundCommunityList
-                    foundCommunityList?.clear()
+                    foundCommunityListByName.clear()
                     dataSnapshot.children.forEach { it ->
                         it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
                             // 自分が所属しているコミュニティは除外
@@ -706,7 +744,7 @@ object MyChatManager {
                                 }
                             }
                             if (searchWords == it.name && !isMyCommunity) {
-                                foundCommunityList?.add(it)
+                                foundCommunityListByName.add(it)
                             }
                         }
                     }
@@ -718,26 +756,35 @@ object MyChatManager {
         communityRef?.addListenerForSingleValueEvent(listener)
     }
 
-//    fun searchCommunityLocation(callback: NotifyMeInterface?, requestType: Int?, searchWords: String) {
-//        val listener = object : ValueEventListener {
-//            override fun onCancelled(databaseError: DatabaseError) {}
-//            override fun onDataChange(dataSnaphot: DataSnapshot) {
-//                if (dataSnaphot.exists()) {
-//                    val communityList: ArrayList<CommunityModel> = ArrayList()
-//                    dataSnaphot.children.forEach { it ->
-//                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
-//                            if (searchWords == it.name) {
-//                                communityList.add(it)
-//                            }
-//                        }
-//                    }
-//                    callback?.handleData(communityList, requestType)
-//                }
-//            }
-//        }
-//
-//        communityRef?.addListenerForSingleValueEvent(listener)
-//    }
+    fun searchCommunityLocation(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    foundCommunityListByLocation.clear()
+                    dataSnapshot.children.forEach { it ->
+                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
+                            // 自分が所属しているコミュニティは除外
+                            var isMyCommunity = false
+                            if (myCommunities.size != 0) {
+                                for (community: CommunityModel in myCommunities) {
+                                    isMyCommunity = (community.communityId == it.communityId)
+                                    if (isMyCommunity) break
+                                }
+                            }
+                            if (searchWords == it.location && !isMyCommunity) {
+                                foundCommunityListByLocation.add(it)
+                            }
+                        }
+                    }
+                    callback?.handleData(true, requestType)
+                }
+            }
+        }
+
+        communityRef?.addListenerForSingleValueEvent(listener)
+    }
 
     fun searchUserName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
         // Making a copy of listener
@@ -745,7 +792,7 @@ object MyChatManager {
             override fun onCancelled(databaseError: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    foundUserList?.clear()
+                    foundUserList.clear()
                     dataSnapshot.children.forEach { it ->
                         it.getValue<UserModel>(UserModel::class.java)?.let {
                             // フレンド除外
@@ -758,13 +805,13 @@ object MyChatManager {
                                 if (!isMyFriends) {
                                     // 自分は除外
                                     if (searchWords == it.name && it.uid != currentUser?.uid) {
-                                        foundUserList?.add(it)
+                                        foundUserList.add(it)
                                     }
                                 }
                             } else {
                                 // 自分は除外
                                 if (searchWords == it.name && it.uid != currentUser?.uid) {
-                                    foundUserList?.add(it)
+                                    foundUserList.add(it)
                                 }
                             }
                         }
@@ -1305,40 +1352,6 @@ object MyChatManager {
                         return Transaction.success(mutabledata)
                     }
                 })
-    }
-
-    fun createOneOnOneChatCommunity(callback: NotifyMeInterface, user2Id: String, user2: UserModel, requestType: Int) {
-
-        val newCommunityId = MyTextUtil().getHash(currentUser?.uid!!, user2Id)
-
-
-        val community = CommunityModel("", "", newCommunityId, false, false)
-
-        community.members.put(user2Id, user2)
-        community.members.put(currentUser?.uid!!, currentUser!!)
-
-        val time = Calendar.getInstance().timeInMillis
-
-        for (user in community.members) {
-            user.value.communities = hashMapOf()
-            user.value.email = null
-            user.value.imageUrl = null
-            user.value.name = null
-            user.value.online = null
-            user.value.unreadCount = 0
-            user.value.lastSeenMessageTimestamp = time.toString()
-            user.value.deleteTill = time.toString()
-        }
-
-        communityRef?.child(newCommunityId)?.setValue(community)
-
-        for (user in community.members) {
-            userRef?.child(user.value.uid)?.child(FirebaseConstants().COMMUNITY)?.child(newCommunityId)?.setValue(true)
-        }
-
-        communityMap?.put(community.communityId!!, community)
-
-        callback?.handleData(true, requestType)
     }
 
     /**

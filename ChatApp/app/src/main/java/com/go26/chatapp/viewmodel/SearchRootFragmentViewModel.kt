@@ -15,13 +15,13 @@ class SearchRootFragmentViewModel(val view: SearchRootFragmentContract) {
     fun setSearchHint(pos: Int) {
         when (pos) {
             0 -> {
-                searchHint.set("コミュニティ")
+                searchHint.set("活動場所で検索")
             }
             1 -> {
-                searchHint.set("場所")
+                searchHint.set("コミュニティ名で検索")
             }
             2 -> {
-                searchHint.set("ユーザー")
+                searchHint.set("ユーザーを検索")
             }
         }
     }

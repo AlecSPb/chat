@@ -1,12 +1,13 @@
 package com.go26.chatapp.ui.search
 
 
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,6 @@ import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.viewmodel.SearchRootFragmentViewModel
 import com.go26.chatapp.databinding.FragmentSearchRootBinding
 import kotlinx.android.synthetic.main.fragment_search_root.*
-import android.view.inputmethod.InputMethodManager
 
 
 class SearchRootFragment : Fragment(), SearchRootFragmentContract {
@@ -74,26 +74,33 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        search_word_button.setOnClickListener {
+        search_edit_text.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            if (search_edit_text.text != null) {
-                val searchWord = search_edit_text.text.toString()
-
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val searchWord = p0.toString()
                 when (search_edit_text.hint.toString()) {
-                    "コミュニティ" -> {
-                        MyChatManager.searchCommunityName(object : NotifyMeInterface {
+                    "活動場所で検索" -> {
+                        MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 val valid: Boolean = obj as Boolean
                                 if (valid) {
                                     reloadAdapter(0)
                                 }
                             }
+                        }, searchWord, NetworkConstants().SEARCH_LOCATION)
+                    }
+                    "コミュニティ名で検索" -> {
+                        MyChatManager.searchCommunityName(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
+                                val valid: Boolean = obj as Boolean
+                                if (valid) {
+                                    reloadAdapter(1)
+                                }
+                            }
                         }, searchWord, NetworkConstants().SEARCH_COMUUNITY)
                     }
-                    "場所" -> {
-                        reloadAdapter(1)
-                    }
-                    "ユーザー" -> {
+                    "ユーザーを検索" -> {
                         MyChatManager.searchUserName(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 val valid: Boolean = obj as Boolean
@@ -104,12 +111,16 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
                         }, searchWord, NetworkConstants().SEARCH_USER)
                     }
                 }
-                if (activity.currentFocus != null) {
-                    val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(activity.currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                }
             }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+
+        back_button.setOnClickListener {
+            fragmentManager.beginTransaction().remove(this).commit()
+            fragmentManager.popBackStack()
         }
+
     }
 
     override fun reloadAdapter(index: Int) {

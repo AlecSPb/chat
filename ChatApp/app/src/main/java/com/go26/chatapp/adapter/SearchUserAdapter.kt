@@ -14,7 +14,7 @@ import com.go26.chatapp.util.MyViewUtils
 /**
  * Created by daigo on 2018/01/24.
  */
-class SearchUserAdapter(private val foundUserList: ArrayList<UserModel>, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<SearchUserAdapter.SearchViewHolder>() {
+class SearchUserAdapter(private val foundUserList: MutableList<UserModel>, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<SearchUserAdapter.SearchViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
             SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false), itemClick)
 

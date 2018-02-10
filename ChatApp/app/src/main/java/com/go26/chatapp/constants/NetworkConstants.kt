@@ -30,4 +30,6 @@ class NetworkConstants {
     val DISCONFIRM_REQUEST = 1024
     val CHECK_CHAT_ROOMS_EXISTS = 1025
     val UPDATE_INFO = 1026
+    val SEARCH_LOCATION = 1027
+    val FETCH_POPULAR_COMMUNITY = 1028
 }

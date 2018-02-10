@@ -11,7 +11,8 @@ import android.view.ViewGroup
 
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.SearchCommunityNameAdapter
-import com.go26.chatapp.constants.DataConstants
+import com.go26.chatapp.constants.AppConstants
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
 import kotlinx.android.synthetic.main.fragment_search_community.*
 
 
@@ -27,13 +28,18 @@ class SearchCommunityNameFragment : Fragment() {
     }
 
     private fun setViews() {
-        search_community_recycler_view.layoutManager = LinearLayoutManager(context)
-        val adapter = SearchCommunityNameAdapter(DataConstants.foundCommunityList!!) { position ->
-            val intent = Intent(context, CommunityJoinRequestActivity::class.java)
-            intent.putExtra("position", position)
-            activity.startActivity(intent)
+        if (foundCommunityListByName.size == 0) {
+            empty_view.visibility = View.VISIBLE
+        } else {
+            search_community_recycler_view.layoutManager = LinearLayoutManager(context)
+            val adapter = SearchCommunityNameAdapter(foundCommunityListByName) { position ->
+                val intent = Intent(context, CommunityJoinRequestActivity::class.java)
+                intent.putExtra("position", position)
+                intent.putExtra("type", AppConstants().SEARCH_NAME)
+                activity.startActivity(intent)
+            }
+            search_community_recycler_view.adapter = adapter
         }
-        search_community_recycler_view.adapter = adapter
     }
 
     companion object {
