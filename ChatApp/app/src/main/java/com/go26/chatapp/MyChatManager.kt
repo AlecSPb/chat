@@ -124,8 +124,8 @@ object MyChatManager {
                         mutableData.value = userModel
                     } else {
                         val newUserData: HashMap<String, Any?> = hashMapOf()
-                        newUserData.put("imageUrl", userModel?.imageUrl)
-                        newUserData.put("name", userModel?.name)
+//                        newUserData.put("imageUrl", userModel?.imageUrl)
+//                        newUserData.put("name", userModel?.name)
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
                     }
@@ -199,7 +199,6 @@ object MyChatManager {
                                 }
                             }
                         }
-
                     }
                 }
 
@@ -896,6 +895,16 @@ object MyChatManager {
     }
 
     fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, userModel?.name!!)
+        if (userModel.programmingLanguage != null) {
+            updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel.programmingLanguage!!)
+        }
+        if (userModel.whatMade != null) {
+            updateMap.put(FirebaseConstants().WHAT_MADE, userModel.whatMade!!)
+        }
+        userRef?.child(userModel.uid)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
     }
 
     fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {

@@ -14,6 +14,8 @@ class FirebaseConstants {
     val MESSAGES = "messages"
     val DESCRIPTION = "description"
     val LOCATION = "location"
+    val WHAT_MADE = "whatMade"
+    val PROGRAMMING_LANGUAGE = "programmingLanguage"
     val ONLINE = "online"
     val MEMBERS = "members"
     val MEMBER_COUNT = "memberCount"

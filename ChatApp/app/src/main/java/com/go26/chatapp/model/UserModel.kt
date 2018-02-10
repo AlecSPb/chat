@@ -22,4 +22,7 @@ data class UserModel(var uid: String? = null,
                      var admin: Boolean? = null,
                      var deleteTill: String? = null,
                      var joinTime: String? = null,
+                     var programmingLanguage: String? = null,
+                     var age: Int? = null,
+                     var whatMade: String? = null,
                      var active: Boolean? = null) : Serializable

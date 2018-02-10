@@ -121,11 +121,11 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
         if (communityName.isBlank()) {
             isValid = false
-            errorMessage = "Group name is blank"
+            errorMessage = "Community name is blank"
         }
         if (communityName.length < 3) {
             isValid = false
-            errorMessage = "Group name should be more than 2 characters"
+            errorMessage = "Community name should be more than 2 characters"
         }
 
         val location: String = location_text_view.text.toString()
@@ -162,7 +162,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
             MyChatManager.createCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    Toast.makeText(context, "Group has been created successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()
                     activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
                 }
             }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
