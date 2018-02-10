@@ -15,10 +15,10 @@ import com.go26.chatapp.R
 import com.go26.chatapp.adapter.SearchAdapter
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
-import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityMap
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.viewmodel.SearchFragmentViewModel
 import com.go26.chatapp.databinding.FragmentSearchBinding
+import com.go26.chatapp.model.CommunityModel
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
@@ -42,9 +42,16 @@ class SearchFragment : Fragment() {
             MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Log.d("fetch popular", "success")
-                    popularCommunityMap = popularCommunityMap.toSortedMap()
-                    popularCommunityList = popularCommunityMap.values.toMutableList().asReversed()
-                    setAdapter()
+
+                    val valid = obj as Boolean
+
+                    if (popularCommunityList.isEmpty()) {
+                        empty_view.visibility = View.VISIBLE
+                    } else if (valid) {
+                        popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
+                        setAdapter()
+                    }
+
                 }
             }, NetworkConstants().FETCH_POPULAR_COMMUNITY)
         } else {
@@ -74,6 +81,27 @@ class SearchFragment : Fragment() {
         }
 
         search_recycler_view.adapter = adapter
+
+        search_refresh.setOnRefreshListener {
+            MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
+                override fun handleData(obj: Any, requestCode: Int?) {
+                    Log.d("fetch popular", "success")
+
+                    val valid = obj as Boolean
+
+                    if (search_refresh.isRefreshing) {
+                        search_refresh.isRefreshing = false
+                    }
+
+                    if (popularCommunityList.isEmpty()) {
+                        empty_view.visibility = View.VISIBLE
+                    } else if (valid) {
+                        popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
+                        setAdapter()
+                    }
+                }
+            }, NetworkConstants().FETCH_POPULAR_COMMUNITY)
+        }
     }
 
     companion object {

@@ -2,7 +2,6 @@ package com.go26.chatapp.ui.search
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -11,9 +10,10 @@ import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.AppConstants
-import com.go26.chatapp.constants.DataConstants
+import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLocation
 import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
+import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.CommunityModel
@@ -66,29 +66,42 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
 
             loadRoundImage(profile_image_view, community?.imageUrl!!)
 
-            var isRequested = false
-            val currentUser = DataConstants.currentUser
-            if (currentUser?.myCommunityRequests?.size != 0) {
-                for (request in currentUser?.myCommunityRequests!!) {
-                    if (request.value && request.key == community?.communityId) {
-                        isRequested = true
-                    }
+            // 自分が所属しているコミュニティの場合、申請ボタン非表示
+            var isMyCommunity = false
+            if (myCommunities.size != 0) {
+                for (myCommunity: CommunityModel in myCommunities) {
+                    isMyCommunity = (myCommunity.communityId == community?.communityId)
+                    if (isMyCommunity) break
                 }
-
             }
 
-            if (!isRequested) {
-                request_button.text = "申請"
-                request_button.setOnClickListener {
-                    MyChatManager.sendCommunityJoinRequest(object : NotifyMeInterface {
-                        override fun handleData(obj: Any, requestCode: Int?) {
-                            finish()
-                            Toast.makeText(this@CommunityJoinRequestActivity, "参加リクエストを送信しました", Toast.LENGTH_SHORT).show()
+            if (!isMyCommunity) {
+                var isRequested = false
+                val currentUser = currentUser
+                if (currentUser?.myCommunityRequests?.size != 0) {
+                    for (request in currentUser?.myCommunityRequests!!) {
+                        if (request.value && request.key == community?.communityId) {
+                            isRequested = true
                         }
-                    }, DataConstants.currentUser!!, community!!, NetworkConstants().SEND_COMMUNITY_JOIN_REQUEST)
+                    }
+
+                }
+
+                if (!isRequested) {
+                    request_button.text = "申請"
+                    request_button.setOnClickListener {
+                        MyChatManager.sendCommunityJoinRequest(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
+                                finish()
+                                Toast.makeText(this@CommunityJoinRequestActivity, "参加リクエストを送信しました", Toast.LENGTH_SHORT).show()
+                            }
+                        }, currentUser, community!!, NetworkConstants().SEND_COMMUNITY_JOIN_REQUEST)
+                    }
+                } else {
+                    request_button.text = "申請中"
                 }
             } else {
-                request_button.text = "申請中"
+                request_button.visibility = View.GONE
             }
         }
     }

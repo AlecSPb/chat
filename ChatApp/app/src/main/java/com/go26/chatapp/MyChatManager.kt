@@ -27,11 +27,9 @@ import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequestsMap
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
-import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityMap
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.*
 import com.go26.chatapp.ui.LoginActivity
-import com.go26.chatapp.util.MyTextUtil
 import com.go26.chatapp.util.SharedPrefManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
@@ -702,8 +700,8 @@ object MyChatManager {
     }
 
     private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
-        popularCommunityMap.clear()
-        var limit = 3
+        popularCommunityList.clear()
+        var limit = 10
         var now = 0
 
         if (communityCount < limit) {
@@ -719,11 +717,11 @@ object MyChatManager {
             override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
                 val community = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
                 if (community != null) {
-                    popularCommunityMap.put(community.memberCount!!, community)
+                    popularCommunityList.add(community)
                     now += 1
                 }
                 if (limit == now) {
-                    callback?.handleData(popularCommunityMap, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
