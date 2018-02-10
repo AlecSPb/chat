@@ -220,13 +220,6 @@ object MyChatManager {
      * This function gets all the groups in which user is present.
      */
     fun fetchMyCommunities(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?, isSingleEvent: Boolean) {
-
-//        var i: Int = userModel?.communities?.size!!
-//        if (i == 0) {
-////            //No Groups
-//            callback?.handleData(true, requestType)
-//        }
-
         var communityCount = 0
         var now = 0
 
@@ -709,7 +702,6 @@ object MyChatManager {
     }
 
     private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
-//        popularCommunityList.clear()
         popularCommunityMap.clear()
         var limit = 3
         var now = 0
@@ -728,7 +720,6 @@ object MyChatManager {
                 val community = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
                 if (community != null) {
                     popularCommunityMap.put(community.memberCount!!, community)
-//                    popularCommunityList.add(community)
                     now += 1
                 }
                 if (limit == now) {
@@ -1363,40 +1354,6 @@ object MyChatManager {
                         return Transaction.success(mutabledata)
                     }
                 })
-    }
-
-    fun createOneOnOneChatCommunity(callback: NotifyMeInterface, user2Id: String, user2: UserModel, requestType: Int) {
-
-        val newCommunityId = MyTextUtil().getHash(currentUser?.uid!!, user2Id)
-
-
-        val community = CommunityModel("", "", newCommunityId, false, false)
-
-        community.members.put(user2Id, user2)
-        community.members.put(currentUser?.uid!!, currentUser!!)
-
-        val time = Calendar.getInstance().timeInMillis
-
-        for (user in community.members) {
-            user.value.communities = hashMapOf()
-            user.value.email = null
-            user.value.imageUrl = null
-            user.value.name = null
-            user.value.online = null
-            user.value.unreadCount = 0
-            user.value.lastSeenMessageTimestamp = time.toString()
-            user.value.deleteTill = time.toString()
-        }
-
-        communityRef?.child(newCommunityId)?.setValue(community)
-
-        for (user in community.members) {
-            userRef?.child(user.value.uid)?.child(FirebaseConstants().COMMUNITY)?.child(newCommunityId)?.setValue(true)
-        }
-
-        communityMap?.put(community.communityId!!, community)
-
-        callback?.handleData(true, requestType)
     }
 
     /**
