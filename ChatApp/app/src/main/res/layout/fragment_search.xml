@@ -16,6 +16,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:orientation="vertical"
             android:background="#ffffff">
 
             <Button
@@ -30,6 +31,11 @@
                 android:hint="@string/search"/>
 
         </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

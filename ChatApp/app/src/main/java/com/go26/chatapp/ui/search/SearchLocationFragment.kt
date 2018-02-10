@@ -11,6 +11,7 @@ import android.view.ViewGroup
 
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.SearchLocationAdapter
+import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLocation
 import kotlinx.android.synthetic.main.fragment_search_location.*
 
@@ -31,6 +32,7 @@ class SearchLocationFragment : Fragment() {
         val adapter = SearchLocationAdapter(foundCommunityListByLocation) { position ->
             val intent = Intent(context, CommunityJoinRequestActivity::class.java)
             intent.putExtra("position", position)
+            intent.putExtra("type", AppConstants().SEARCH_LOCATION)
             activity.startActivity(intent)
         }
         search_location_recycler_view.adapter = adapter

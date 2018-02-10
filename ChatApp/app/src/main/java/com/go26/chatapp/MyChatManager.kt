@@ -26,6 +26,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequests
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendRequestsMap
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.*
 import com.go26.chatapp.ui.LoginActivity
@@ -688,6 +689,50 @@ object MyChatManager {
             }
         }
         communityRef?.child(communityModel?.communityId)?.child(FirebaseConstants().JOIN_REQUESTS)?.addListenerForSingleValueEvent(communityRequestsListener)
+    }
+
+    fun fetchPopularCommunity(callback: NotifyMeInterface?, requestType: Int?) {
+        var communityCount = 0
+
+        // communityの数を取得
+        val listener = object : ValueEventListener {
+            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    communityCount = dataSnapshot.children.count()
+                    queryPopularCommunity(callback, communityCount, requestType)
+                }
+            }
+        }
+        communityRef?.addListenerForSingleValueEvent(listener)
+    }
+
+    private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
+        popularCommunityList.clear()
+        var limit = 3
+        var now = 0
+
+        if (communityCount < limit) {
+            limit = communityCount
+        }
+
+        communityRef?.orderByChild(FirebaseConstants().MEMBER_COUNT)?.limitToLast(limit)?.addChildEventListener(object : ChildEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onChildChanged(p0: DataSnapshot?, p1: String?) {}
+            override fun onChildMoved(p0: DataSnapshot?, p1: String?) {}
+            override fun onChildRemoved(p0: DataSnapshot?) {}
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+                val community = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
+                if (community != null) {
+                    popularCommunityList.add(community)
+                    now += 1
+                }
+                if (limit == now) {
+                    callback?.handleData(popularCommunityList, requestType)
+                }
+            }
+        })
     }
 
     fun searchCommunityName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {

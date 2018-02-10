@@ -28,6 +28,7 @@ class DataConstants {
         var communityMembersMap: MutableMap<String, ArrayList<UserModel>>? = mutableMapOf()
 
         // Search
+        var popularCommunityList: MutableList<CommunityModel> = mutableListOf()
         var foundCommunityListByName: MutableList<CommunityModel> = mutableListOf()
         var foundCommunityListByLocation: MutableList<CommunityModel> = mutableListOf()
         var foundUserList: MutableList<UserModel> = mutableListOf()

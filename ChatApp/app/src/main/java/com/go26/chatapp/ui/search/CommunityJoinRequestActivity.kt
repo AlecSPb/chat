@@ -10,8 +10,11 @@ import android.widget.Toast
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
+import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
+import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLocation
 import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
+import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.CommunityModel
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
@@ -26,7 +29,20 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_community_join_request)
 
         val pos = intent.getIntExtra("position", 0)
-        community = foundCommunityListByName[pos]
+        val type = intent.getStringExtra("type")
+
+        when (type) {
+            AppConstants().SEARCH_NAME -> {
+                community = foundCommunityListByName[pos]
+            }
+            AppConstants().SEARCH_LOCATION -> {
+                community = foundCommunityListByLocation[pos]
+            }
+            AppConstants().POPULAR_COMMUNITY -> {
+                community = popularCommunityList[pos]
+            }
+        }
+
         setViews()
     }
 

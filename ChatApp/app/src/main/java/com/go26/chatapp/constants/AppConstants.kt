@@ -16,6 +16,9 @@ class AppConstants {
     val COMMUNITY = "communityModel"
     val FRIEND = "friend"
     val USER_ID = "user_id"
+    val POPULAR_COMMUNITY = "popularCommunity"
+    val SEARCH_NAME = "searchName"
+    val SEARCH_LOCATION = "searchLocation"
 
     val NEW_TOKEN = "new_token"
     val NOTIFICATION_ID_REFRESHED = "notification_id_refreshed"
