@@ -907,12 +907,9 @@ object MyChatManager {
         val updateMap: HashMap<String, Any> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, userModel?.name!!)
         updateMap.put(FirebaseConstants().IMAGE_URL, userModel.imageUrl!!)
-        if (userModel.programmingLanguage != null) {
-            updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel.programmingLanguage!!)
-        }
-        if (userModel.whatMade != null) {
-            updateMap.put(FirebaseConstants().WHAT_MADE, userModel.whatMade!!)
-        }
+        updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel.programmingLanguage!!)
+        updateMap.put(FirebaseConstants().WHAT_MADE, userModel.whatMade!!)
+
         userRef?.child(userModel.uid)?.updateChildren(updateMap)
 
         userRef?.child(userModel.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {

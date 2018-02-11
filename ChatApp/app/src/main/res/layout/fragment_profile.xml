@@ -40,18 +40,31 @@
         android:layout_toRightOf="@+id/profile_image_view" />
 
     <TextView
+        android:id="@+id/made_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="過去に作ったアプリ: "
+        android:layout_below="@+id/language_text_view"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/made_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/description_text_border"
-        android:layout_below="@+id/language_text_view"
+        android:layout_below="@+id/made_title_text_view"
         android:padding="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_2"
         android:layout_toEndOf="@+id/profile_image_view"
         android:layout_toRightOf="@+id/profile_image_view"
-        android:gravity="top|start" />
+        android:gravity="top|start"
+        android:visibility="gone"/>
+
 
 </RelativeLayout>
 

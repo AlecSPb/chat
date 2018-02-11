@@ -42,6 +42,7 @@ class ProfileFragment : Fragment() {
         name_text_view.text = currentUser?.name
 
         if (currentUser?.programmingLanguage != null) {
+            language_text_view.visibility = View.VISIBLE
             val language = "使用言語: " + currentUser?.programmingLanguage
             language_text_view.text = language
         } else {
@@ -49,7 +50,9 @@ class ProfileFragment : Fragment() {
         }
 
         if (currentUser?.whatMade != null) {
-            val made = "過去に作ったアプリ: " + currentUser?.whatMade
+            made_title_text_view.visibility = View.VISIBLE
+            made_text_view.visibility = View.VISIBLE
+            val made = currentUser?.whatMade
             made_text_view.text = made
         } else {
             made_text_view.visibility = View.GONE

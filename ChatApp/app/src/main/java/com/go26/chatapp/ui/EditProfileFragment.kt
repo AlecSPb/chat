@@ -100,11 +100,15 @@ class EditProfileFragment : Fragment() {
                 val language = language_edit_text.text.toString()
                 if (!language.isBlank()) {
                     userModel.programmingLanguage = language
+                } else {
+                    userModel.programmingLanguage = null
                 }
 
                 val made = made_edit_text.text.toString()
                 if (!made.isBlank()) {
                     userModel.whatMade = made
+                } else {
+                    userModel.whatMade = null
                 }
 
                 if (isValid) {

@@ -91,8 +91,9 @@ class ContactsDetailFragment : Fragment() {
                 }
 
                 if (friend.whatMade != null) {
+                    made_title_text_view.visibility = View.VISIBLE
                     made_text_view.visibility = View.VISIBLE
-                    val made = "過去に作ったアプリ: " + friend.whatMade
+                    val made = friend.whatMade
                     made_text_view.text = made
                 }
             }
