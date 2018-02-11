@@ -66,6 +66,7 @@ class ContactsDetailFragment : Fragment() {
 
         when (type) {
             AppConstants().COMMUNITY -> {
+                activity.supportActionBar?.title = "community詳細"
 
                 val communityModel: CommunityModel? = communityMap!![id]
                 loadRoundImage(profile_image_view, communityModel?.imageUrl!!)
@@ -76,11 +77,24 @@ class ContactsDetailFragment : Fragment() {
                 description_text_view.visibility = View.VISIBLE
                 description_text_view.text = communityModel.description
 
+
+                community_member_button.visibility = View.VISIBLE
+                community_member_button.setOnClickListener {
+                    val communityMemberFragment = CommunityMemberFragment.newInstance(id)
+                    val fragmentManager: FragmentManager = activity.supportFragmentManager
+                    val fragmentTransaction = fragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.fragment, communityMemberFragment)
+                    fragmentTransaction.addToBackStack(null)
+                    fragmentTransaction.commit()
+                }
+
                 if (communityModel.members[currentUser?.uid]?.admin != null) {
                     admin = true
                 }
             }
             AppConstants().FRIEND -> {
+                activity.supportActionBar?.title = "フレンド詳細"
+
                 val friend: UserModel? = myFriendsMap[id]
                 loadRoundImage(profile_image_view, friend?.imageUrl!!)
                 name_text_view.text = friend.name

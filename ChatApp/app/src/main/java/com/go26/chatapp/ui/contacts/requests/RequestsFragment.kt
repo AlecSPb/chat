@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui
+package com.go26.chatapp.ui.contacts.requests
 
 
 import android.os.Bundle

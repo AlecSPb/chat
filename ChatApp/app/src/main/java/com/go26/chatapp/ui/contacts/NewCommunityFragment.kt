@@ -151,6 +151,9 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
         if (selectedUserList.size != 0) {
             for (user in selectedUserList) {
+                user.whatMade = null
+                user.age = null
+                user.programmingLanguage = null
                 communityMembers.put(user.uid!!, user)
             }
         }

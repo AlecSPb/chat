@@ -6,11 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
-import com.go26.chatapp.ViewHolders.UserRowViewHolder
-import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 
@@ -20,7 +17,7 @@ import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String) : RecyclerView.Adapter<ParticipantsAdapter.ParticipantsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ParticipantsViewHolder =
-            ParticipantsViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_member, parent, false))
+            ParticipantsViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_invited_community_member, parent, false))
 
     override fun onBindViewHolder(holder: ParticipantsViewHolder, position: Int) {
         val user = DataConstants.selectedUserList[position]

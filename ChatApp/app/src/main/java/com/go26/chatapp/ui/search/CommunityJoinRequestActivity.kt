@@ -99,6 +99,7 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
                     }
                 } else {
                     request_button.text = "申請中"
+                    request_button.isEnabled = false
                 }
             } else {
                 request_button.visibility = View.GONE

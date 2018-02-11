@@ -12,7 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.go26.chatapp.R
 import com.go26.chatapp.model.UserModel
-import com.go26.chatapp.ui.CommunityRequestsFragment
+import com.go26.chatapp.ui.contacts.requests.CommunityRequestsFragment
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 
 /**

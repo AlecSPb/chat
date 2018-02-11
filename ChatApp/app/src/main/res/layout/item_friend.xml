@@ -3,8 +3,7 @@
     android:id="@+id/parent_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:orientation="vertical">
+    android:layout_margin="8dp">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/profile_image_view"

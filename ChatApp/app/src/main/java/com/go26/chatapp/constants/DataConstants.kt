@@ -47,5 +47,6 @@ class DataConstants {
         // contacts
         var communityList: MutableList<CommunityModel> = mutableListOf()
         var friendList: MutableList<FriendModel> = mutableListOf()
+        var communityMemberList: MutableList<UserModel> = mutableListOf()
     }
 }

@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/made_text_view" />
+        android:layout_below="@+id/made_text_view"
+        android:visibility="gone"/>
 
 </RelativeLayout>

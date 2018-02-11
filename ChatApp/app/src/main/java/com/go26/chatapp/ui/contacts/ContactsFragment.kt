@@ -19,7 +19,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.communityList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.friendList
 import com.go26.chatapp.constants.NetworkConstants
-import com.go26.chatapp.ui.RequestsFragment
+import com.go26.chatapp.ui.contacts.requests.RequestsFragment
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 
