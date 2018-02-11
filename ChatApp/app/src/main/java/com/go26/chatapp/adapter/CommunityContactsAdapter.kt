@@ -48,7 +48,7 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<Comm
             val list: MutableList<String> = mutableListOf("トーク", "詳細")
 
             MaterialDialog.Builder(context).title(community.name!!).items(list).itemsCallback { _, _, _, text ->
-
+                MyChatManager.setmContext(context)
                 if (text.toString() == "トーク") {
                     val chatRoomModel = ChatRoomModel(community.communityId!!, community.name!!, community.imageUrl!!,
                             community.lastMessage?.message!!, community.members[currentUser?.uid]?.unreadCount!!, AppConstants().COMMUNITY_CHAT)

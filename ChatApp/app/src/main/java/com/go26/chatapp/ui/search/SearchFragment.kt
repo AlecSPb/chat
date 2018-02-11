@@ -39,6 +39,7 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews()
         if (popularCommunityList.isEmpty()) {
+            MyChatManager.setmContext(context)
             MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Log.d("fetch popular", "success")
@@ -83,6 +84,7 @@ class SearchFragment : Fragment() {
         search_recycler_view.adapter = adapter
 
         search_refresh.setOnRefreshListener {
+            MyChatManager.setmContext(context)
             MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     Log.d("fetch popular", "success")

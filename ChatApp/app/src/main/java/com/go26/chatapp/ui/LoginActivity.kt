@@ -70,6 +70,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         super.onStart()
 
         if (currentUser != null) {
+            MyChatManager.setmContext(this)
             MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
                     viewModel.setProgressBarVisibility(View.INVISIBLE)
@@ -114,6 +115,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun firebaseLogin(userModel: UserModel) {
+        MyChatManager.setmContext(this)
         MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 viewModel.setProgressBarVisibility(View.INVISIBLE)

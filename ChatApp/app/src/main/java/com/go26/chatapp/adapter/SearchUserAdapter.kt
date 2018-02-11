@@ -16,7 +16,7 @@ import com.go26.chatapp.util.MyViewUtils
  */
 class SearchUserAdapter(private val foundUserList: MutableList<UserModel>, private val itemClick: (Int) -> Unit) : RecyclerView.Adapter<SearchUserAdapter.SearchViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SearchViewHolder =
-            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false), itemClick)
+            SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_friend, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.communityName.text = foundUserList[position].name

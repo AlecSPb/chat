@@ -21,15 +21,11 @@ class RequestsActivity : AppCompatActivity() {
 
     private fun setViews() {
         friend_requests_recycler_view.layoutManager = LinearLayoutManager(this)
-        val friendRequestsAdapter = FriendRequestsAdapter(friendRequests) { position ->
-
-        }
+        val friendRequestsAdapter = FriendRequestsAdapter(this, friendRequests)
         friend_requests_recycler_view.adapter = friendRequestsAdapter
 
         community_requests_recycler_view.layoutManager = LinearLayoutManager(this)
-        val communityRequestsAdapter = CommunityRequestsAdapter(communityRequestsList) { position ->
-
-        }
+        val communityRequestsAdapter = CommunityRequestsAdapter(this, communityRequestsList)
         community_requests_recycler_view.adapter = communityRequestsAdapter
     }
 }

@@ -121,23 +121,28 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
         if (communityName.isBlank()) {
             isValid = false
-            errorMessage = "Group name is blank"
+            errorMessage = "Community name is blank"
         }
         if (communityName.length < 3) {
             isValid = false
-            errorMessage = "Group name should be more than 2 characters"
+            errorMessage = "Community name should be more than 2 characters"
         }
 
-        val location: String = location_text_view.text.toString()
+        val location: String = location_edit_text.text.toString()
         if (location.isBlank()) {
             isValid = false
             errorMessage = "location is blank"
         }
 
-        val communityDescription: String = description_edit_text.text.toString()
+        val description: String = description_edit_text.text.toString()
+        if (description.isBlank()) {
+            isValid = false
+            errorMessage = "description is blank"
+        }
+
         val communityImage = "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/128/groups.png"
         val newCommunity = CommunityModel(communityName, communityImage, communityDeleted = false,
-                community = true, description = communityDescription, location = location)
+                community = true, description = description, location = location)
         val adminUserModel: UserModel? = SharedPrefManager.getInstance(context).savedUserModel
         adminUserModel?.admin = true
 
@@ -159,10 +164,9 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         if (isValid) {
 
             //sendFileFirebase(storageRef, resultUri!!, id!!)
-
             MyChatManager.createCommunity(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    Toast.makeText(context, "Group has been created successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()
                     activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
                 }
             }, newCommunity, NetworkConstants().CREATE_COMMUNITY)

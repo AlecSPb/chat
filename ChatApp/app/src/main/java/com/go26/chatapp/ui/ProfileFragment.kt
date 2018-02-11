@@ -1,10 +1,10 @@
 package com.go26.chatapp.ui
 
 
-import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.SpannableString
@@ -13,24 +13,18 @@ import android.view.*
 import com.go26.chatapp.MyChatManager
 
 import com.go26.chatapp.R
-import com.go26.chatapp.databinding.FragmentProfileBinding
-import com.go26.chatapp.viewmodel.ProfileFragmentViewModel
+import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
-
-    lateinit var viewModel: ProfileFragmentViewModel
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        viewModel = ProfileFragmentViewModel(context)
-        val binding: FragmentProfileBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
-        binding.viewModel = viewModel
-
-        return binding.root
+        return inflater!!.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -45,6 +39,26 @@ class ProfileFragment : Fragment() {
         activity.supportActionBar?.title = "MyPage"
         setHasOptionsMenu(true)
 
+        name_text_view.text = currentUser?.name
+
+        if (currentUser?.programmingLanguage != null) {
+            language_text_view.visibility = View.VISIBLE
+            val language = "使用言語: " + currentUser?.programmingLanguage
+            language_text_view.text = language
+        } else {
+            language_text_view.visibility = View.GONE
+        }
+
+        if (currentUser?.whatMade != null) {
+            made_title_text_view.visibility = View.VISIBLE
+            made_text_view.visibility = View.VISIBLE
+            val made = currentUser?.whatMade
+            made_text_view.text = made
+        } else {
+            made_text_view.visibility = View.GONE
+        }
+
+        loadRoundImage(profile_image_view, currentUser?.imageUrl!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -60,6 +74,15 @@ class ProfileFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.edit -> {
+                val editProfileFragment = EditProfileFragment.newInstance()
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, editProfileFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+                return true
+            }
             R.id.logout -> {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken((R.string.default_web_client_id).toString())

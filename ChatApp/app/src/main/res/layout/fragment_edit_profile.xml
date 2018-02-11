@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/edit_community_layout"
+    android:id="@+id/edit_profile_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="com.go26.chatapp.ui.contacts.EditCommunityFragment">
+    tools:context="com.go26.chatapp.ui.EditProfileFragment">
 
     <include
         android:id="@+id/toolbar"
@@ -23,7 +23,7 @@
 
 
     <EditText
-        android:id="@+id/community_name_edit_text"
+        android:id="@+id/name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
@@ -32,39 +32,39 @@
         android:layout_marginTop="@dimen/dp_24"
         android:layout_toEndOf="@+id/profile_image_view"
         android:layout_toRightOf="@+id/profile_image_view"
-        android:hint="Community Name"
+        android:hint="Name"
         android:inputType="text"
         android:maxLength="25" />
 
     <EditText
-        android:id="@+id/location_edit_text"
+        android:id="@+id/language_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/community_name_edit_text"
+        android:layout_below="@+id/name_edit_text"
         android:layout_marginTop="@dimen/dp_5"
         android:layout_toEndOf="@+id/profile_image_view"
         android:layout_toRightOf="@+id/profile_image_view"
-        android:hint="活動場所"
+        android:hint="使用言語"
         android:inputType="text"
-        android:maxLength="10" />
+        android:maxLength="25" />
 
     <EditText
-        android:id="@+id/description_edit_text"
+        android:id="@+id/made_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/location_edit_text"
-        android:layout_marginEnd="@dimen/dp_16"
+        android:background="@drawable/description_text_border"
+        android:layout_below="@+id/language_edit_text"
+        android:padding="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_16"
         android:layout_toEndOf="@+id/profile_image_view"
         android:layout_toRightOf="@+id/profile_image_view"
-        android:background="@drawable/description_text_border"
         android:gravity="top|start"
-        android:hint="コミュニティーの説明"
-        android:maxLength="225"
-        android:maxLines="13"
-        android:minLines="13"
-        android:padding="@dimen/dp_16"
+        android:hint="作成したアプリ(githubのurlなど)"
+        android:maxLength="100"
+        android:maxLines="3"
+        android:minLines="3"
         android:textSize="15sp" />
 
 </RelativeLayout>

@@ -1,21 +1,70 @@
-<layout>
-    <data>
-        <variable
-            name="viewModel"
-            type="com.go26.chatapp.viewmodel.ProfileFragmentViewModel"/>
-    </data>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.go26.chatapp.ui.ProfileFragment">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.go26.chatapp.ui.ProfileFragment">
+        android:layout_height="wrap_content" />
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/profile_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="@dimen/dp_16" />
 
-    </FrameLayout>
-</layout>
+
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/language_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image_view"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view" />
+
+    <TextView
+        android:id="@+id/made_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="過去に作ったアプリ: "
+        android:layout_below="@+id/language_text_view"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/made_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/description_text_border"
+        android:layout_below="@+id/made_title_text_view"
+        android:padding="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:gravity="top|start"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>
 

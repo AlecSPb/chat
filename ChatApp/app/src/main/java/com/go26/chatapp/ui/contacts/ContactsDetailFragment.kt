@@ -71,7 +71,9 @@ class ContactsDetailFragment : Fragment() {
                 loadRoundImage(profile_image_view, communityModel?.imageUrl!!)
                 name_text_view.text = communityModel.name
                 val locationText = "活動場所: " + communityModel.location
+                location_text_view.visibility = View.VISIBLE
                 location_text_view.text = locationText
+                description_text_view.visibility = View.VISIBLE
                 description_text_view.text = communityModel.description
 
                 if (communityModel.members[currentUser?.uid]?.admin != null) {
@@ -82,9 +84,18 @@ class ContactsDetailFragment : Fragment() {
                 val friend: UserModel? = myFriendsMap[id]
                 loadRoundImage(profile_image_view, friend?.imageUrl!!)
                 name_text_view.text = friend.name
-                location_text_view.visibility = View.GONE
-                description_text_view.visibility = View.GONE
+                if (friend.programmingLanguage != null) {
+                    language_text_view.visibility = View.VISIBLE
+                    val language = "使用言語: " + friend.programmingLanguage
+                    language_text_view.text = language
+                }
 
+                if (friend.whatMade != null) {
+                    made_title_text_view.visibility = View.VISIBLE
+                    made_text_view.visibility = View.VISIBLE
+                    val made = friend.whatMade
+                    made_text_view.text = made
+                }
             }
         }
     }

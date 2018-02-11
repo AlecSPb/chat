@@ -31,13 +31,13 @@
         android:maxLength="25"
         android:layout_marginRight="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_24"
         android:layout_toRightOf="@+id/profile_image_view"
         android:layout_toEndOf="@+id/profile_image_view"
         android:hint="Community Name" />
 
     <EditText
-        android:id="@+id/location_text_view"
+        android:id="@+id/location_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/community_name_edit_text"
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/description_text_border"
-        android:layout_below="@+id/location_text_view"
+        android:layout_below="@+id/location_edit_text"
         android:gravity="top|start"
         android:textSize="15sp"
         android:maxLength="225"

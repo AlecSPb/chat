@@ -45,13 +45,13 @@ class ChatRecyclerAdapter(var context: Context, var ref: Query)  :
             viewHolder.llParent.gravity = Gravity.END
             viewHolder.name.text = "You"
 
-            lp.gravity = Gravity.RIGHT
+            lp.gravity = Gravity.END
             viewHolder.message.layoutParams = lp
         } else {
             viewHolder.llParent.gravity = Gravity.START
             viewHolder.name.text = userMap?.get(chatMessage.sender_id!!)?.name
 
-            lp.gravity = Gravity.LEFT
+            lp.gravity = Gravity.START
             viewHolder.message.layoutParams = lp
         }
         viewHolder.message.text = chatMessage.message

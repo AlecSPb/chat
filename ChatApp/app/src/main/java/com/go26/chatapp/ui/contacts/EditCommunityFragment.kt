@@ -75,7 +75,7 @@ class EditCommunityFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.edit_community_toolbar_item, menu)
+        inflater!!.inflate(R.menu.edit_toolbar_item, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -89,17 +89,17 @@ class EditCommunityFragment : Fragment() {
                 val name = community_name_edit_text.text.toString()
                 val description = description_edit_text.text.toString()
                 val location = location_edit_text.text.toString()
-                val community = CommunityModel(communityId = communityModel?.communityId, name = name, description = description, location = location)
+                val community = CommunityModel(communityId = communityModel?.communityId,imageUrl = communityModel?.imageUrl, name = name, description = description, location = location)
 
                 MyChatManager.setmContext(context)
                 MyChatManager.updateCommunityInfo(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
-                        Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
                         fragmentManager.popBackStack()
                         fragmentManager.beginTransaction().remove(this@EditCommunityFragment).commit()
                     }
                 }, community, NetworkConstants().UPDATE_INFO)
-                return false
+                return true
             }
             else -> {
                 return false

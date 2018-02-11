@@ -74,6 +74,7 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        MyChatManager.setmContext(context)
         search_edit_text.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 

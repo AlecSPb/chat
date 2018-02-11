@@ -84,12 +84,12 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
                             isRequested = true
                         }
                     }
-
                 }
 
                 if (!isRequested) {
                     request_button.text = "申請"
                     request_button.setOnClickListener {
+                        MyChatManager.setmContext(this)
                         MyChatManager.sendCommunityJoinRequest(object : NotifyMeInterface {
                             override fun handleData(obj: Any, requestCode: Int?) {
                                 finish()
