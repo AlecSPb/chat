@@ -904,20 +904,20 @@ object MyChatManager {
     }
 
     fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
-        val updateMap: HashMap<String, Any> = hashMapOf()
-        updateMap.put(FirebaseConstants().NAME, userModel?.name!!)
-        updateMap.put(FirebaseConstants().IMAGE_URL, userModel.imageUrl!!)
-        updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel.programmingLanguage!!)
-        updateMap.put(FirebaseConstants().WHAT_MADE, userModel.whatMade!!)
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, userModel?.name)
+        updateMap.put(FirebaseConstants().IMAGE_URL, userModel?.imageUrl)
+        updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel?.programmingLanguage)
+        updateMap.put(FirebaseConstants().WHAT_MADE, userModel?.whatMade)
 
-        userRef?.child(userModel.uid)?.updateChildren(updateMap)
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
 
-        userRef?.child(userModel.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     dataSnapshot.children.forEach{ it ->
-                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel.uid)?.updateChildren(updateMap)
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
 
                     }
                 } else {
@@ -929,12 +929,12 @@ object MyChatManager {
     }
 
     fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
-        val updateMap: HashMap<String, Any> = hashMapOf()
-        updateMap.put(FirebaseConstants().NAME, communityModel?.name!!)
-        updateMap.put(FirebaseConstants().IMAGE_URL, communityModel.imageUrl!!)
-        updateMap.put(FirebaseConstants().DESCRIPTION, communityModel.description!!)
-        updateMap.put(FirebaseConstants().LOCATION, communityModel.location!!)
-        communityRef?.child(communityModel.communityId)?.updateChildren(updateMap)
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, communityModel?.name)
+        updateMap.put(FirebaseConstants().IMAGE_URL, communityModel?.imageUrl)
+        updateMap.put(FirebaseConstants().DESCRIPTION, communityModel?.description)
+        updateMap.put(FirebaseConstants().LOCATION, communityModel?.location)
+        communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
         callback?.handleData(true, requestType)
     }
 
