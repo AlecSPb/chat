@@ -9,28 +9,21 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.ChatRoomsAdapter
-import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
-import com.go26.chatapp.constants.DataConstants.Companion.communityMap
-import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
 import com.go26.chatapp.constants.FirebaseConstants
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.ChatRoomModel
-import com.go26.chatapp.model.CommunityModel
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.Query
 import kotlinx.android.synthetic.main.fragment_chat_rooms.*
-import java.util.*
 
 
 class ChatRoomsFragment : Fragment() {
@@ -63,6 +56,7 @@ class ChatRoomsFragment : Fragment() {
         setViews()
 
     }
+
     private fun setViews() {
         //bottomNavigationView　表示
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
@@ -76,12 +70,24 @@ class ChatRoomsFragment : Fragment() {
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.title = "Chat"
 
-        val recycler: RecyclerView? = view?.findViewById(R.id.rv_main)
+        val recycler: RecyclerView? = view?.findViewById(R.id.chat_rooms_recycler_view)
         recycler?.layoutManager = LinearLayoutManager(context)
 
-        val ref: Query = FirebaseDatabase.getInstance().reference.child(FirebaseConstants().USERS).child(currentUser?.uid).child(FirebaseConstants().CHAT_ROOMS)
-        adapter = ChatRoomsAdapter(context, ref)
-        recycler?.adapter = adapter
+        MyChatManager.setmContext(context)
+        MyChatManager.isChatRoomExist(object : NotifyMeInterface {
+            override fun handleData(obj: Any, requestCode: Int?) {
+                val isValid = obj as Boolean
+                if (isValid) {
+                    val ref: Query = FirebaseDatabase.getInstance().reference.child(FirebaseConstants().USERS).child(currentUser?.uid).child(FirebaseConstants().CHAT_ROOMS)
+                    adapter = ChatRoomsAdapter(context, ref)
+                    recycler?.visibility = View.VISIBLE
+                    recycler?.adapter = adapter
+                } else {
+                    empty_view.visibility = View.VISIBLE
+                }
+            }
+        }, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
+
     }
 
     companion object {

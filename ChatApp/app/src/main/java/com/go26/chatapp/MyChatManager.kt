@@ -320,6 +320,8 @@ object MyChatManager {
                     myCommunitiesSnapshot.children.forEach { it ->
                         communityRef?.child(it.key)?.addListenerForSingleValueEvent(listenerForSingle)
                     }
+                } else {
+                    callback?.handleData(true, requestType)
                 }
             }
         }
@@ -446,6 +448,8 @@ object MyChatManager {
                     myFriendsSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.addListenerForSingleValueEvent(listenerForSingle)
                     }
+                } else {
+                    callback?.handleData(true, requestType)
                 }
             }
         }
@@ -692,7 +696,7 @@ object MyChatManager {
     }
 
     fun fetchPopularCommunity(callback: NotifyMeInterface?, requestType: Int?) {
-        var communityCount = 0
+        var communityCount: Int
 
         // communityの数を取得
         val listener = object : ValueEventListener {
@@ -701,6 +705,8 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     communityCount = dataSnapshot.children.count()
                     queryPopularCommunity(callback, communityCount, requestType)
+                } else {
+                    callback?.handleData(true, requestType)
                 }
             }
         }
@@ -896,6 +902,19 @@ object MyChatManager {
         }
 
         userRef?.child(uid)?.child(FirebaseConstants().CHAT_ROOMS)?.child(chatRoomModel.id)?.addListenerForSingleValueEvent(listener)
+    }
+
+    fun isChatRoomExist(callback: NotifyMeInterface?, requestType: Int?) {
+        userRef?.child(currentUser?.uid)?.child(FirebaseConstants().CHAT_ROOMS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
     }
 
     fun createChatRoom(callback: NotifyMeInterface?, uid: String, chatRoomModel: ChatRoomModel, requestType: Int?) {
