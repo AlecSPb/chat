@@ -89,7 +89,7 @@ class EditCommunityFragment : Fragment() {
                 val name = community_name_edit_text.text.toString()
                 val description = description_edit_text.text.toString()
                 val location = location_edit_text.text.toString()
-                val community = CommunityModel(communityId = communityModel?.communityId, name = name, description = description, location = location)
+                val community = CommunityModel(communityId = communityModel?.communityId,imageUrl = communityModel?.imageUrl, name = name, description = description, location = location)
 
                 MyChatManager.setmContext(context)
                 MyChatManager.updateCommunityInfo(object : NotifyMeInterface {

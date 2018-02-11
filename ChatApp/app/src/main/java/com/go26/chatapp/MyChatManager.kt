@@ -396,24 +396,33 @@ object MyChatManager {
                         }
                         if (isMyFriend) {
                             if (!friendModel.friendDeleted!!) {
-                                var friend: UserModel? = null
+                                var friendId: String
                                 for (f in friendModel.members) {
                                     if (f.key != currentUser?.uid) {
-                                        friend = friendModel.members[f.key]
-                                    }
-                                }
-                                myFriendsMap.put(friend?.uid!!, friend)
-                                myFriends.clear()
-                                myFriends = myFriendsMap.values.toMutableList()
+                                        friendId = f.key
 
-                                // lastMessageが変わったらchatRoomを作る
-                                if (friendModel.lastMessage?.timestamp != null) {
-                                    if (friendModel.lastMessage?.timestamp!! >= friendModel.members[currentUser?.uid]?.joinTime!!) {
-                                        val chatRoomModel = ChatRoomModel(friendModel.friendId!!, friend.name!!, friend.imageUrl!!,
-                                                friendModel.lastMessage?.message!!, friendModel.members[currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
-                                        userRef?.child(currentUser?.uid)?.child(FirebaseConstants().CHAT_ROOMS)?.child(chatRoomModel.id)?.setValue(chatRoomModel)
+                                        userRef?.child(friendId)?.addListenerForSingleValueEvent(object : ValueEventListener {
+                                            override fun onCancelled(p0: DatabaseError?) {}
+
+                                            override fun onDataChange(p0: DataSnapshot?) {
+                                                val friend: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
+                                                myFriendsMap.put(friend?.uid!!, friend)
+                                                myFriends.clear()
+                                                myFriends = myFriendsMap.values.toMutableList()
+
+                                                // lastMessageが変わったらchatRoomを作る
+                                                if (friendModel.lastMessage?.timestamp != null) {
+                                                    if (friendModel.lastMessage?.timestamp!! >= friendModel.members[currentUser?.uid]?.joinTime!!) {
+                                                        val chatRoomModel = ChatRoomModel(friendModel.friendId!!, friend.name!!, friend.imageUrl!!,
+                                                                friendModel.lastMessage?.message!!, friendModel.members[currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
+                                                        userRef?.child(currentUser?.uid)?.child(FirebaseConstants().CHAT_ROOMS)?.child(chatRoomModel.id)?.setValue(chatRoomModel)
+                                                    }
+                                                }
+                                            }
+                                        })
                                     }
                                 }
+
                             } else {
                                 friendRef?.child(friendModel.friendId)?.removeEventListener(this)
                             }
@@ -897,6 +906,7 @@ object MyChatManager {
     fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, userModel?.name!!)
+        updateMap.put(FirebaseConstants().IMAGE_URL, userModel.imageUrl!!)
         if (userModel.programmingLanguage != null) {
             updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel.programmingLanguage!!)
         }
@@ -904,12 +914,27 @@ object MyChatManager {
             updateMap.put(FirebaseConstants().WHAT_MADE, userModel.whatMade!!)
         }
         userRef?.child(userModel.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel.uid)?.updateChildren(updateMap)
+
+                    }
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
         callback?.handleData(true, requestType)
     }
 
     fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, communityModel?.name!!)
+        updateMap.put(FirebaseConstants().IMAGE_URL, communityModel.imageUrl!!)
         updateMap.put(FirebaseConstants().DESCRIPTION, communityModel.description!!)
         updateMap.put(FirebaseConstants().LOCATION, communityModel.location!!)
         communityRef?.child(communityModel.communityId)?.updateChildren(updateMap)
@@ -1051,6 +1076,7 @@ object MyChatManager {
             user.value.unreadCount = 0
             user.value.joinTime = time.toString()
             user.value.lastSeenMessageTimestamp = time.toString()
+            user.value.age = null
             user.value.deleteTill = time.toString()
         }
 

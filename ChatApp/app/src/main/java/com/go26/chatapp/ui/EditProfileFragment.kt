@@ -87,7 +87,7 @@ class EditProfileFragment : Fragment() {
             R.id.finish_edit -> {
                 var isValid = true
                 var errorMessage = ""
-                val userModel = UserModel(uid = currentUser?.uid)
+                val userModel = UserModel(uid = currentUser?.uid, imageUrl = currentUser?.imageUrl!!)
 
                 val name = name_edit_text.text.toString()
                 if (name.isBlank()) {
