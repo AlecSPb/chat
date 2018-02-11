@@ -32,4 +32,6 @@ class NetworkConstants {
     val UPDATE_INFO = 1026
     val SEARCH_LOCATION = 1027
     val FETCH_POPULAR_COMMUNITY = 1028
+    val FETCH_COMMUNITY_MEMBER = 1029
+
 }

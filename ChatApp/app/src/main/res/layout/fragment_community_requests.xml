@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.go26.chatapp.ui.CommunityRequestsFragment">
+    tools:context="com.go26.chatapp.ui.contacts.requests.CommunityRequestsFragment">
 
     <include
         android:id="@+id/toolbar"

@@ -56,6 +56,19 @@
         android:layout_toEndOf="@+id/profile_image_view"
         android:visibility="gone"/>
 
+    <Button
+        android:id="@+id/community_member_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/description_text_view"
+        android:text="メンバー"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/language_text_view"
         android:layout_width="wrap_content"

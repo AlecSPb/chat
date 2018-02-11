@@ -9,6 +9,7 @@ import com.go26.chatapp.constants.*
 import com.go26.chatapp.constants.DataConstants.Companion.communityList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.constants.DataConstants.Companion.communityMemberList
 import com.go26.chatapp.constants.DataConstants.Companion.communityMembersMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityMessageMap
 import com.go26.chatapp.constants.DataConstants.Companion.communityRequestsList
@@ -476,6 +477,28 @@ object MyChatManager {
             userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(myFriendsListenerForSingle)
         } else {
             userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addValueEventListener(myFriendsListener)
+        }
+    }
+
+    fun fetchCommunityMember(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        communityMemberList.clear()
+        val memberCount = communityModel?.memberCount
+        var now = 0
+
+        val listener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(p0: DataSnapshot?) {
+                val member: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
+                communityMemberList.add(member!!)
+                now += 1
+                if (now == memberCount) {
+                    callback?.handleData(true, requestType)
+                }
+            }
+        }
+
+        for (member in communityModel?.members?.values!!) {
+            userRef?.child(member.uid)?.addListenerForSingleValueEvent(listener)
         }
     }
 
@@ -1359,6 +1382,9 @@ object MyChatManager {
         userModel?.online = null
         userModel?.friends?.clear()
         userModel?.unreadCount = 0
+        userModel?.programmingLanguage = null
+        userModel?.whatMade = null
+        userModel?.age = null
         userModel?.joinTime = time.toString()
         userModel?.lastSeenMessageTimestamp = time.toString()
         userModel?.deleteTill = time.toString()

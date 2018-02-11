@@ -36,6 +36,7 @@ class SearchUserFragment : Fragment() {
             val adapter = SearchUserAdapter(foundUserList) { position ->
                 val intent = Intent(context, FriendRequestActivity::class.java)
                 intent.putExtra("position", position)
+                intent.putExtra("type", "search")
                 activity.startActivity(intent)
             }
             search_user_recycler_view.adapter = adapter

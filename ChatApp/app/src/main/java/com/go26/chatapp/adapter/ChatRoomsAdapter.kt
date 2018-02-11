@@ -13,7 +13,7 @@ import android.widget.TextView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.go26.chatapp.R
 import com.go26.chatapp.model.ChatRoomModel
-import com.go26.chatapp.ui.ChatFragment
+import com.go26.chatapp.ui.chat.ChatFragment
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import com.google.firebase.database.Query
 
