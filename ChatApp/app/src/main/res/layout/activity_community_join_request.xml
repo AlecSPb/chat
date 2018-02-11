@@ -27,7 +27,7 @@ tools:context="com.go26.chatapp.ui.search.CommunityJoinRequestActivity">
         android:layout_below="@+id/toolbar"
         android:layout_marginRight="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_24"
         android:layout_toRightOf="@+id/profile_image_view"
         android:layout_toEndOf="@+id/profile_image_view" />
 

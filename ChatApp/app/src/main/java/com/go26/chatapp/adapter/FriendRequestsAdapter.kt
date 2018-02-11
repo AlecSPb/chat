@@ -25,7 +25,7 @@ import java.util.HashMap
  */
 class FriendRequestsAdapter(private val context: Context, private val friendRequests: MutableList<UserModel>) : RecyclerView.Adapter<FriendRequestsAdapter.RequestViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RequestViewHolder =
-            RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_contact, parent, false))
+            RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_friend_request, parent, false))
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
         holder.userName.text = friendRequests[position].name
