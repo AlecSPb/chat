@@ -51,7 +51,46 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
         viewPager?.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    val searchWord = search_edit_text.text.toString()
+                    if (searchWord != "") {
+                        when (search_edit_text.hint.toString()) {
+                            "活動場所で検索" -> {
+                                MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
+                                    override fun handleData(obj: Any, requestCode: Int?) {
+                                        val valid: Boolean = obj as Boolean
+                                        if (valid) {
+                                            reloadAdapter(0)
+                                        }
+                                    }
+                                }, searchWord, NetworkConstants().SEARCH_LOCATION)
+                            }
+                            "コミュニティ名で検索" -> {
+                                MyChatManager.searchCommunityName(object : NotifyMeInterface {
+                                    override fun handleData(obj: Any, requestCode: Int?) {
+                                        val valid: Boolean = obj as Boolean
+                                        if (valid) {
+                                            reloadAdapter(1)
+                                        }
+                                    }
+                                }, searchWord, NetworkConstants().SEARCH_COMUUNITY)
+                            }
+                            "ユーザーを検索" -> {
+                                MyChatManager.searchUserName(object : NotifyMeInterface {
+                                    override fun handleData(obj: Any, requestCode: Int?) {
+                                        val valid: Boolean = obj as Boolean
+                                        if (valid) {
+                                            reloadAdapter(2)
+                                        }
+                                    }
+                                }, searchWord, NetworkConstants().SEARCH_USER)
+                            }
+                        }
+                    }
+                }
+            }
+
             override fun onPageSelected(position: Int) {
                 viewModel.setSearchHint(position)
             }
@@ -125,8 +164,8 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
     }
 
     override fun reloadAdapter(index: Int) {
-        val adapter = SearchRootFragmentPagerAdapter(fragmentManager)
-        viewPager?.let { adapter.destroyAllItem(it) }
+        viewPager?.let { adapter?.destroyAllItem(it) }
+        adapter = SearchRootFragmentPagerAdapter(fragmentManager)
         viewPager?.adapter = adapter
         viewPager?.currentItem = index
     }

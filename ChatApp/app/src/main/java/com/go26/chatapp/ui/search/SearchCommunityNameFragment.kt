@@ -31,6 +31,7 @@ class SearchCommunityNameFragment : Fragment() {
         if (foundCommunityListByName.size == 0) {
             empty_view.visibility = View.VISIBLE
         } else {
+            search_community_recycler_view.visibility = View.VISIBLE
             search_community_recycler_view.layoutManager = LinearLayoutManager(context)
             val adapter = SearchCommunityNameAdapter(foundCommunityListByName) { position ->
                 val intent = Intent(context, CommunityJoinRequestActivity::class.java)
