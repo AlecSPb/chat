@@ -16,14 +16,17 @@ import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
 import com.go26.chatapp.adapter.CommunityContactsAdapter
 import com.go26.chatapp.adapter.FriendContactsAdapter
+import com.go26.chatapp.constants.DataConstants.Companion.communityList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import com.go26.chatapp.constants.DataConstants.Companion.friendList
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.ui.RequestsActivity
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 
 class ContactsFragment : Fragment() {
-
+    var isCompleteToFetchCommunities = false
+    var isCompleteToFetchFriends = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,13 +44,33 @@ class ContactsFragment : Fragment() {
         MyChatManager.setmContext(context)
         MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
-                setCommunityContactsAdapter()
+                isCompleteToFetchCommunities = true
+                val isValid = obj as Boolean
+                if (isValid) {
+                    if (!communityList.isEmpty()) {
+                        setCommunityContactsAdapter()
+                    } else {
+                        if (isCompleteToFetchCommunities && isCompleteToFetchFriends && friendList.isEmpty()) {
+                            empty_view.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
         }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
 
         MyChatManager.fetchMyFriends(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
-                setFriendContactsAdapter()
+                isCompleteToFetchFriends = true
+                val isValid = obj as Boolean
+                if (isValid) {
+                    if (!friendList.isEmpty()) {
+                        setFriendContactsAdapter()
+                    } else {
+                        if (isCompleteToFetchCommunities && isCompleteToFetchFriends && communityList.isEmpty()) {
+                            empty_view.visibility = View.VISIBLE
+                        }
+                    }
+                }
             }
         }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
     }
@@ -67,11 +90,17 @@ class ContactsFragment : Fragment() {
     }
 
     private fun setCommunityContactsAdapter() {
+        contacts_scroll_view.visibility = View.VISIBLE
+        contacts_community_title_text_view.visibility = View.VISIBLE
+        contacts_community_recycler_view.visibility = View.VISIBLE
         contacts_community_recycler_view.layoutManager = LinearLayoutManager(context)
         contacts_community_recycler_view.adapter = CommunityContactsAdapter(context)
     }
 
     private fun setFriendContactsAdapter() {
+        contacts_scroll_view.visibility = View.VISIBLE
+        contacts_friend_title_text_view.visibility = View.VISIBLE
+        contacts_friend_recycler_view.visibility = View.VISIBLE
         contacts_friend_recycler_view.layoutManager = LinearLayoutManager(context)
         contacts_friend_recycler_view.adapter = FriendContactsAdapter(context)
     }
