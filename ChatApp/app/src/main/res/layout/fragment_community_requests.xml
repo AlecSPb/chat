@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.go26.chatapp.ui.CommunityRequestsFragment">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/profile_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="@dimen/dp_16"
+        android:layout_below="@+id/toolbar"/>
+
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_below="@+id/toolbar"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:layout_toEndOf="@+id/profile_image_view" />
+
+    <TextView
+        android:id="@+id/language_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image_view"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/made_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="過去に作ったアプリ: "
+        android:layout_below="@+id/language_text_view"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/made_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/description_text_border"
+        android:layout_below="@+id/made_title_text_view"
+        android:padding="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_toEndOf="@+id/profile_image_view"
+        android:layout_toRightOf="@+id/profile_image_view"
+        android:gravity="top|start"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/requests_content_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginLeft="@dimen/sp_48"
+        android:layout_marginStart="@dimen/sp_48"
+        android:layout_marginRight="@dimen/sp_48"
+        android:layout_marginEnd="@dimen/sp_48"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/made_text_view"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/requests_content_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_16"
+        style="?android:attr/buttonBarStyle">
+
+        <Button
+            android:id="@+id/request_confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="承認"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/request_disconfirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="拒否"
+            style="?android:attr/buttonBarButtonStyle" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".ui.search.CommunityJoinRequestActivity" />
         <activity android:name=".ui.search.FriendRequestActivity" />
-        <activity android:name=".ui.RequestsActivity"></activity>
     </application>
 
 </manifest>
