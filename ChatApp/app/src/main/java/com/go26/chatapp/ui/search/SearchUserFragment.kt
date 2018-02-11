@@ -31,6 +31,7 @@ class SearchUserFragment : Fragment() {
         if (foundUserList.size == 0) {
             empty_view.visibility = View.VISIBLE
         } else {
+            search_user_recycler_view.visibility = View.VISIBLE
             search_user_recycler_view.layoutManager = LinearLayoutManager(context)
             val adapter = SearchUserAdapter(foundUserList) { position ->
                 val intent = Intent(context, FriendRequestActivity::class.java)
