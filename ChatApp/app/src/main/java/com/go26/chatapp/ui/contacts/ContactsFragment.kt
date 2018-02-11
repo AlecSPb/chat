@@ -1,7 +1,6 @@
 package com.go26.chatapp.ui.contacts
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -20,7 +19,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.communityList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.friendList
 import com.go26.chatapp.constants.NetworkConstants
-import com.go26.chatapp.ui.RequestsActivity
+import com.go26.chatapp.ui.RequestsFragment
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 
@@ -122,8 +121,12 @@ class ContactsFragment : Fragment() {
                 return true
             }
             R.id.requests -> {
-                val intent = Intent(context, RequestsActivity::class.java)
-                startActivity(intent)
+                val requestsFragment = RequestsFragment.newInstance()
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, requestsFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
                 return true
             }
             else -> {

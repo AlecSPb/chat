@@ -198,7 +198,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                 MaterialDialog.Builder(context)
                         .title("招待")
                         .items(friendNameList)
-                        .itemsCallbackMultiChoice(null, MaterialDialog.ListCallbackMultiChoice { dialog, which, text ->
+                        .itemsCallbackMultiChoice(null, MaterialDialog.ListCallbackMultiChoice { _, which, _ ->
                             for (i in which) {
                                 selectedUserList.add(myFriends[i])
                             }
