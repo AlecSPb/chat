@@ -20,7 +20,7 @@ import com.google.firebase.database.Query
 /**
  * Created by daigo on 2018/02/12.
  */
-class ChatAdapter(var context: Context, var ref: Query, itemsPerPage: Int, deleteTill: String, chat_messages_recycler: RecyclerView)  :
+class ChatAdapter(var context: Context, ref: Query, itemsPerPage: Int, deleteTill: String, chat_messages_recycler: RecyclerView)  :
         InfiniteFirebaseRecyclerAdapter<MessageModel, ChatAdapter.ViewHolder>(
                 MessageModel::class.java, R.layout.item_chat_row,
                 ChatAdapter.ViewHolder::class.java, ref, itemsPerPage, deleteTill, chat_messages_recycler) {
@@ -38,25 +38,33 @@ class ChatAdapter(var context: Context, var ref: Query, itemsPerPage: Int, delet
             viewHolder.message.layoutParams = lp
         } else {
             viewHolder.llParent.gravity = Gravity.START
-            viewHolder.name.text = userMap?.get(chatMessage.sender_id!!)?.name
+
+            val name = userMap?.get(chatMessage.sender_id!!)?.name
+            if (name != null) {
+                viewHolder.name.visibility = View.VISIBLE
+                viewHolder.name.text = name
+            } else {
+                viewHolder.name.visibility = View.GONE
+            }
             lp.gravity = Gravity.START
             viewHolder.message.layoutParams = lp
         }
         viewHolder.message.text = chatMessage.message
+
         try {
             viewHolder.timestamp.text = MyTextUtil().getTimestamp(chatMessage.timestamp?.toLong()!!)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        viewHolder.rlName.layoutParams.width = viewHolder.message.layoutParams.width
+//        viewHolder.rlName.layoutParams.width = viewHolder.message.layoutParams.width
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var llParent = itemView.findViewById(R.id.ll_parent) as LinearLayout
         var name = itemView.findViewById(R.id.name) as TextView
         var timestamp = itemView.findViewById(R.id.timestamp) as TextView
-        var rlName = itemView.findViewById(R.id.rl_name) as RelativeLayout
+//        var rlName = itemView.findViewById(R.id.rl_name) as RelativeLayout
         var message = itemView.findViewById(R.id.message) as TextView
     }
 }

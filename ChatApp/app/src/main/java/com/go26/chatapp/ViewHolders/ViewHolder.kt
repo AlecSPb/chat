@@ -12,7 +12,6 @@ import com.go26.chatapp.R
  */
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var llParent = itemView.findViewById(R.id.ll_parent) as LinearLayout
-    var llChild = itemView.findViewById(R.id.ll_child) as LinearLayout
     var name = itemView.findViewById(R.id.name) as TextView
     var timestamp = itemView.findViewById(R.id.timestamp) as TextView
     var rlName = itemView.findViewById(R.id.rl_name) as RelativeLayout
