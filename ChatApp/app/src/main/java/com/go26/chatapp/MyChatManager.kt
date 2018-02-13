@@ -18,6 +18,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByLo
 import com.go26.chatapp.constants.DataConstants.Companion.foundCommunityListByName
 import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import com.go26.chatapp.constants.DataConstants.Companion.friendList
+import com.go26.chatapp.constants.DataConstants.Companion.friendMap
 import com.go26.chatapp.constants.DataConstants.Companion.friendRequests
 import com.go26.chatapp.constants.DataConstants.Companion.friendRequestsMap
 import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
@@ -401,6 +402,8 @@ object MyChatManager {
                             if (!friendModel.friendDeleted!!) {
                                 var friendId: String
                                 for (f in friendModel.members) {
+                                    friendMap.put(friendModel.friendId!!, friendModel)
+
                                     if (f.key != currentUser?.uid) {
                                         friendId = f.key
 
@@ -463,6 +466,7 @@ object MyChatManager {
             override fun onDataChange(myFriendsSnapshot: DataSnapshot) {
                 myFriendsMap.clear()
                 myFriends.clear()
+                friendMap.clear()
                 if (myFriendsSnapshot.exists()) {
                     myFriendsSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.removeEventListener(listener)

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,7 +17,6 @@ import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
-import com.go26.chatapp.adapter.ChatRecyclerAdapter
 import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
@@ -32,12 +32,15 @@ import java.io.File
 import java.util.*
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
+import com.go26.chatapp.adapter.ChatAdapter
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.constants.DataConstants.Companion.friendMap
 import com.go26.chatapp.model.ChatRoomModel
+import com.go26.chatapp.ui.contacts.CommunityMemberFragment
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
-    var adapter: ChatRecyclerAdapter? = null
+    var newAdapter: ChatAdapter? = null
     var chatRoomModel: ChatRoomModel? = null
     var id: String? = ""
     var progressBar: ProgressBar? = null
@@ -45,6 +48,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     var mLinearLayoutManager: LinearLayoutManager? = null
     var storage = FirebaseStorage.getInstance()
     var type: String? = ""
+    var scrollListener: RecyclerView.OnScrollListener? = null
 
     val IMAGE_GALLERY_REQUEST = 1
     val IMAGE_CAMERA_REQUEST = 2
@@ -85,7 +89,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         chatRoomModel = arguments.getSerializable("chatRoomModel") as ChatRoomModel
         id = chatRoomModel?.id
         type = chatRoomModel?.type
-        tv_loadmore.setOnClickListener(this)
+//        tv_loadmore.setOnClickListener(this)
 
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
@@ -98,7 +102,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         mLinearLayoutManager!!.stackFromEnd = true
 
         progressBar?.visibility = View.VISIBLE
-        btnSend.setOnClickListener(this)
+        send_button.setOnClickListener(this)
 
         MyChatManager.setmContext(context)
 
@@ -147,6 +151,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.member -> {
+                val communityMemberFragment = CommunityMemberFragment.newInstance(id)
+                val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, communityMemberFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+                return true
+            }
             R.id.leave -> {
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
@@ -185,18 +198,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnSend -> {
-                val message: String = et_chat.text.toString()
+            R.id.send_button -> {
+                val message: String = chat_edit_text.text.toString()
                 if (!message.isEmpty()) {
                     sendMessage(message)
                 }
             }
-
-            R.id.tv_loadmore -> {
-                /* newAdapter?.more()
-                 tv_loadmore.visibility = View.GONE*/
-            }
-
         }
     }
 
@@ -225,9 +232,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
         MyChatManager.sendMessageToACommunity(object : NotifyMeInterface {
 
             override fun handleData(obj: Any, requestCode: Int?) {
-                et_chat.setText("")
-                adapter?.notifyDataSetChanged()
-                chat_messages_recycler.scrollToPosition(adapter?.itemCount!!)
+                chat_edit_text.setText("")
+                chat_messages_recycler.scrollToPosition(newAdapter?.itemCount!!)
             }
 
         }, NetworkConstants().SEND_MESSAGE_REQUEST, id, messageModel)
@@ -243,9 +249,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
         MyChatManager.sendMessageToAFriend(object : NotifyMeInterface {
 
             override fun handleData(obj: Any, requestCode: Int?) {
-                et_chat.setText("")
-                adapter?.notifyDataSetChanged()
-                chat_messages_recycler.scrollToPosition(adapter?.itemCount!!)
+                chat_edit_text.setText("")
+                chat_messages_recycler.scrollToPosition(newAdapter?.itemCount!!)
             }
 
         }, NetworkConstants().SEND_MESSAGE_REQUEST, id, messageModel)
@@ -253,13 +258,23 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onStop() {
         super.onStop()
+        chat_messages_recycler.removeOnScrollListener(scrollListener)
         getLastMessageAndUpdateUnreadCount()
     }
 
+
     private fun readMessagesFromFirebase() {
-//        val currentCommunity = DataConstants.communityMap?.get(id)
-//        var time = Calendar.getInstance().timeInMillis
-//        var deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
+        var deleteTill = ""
+        when (type) {
+            AppConstants().COMMUNITY_CHAT -> {
+                val currentCommunity = DataConstants.communityMap?.get(id)
+                deleteTill = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
+            }
+            AppConstants().FRIEND_CHAT -> {
+                deleteTill = friendMap[id]?.members?.get(currentUser?.uid)?.deleteTill!!
+            }
+        }
+
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference
 
         val itemCount = 10
@@ -267,28 +282,28 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val ref: Query = mFirebaseDatabaseReference?.child(FirebaseConstants().MESSAGES)
                 ?.child(id)!!
 
-        adapter = ChatRecyclerAdapter(context, ref)
+        newAdapter = ChatAdapter(type, context, ref, itemCount, deleteTill, chat_messages_recycler)
 
-        chat_messages_recycler.setLayoutManager(mLinearLayoutManager)
-        //chat_messages_recycler.setAdapter(firebaseAdapter)
-        chat_messages_recycler.adapter = adapter
+        chat_messages_recycler.layoutManager = mLinearLayoutManager
+        chat_messages_recycler.adapter = newAdapter
         chat_messages_recycler.scrollToPosition(itemCount)
-        btnSend.visibility = View.VISIBLE
+        send_button.visibility = View.VISIBLE
         progressBar?.visibility = View.INVISIBLE
 
-
-        chat_messages_recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        scrollListener = object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (IsRecyclerViewAtTop() && newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    newAdapter?.more()
+                if (isRecyclerViewAtTop() && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    newAdapter?.more()
                 }
             }
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {}
-        })
+        }
+
+        chat_messages_recycler.addOnScrollListener(scrollListener)
     }
 
-    private fun IsRecyclerViewAtTop(): Boolean {
+    private fun isRecyclerViewAtTop(): Boolean {
         return if (chat_messages_recycler.childCount == 0) true else chat_messages_recycler.getChildAt(0).top == 0
     }
 

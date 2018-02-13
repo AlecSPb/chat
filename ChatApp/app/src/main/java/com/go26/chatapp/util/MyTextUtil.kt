@@ -12,7 +12,7 @@ import java.util.*
 class MyTextUtil {
     fun getTimestamp(milliseconds: Long): String =
             SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(milliseconds)) + " " +
-                    SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(milliseconds)).replace("", "").toLowerCase()
+                    SimpleDateFormat("hh:mm", Locale.getDefault()).format(Date(milliseconds)).replace("", "").toLowerCase()
 
     fun getEmojiFIlter(): Array<InputFilter> {
         return arrayOf(InputFilter { src, _, _, _, _, _ ->

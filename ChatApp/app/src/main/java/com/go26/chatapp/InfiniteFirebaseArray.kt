@@ -2,40 +2,27 @@ package com.go26.chatapp
 
 import com.go26.chatapp.model.MessageModel
 import android.text.TextUtils
-import android.support.annotation.IntDef
 import com.google.firebase.database.*
-import java.lang.annotation.RetentionPolicy
 
 
 /**
  * Created by daigo on 2018/01/18.
  */
-class InfiniteFirebaseArray(ref: Query, private val mNumberPerPage: Int, startat: String) : ChildEventListener, ValueEventListener {
+class InfiniteFirebaseArray(ref: Query, private val numberPerPage: Int, private val startAt: String) : ChildEventListener, ValueEventListener {
+    val ADDED = 0
+    val CHANGED = 1
+    val REMOVED = 2
+    val NOTIFY_ALL = 3
 
-    internal var tempList: MutableList<DataSnapshot> = ArrayList()
+    private var tempList: MutableList<DataSnapshot> = mutableListOf()
 
-    private var mQuery: Query? = null
-    var mSnapshots: MutableList<DataSnapshot> = ArrayList()
-    private var mIndex = -1
-    private var mNextChildKey: String? = null
-    private var mEndKey: String? = null
-    private var mCount: Int = 0
+    private var query: Query? = null
+    var snapShots: MutableList<DataSnapshot> = mutableListOf()
+    private var nextChildKey: String? = null
+    private var endKey: String? = null
+    private var count: Int = 0
     private var isDuplicateKey: Boolean = false
-    private var mListener: OnChangedListener? = null
-
-    val count: Int
-        get() = mSnapshots.size
-
-    val isHasMore: Boolean
-        get() {
-            var isHasMore = true
-            if (mCount < mNumberPerPage || isDuplicateKey) {
-                isHasMore = false
-            }
-//            Logger.d("isHasMore: " + isHasMore)
-            return isHasMore
-        }
-
+    private var listener: OnChangedListener? = null
 
 //    @IntDef(ADDED.toLong(), CHANGED.toLong(), REMOVED.toLong(), NOTIFY_ALL.toLong())
 //    @Retention(RetentionPolicy.SOURCE)
@@ -49,110 +36,115 @@ class InfiniteFirebaseArray(ref: Query, private val mNumberPerPage: Int, startat
     }
 
     init {
-        startAt = startat
         initQuery(ref)
     }
 
     private fun initQuery(ref: Query) {
-//        Logger.d("LastChildKey: " + mNextChildKey!!)
-//        Logger.d("NumberPerPage: " + mNumberPerPage)
-        mQuery = ref.orderByChild("timestamp").startAt(startAt).limitToLast(mNumberPerPage)
-        mQuery!!.addChildEventListener(this)
-        mCount = 0
+        query = ref.orderByChild("timestamp").startAt(startAt).limitToLast(numberPerPage)
+        query!!.addChildEventListener(this)
+        count = 0
         tempList.clear()
     }
 
     private fun initNextQuery(ref: Query) {
-//        Logger.d("LastChildKey: " + mNextChildKey!!)
-//        Logger.d("NumberPerPage: " + mNumberPerPage)
         ref.orderByChild("timestamp").limitToLast(5)
-                .startAt(startAt).endAt(mEndKey).addListenerForSingleValueEvent(this)
-        mCount = 0
+                .startAt(startAt).endAt(endKey).addListenerForSingleValueEvent(this)
+        count = 0
         tempList.clear()
     }
 
     fun cleanup() {
 //        Logger.enter()
-        //mQuery.removeEventListener(this);
+        //query.removeEventListener(this);
 //        Logger.exit()
     }
 
     fun more(ref: Query) {
-        if (/*isHasMore()*/true) {
+        if (isHasMore()) {
             initNextQuery(ref)
         }
     }
 
+    fun getCount(): Int = snapShots.size
+
     fun getItem(index: Int): DataSnapshot {
-        return mSnapshots[index]
+        return snapShots[index]
     }
 
 
-    override fun onChildAdded(snapshot: DataSnapshot?, previousChildKey: String) {
+    override fun onChildAdded(snapshot: DataSnapshot?, previousChildKey: String?) {
         if (snapshot == null) {
             return
         }
-        mCount++
-        if (mCount == 1) {
-            mEndKey = snapshot.getValue(MessageModel::class.java)?.timestamp
+        count++
+        if (count == 1) {
+            endKey = snapshot.getValue(MessageModel::class.java)?.timestamp
         }
-        mNextChildKey = snapshot.key
-        /*if (mCount > mNumberPerPage) {
+        nextChildKey = snapshot.key
+        /*if (count > numberPerPage) {
             return;
         }*/
-        if (checkDuplicateKey(mNextChildKey)) {
+        if (checkDuplicateKey(nextChildKey)) {
             isDuplicateKey = true
             return
         }
         /*  tempList.clear();
         tempList.add(snapshot);
-        //if (mCount == mNumberPerPage) {
-        mSnapshots.addAll(0, tempList);
-        mListener.onChanged(ADDED, 0, -1);*/
+        //if (count == numberPerPage) {
+        snapShots.addAll(0, tempList);
+        listener.onChanged(ADDED, 0, -1);*/
         //}
-        //mSnapshots.addAll(0, tempList);
+        //snapShots.addAll(0, tempList);
         tempList.clear()
         tempList.add(snapshot)
-        val size = mSnapshots.size
-        mSnapshots.addAll(size, tempList)
-        notifyChangedListeners(ADDED, mSnapshots.size)
+        val size = snapShots.size
+        snapShots.addAll(size, tempList)
+        notifyChangedListeners(ADDED, snapShots.size)
         //notifyChangedListeners(ADDED, 0);
 
-//        Logger.d(mIndex.toString() + " : " + mNextChildKey)
+//        Logger.d(mIndex.toString() + " : " + nextChildKey)
     }
 
     private fun checkDuplicateKey(nextChildKey: String?): Boolean {
-        if (mSnapshots.size > 0) {
-            val previousSnapshot = mSnapshots[0]
-            val previousChildkey = if (previousSnapshot == null) "" else previousSnapshot.key
+        if (snapShots.size > 0) {
+            val previousSnapshot = snapShots[0]
+            val previousChildkey = previousSnapshot.key
             return !TextUtils.isEmpty(previousChildkey) && previousChildkey == nextChildKey
         }
         return false
     }
 
+    private fun isHasMore(): Boolean {
+        var isHasMore = true
+        if (count < numberPerPage || isDuplicateKey) {
+            isHasMore = false
+        }
+        return isHasMore
+    }
+
     fun setOnChangedListener(listener: OnChangedListener) {
-        mListener = listener
+        this.listener = listener
     }
 
     private fun notifyChangedListeners(@EventType type: Int, index: Int) {
         notifyChangedListeners(type, index, -1)
     }
 
-    protected fun notifyChangedListeners(@EventType type: Int, index: Int, oldIndex: Int) {
-        if (mListener != null) {
-            mListener!!.onChanged(type, index, oldIndex)
+    private fun notifyChangedListeners(@EventType type: Int, index: Int, oldIndex: Int) {
+        if (listener != null) {
+            listener!!.onChanged(type, index, oldIndex)
         }
     }
 
-    protected fun notifyCancelledListeners(databaseError: DatabaseError) {
-        if (mListener != null) {
-            mListener!!.onCancelled(databaseError)
+    private fun notifyCancelledListeners(databaseError: DatabaseError) {
+        if (listener != null) {
+            listener!!.onCancelled(databaseError)
         }
     }
 
     private fun getIndexForKey(key: String): Int {
         var index = 0
-        for (snapshot in mSnapshots) {
+        for (snapshot in snapShots) {
             if (snapshot.key.equals(key, ignoreCase = true)) {
                 return index
             } else {
@@ -165,7 +157,7 @@ class InfiniteFirebaseArray(ref: Query, private val mNumberPerPage: Int, startat
     override fun onChildChanged(snapshot: DataSnapshot, s: String) {
         val index = getIndexForKey(snapshot.key)
         if (index != -1) {
-            mSnapshots[index] = snapshot
+            snapShots[index] = snapshot
             notifyChangedListeners(CHANGED, index)
         }
     }
@@ -173,7 +165,7 @@ class InfiniteFirebaseArray(ref: Query, private val mNumberPerPage: Int, startat
     override fun onChildRemoved(snapshot: DataSnapshot) {
         val index = getIndexForKey(snapshot.key)
         if (index != -1) {
-            mSnapshots.removeAt(index)
+            snapShots.removeAt(index)
             notifyChangedListeners(REMOVED, index)
         }
     }
@@ -184,36 +176,27 @@ class InfiniteFirebaseArray(ref: Query, private val mNumberPerPage: Int, startat
 
     override fun onDataChange(dataSnapshot: DataSnapshot) {
         if (dataSnapshot.exists()) {
-            mCount = 0
+            count = 0
 
             for (currentSnap in dataSnapshot.children) {
                 //MessageModel tempModel=dataSnapshot.getChildren().iterator().next().getValue(MessageModel.class);
-                if (mCount == 0) {
-                    mEndKey = currentSnap.getValue(MessageModel::class.java)?.timestamp
+                if (count == 0) {
+                    endKey = currentSnap.getValue(MessageModel::class.java)?.timestamp
                 }
-                mNextChildKey = currentSnap.key
-                if (!checkDuplicateKey(mNextChildKey)) {
+                nextChildKey = currentSnap.key
+                if (!checkDuplicateKey(nextChildKey)) {
                     tempList.add(currentSnap)
-                    mIndex++
                 }
-                mCount++
+                count++
             }
-            mSnapshots.addAll(0, tempList)
-            mListener!!.onChanged(NOTIFY_ALL, 0, -1)
+            snapShots.addAll(0, tempList)
+//            listener!!.onChanged(NOTIFY_ALL, 0, -1)
+            listener!!.onChanged(NOTIFY_ALL, tempList.size, -1)
 
         }
     }
 
     override fun onCancelled(databaseError: DatabaseError) {
         notifyCancelledListeners(databaseError)
-    }
-
-    companion object {
-
-        val ADDED = 0
-        val CHANGED = 1
-        val REMOVED = 2
-        val NOTIFY_ALL = 3
-        private var startAt: String? = null
     }
 }

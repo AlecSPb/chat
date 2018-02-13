@@ -1,64 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_parent"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="end"
-    android:orientation="horizontal">
-
-    <LinearLayout
-        android:id="@+id/ll_child"
-        android:layout_width="wrap_content"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ll_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="#FDF5E6"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
+        android:gravity="end">
 
-        <RelativeLayout
-            android:id="@+id/rl_name"
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/profile_image_view"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_8"/>
+
+        <TextView
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="8dp">
+            android:gravity="start"
+            android:layout_toRightOf="@+id/profile_image_view"
+            android:layout_toEndOf="@+id/profile_image_view"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_1"
+            android:layout_toRightOf="@+id/profile_image_view"
+            android:layout_toEndOf="@+id/profile_image_view"
+            android:layout_below="@+id/name"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="start"
-                android:text="SkyTreasure"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:background="@drawable/message_text_shape_left"
+                android:maxWidth="200dp"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_5"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/dp_1"
                 android:layout_marginEnd="8dp"
-                android:layout_marginStart="16dp"
-                android:layout_toEndOf="@+id/name"
-                android:gravity="end"
-                android:text="12:30 PM"
+                android:layout_marginStart="8dp"
                 android:textSize="10sp" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/message_text_shape_left"
-            android:text="Hello, How are you"
-            android:padding="10dp"
-            android:maxWidth="200dp"
-            android:textSize="15sp" />
-
-
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
 
 </layout>
