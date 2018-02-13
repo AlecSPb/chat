@@ -38,28 +38,27 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews()
-        if (popularCommunityList.isEmpty()) {
-            MyChatManager.setmContext(context)
-            MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    Log.d("fetch popular", "success")
 
-                    val isValid = obj as Boolean
-                    if (isValid) {
-                        if (popularCommunityList.isEmpty()) {
-                            empty_view.visibility = View.VISIBLE
-                        } else {
-                            search_recycler_view.visibility = View.VISIBLE
-                            search_refresh.visibility = View.VISIBLE
-                            popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
-                            setAdapter()
-                        }
+        MyChatManager.setmContext(context)
+        MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
+            override fun handleData(obj: Any, requestCode: Int?) {
+                Log.d("fetch popular", "success")
+
+                val isValid = obj as Boolean
+                if (isValid) {
+                    if (popularCommunityList.isEmpty()) {
+                        empty_view.visibility = View.VISIBLE
+                    } else {
+                        popular_title_text_view.visibility = View.VISIBLE
+                        search_recycler_view.visibility = View.VISIBLE
+                        search_refresh.visibility = View.VISIBLE
+                        popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
+                        setAdapter()
                     }
                 }
-            }, NetworkConstants().FETCH_POPULAR_COMMUNITY)
-        } else {
-            setAdapter()
-        }
+            }
+        }, NetworkConstants().FETCH_POPULAR_COMMUNITY)
+
     }
 
     private fun setViews() {
@@ -100,11 +99,13 @@ class SearchFragment : Fragment() {
                     }
 
                     if (popularCommunityList.isEmpty()) {
+                        popular_title_text_view.visibility = View.GONE
                         search_recycler_view.visibility = View.GONE
                         search_refresh.visibility = View.GONE
                         empty_view.visibility = View.VISIBLE
                     } else if (valid) {
                         empty_view.visibility = View.GONE
+                        popular_title_text_view.visibility = View.VISIBLE
                         search_recycler_view.visibility = View.VISIBLE
                         search_refresh.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
