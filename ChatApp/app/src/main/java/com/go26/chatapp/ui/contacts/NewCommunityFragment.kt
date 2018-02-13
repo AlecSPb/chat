@@ -59,8 +59,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
         bottomNavigationView.visibility = View.GONE
 
-        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
@@ -69,8 +67,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.title = "Create Community"
         setHasOptionsMenu(true)
-
-//        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         paticipants?.layoutManager = LinearLayoutManager(context)
 
@@ -236,10 +232,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-    }
 //    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
 //
 //        if (requestCode == CropImage.CAMERA_CAPTURE_PERMISSIONS_REQUEST_CODE) {

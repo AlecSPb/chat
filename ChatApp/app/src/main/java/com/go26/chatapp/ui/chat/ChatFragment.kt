@@ -62,6 +62,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return inflater!!.inflate(R.layout.fragment_chat, container, false)
     }
 
@@ -260,6 +261,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         super.onStop()
         chat_messages_recycler.removeOnScrollListener(scrollListener)
         getLastMessageAndUpdateUnreadCount()
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
 

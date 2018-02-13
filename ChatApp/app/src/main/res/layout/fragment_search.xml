@@ -32,6 +32,19 @@
 
         </FrameLayout>
 
+        <TextView
+            android:id="@+id/popular_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_12"
+            android:text="人気のコミュニティ"
+            android:textSize="25dp"
+            android:textColor="#3a3a3a"
+            android:visibility="gone"/>
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/search_refresh"
             android:layout_width="match_parent"
