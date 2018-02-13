@@ -45,14 +45,21 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
             viewHolder.profileImage.visibility = View.VISIBLE
 
             val member = userMap?.get(chatMessage.sender_id!!)
-            loadRoundImage(viewHolder.profileImage, member?.imageUrl!!)
+            // 退会した人はnull
+            if (member != null) {
+                loadRoundImage(viewHolder.profileImage, member.imageUrl!!)
 
-            val name = member.name
-            if (name != null && type == AppConstants().COMMUNITY_CHAT) {
-                viewHolder.name.visibility = View.VISIBLE
-                viewHolder.name.text = name
+                val name = member.name
+                if (name != null && type == AppConstants().COMMUNITY_CHAT) {
+                    viewHolder.name.visibility = View.VISIBLE
+                    viewHolder.name.text = name
+                } else {
+                    viewHolder.name.visibility = View.GONE
+                }
             } else {
-                viewHolder.name.visibility = View.GONE
+                viewHolder.profileImage.visibility = View.GONE
+                viewHolder.name.visibility = View.VISIBLE
+                viewHolder.name.text = "退会済み"
             }
             lp.gravity = Gravity.START
             viewHolder.message.layoutParams = lp
