@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -33,7 +34,9 @@ import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
 import com.go26.chatapp.adapter.ChatAdapter
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.constants.DataConstants.Companion.friendMap
 import com.go26.chatapp.model.ChatRoomModel
+import com.go26.chatapp.ui.contacts.CommunityMemberFragment
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
@@ -148,6 +151,15 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.member -> {
+                val communityMemberFragment = CommunityMemberFragment.newInstance(id)
+                val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, communityMemberFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+                return true
+            }
             R.id.leave -> {
                 MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
@@ -252,9 +264,17 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
 
     private fun readMessagesFromFirebase() {
-        val currentCommunity = DataConstants.communityMap?.get(id)
-        var time = Calendar.getInstance().timeInMillis
-        val deleteTill: String = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
+        var deleteTill = ""
+        when (type) {
+            AppConstants().COMMUNITY_CHAT -> {
+                val currentCommunity = DataConstants.communityMap?.get(id)
+                deleteTill = currentCommunity?.members?.get(currentUser?.uid)?.deleteTill!!
+            }
+            AppConstants().FRIEND_CHAT -> {
+                deleteTill = friendMap[id]?.members?.get(currentUser?.uid)?.deleteTill!!
+            }
+        }
+
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().reference
 
         val itemCount = 10
@@ -262,10 +282,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val ref: Query = mFirebaseDatabaseReference?.child(FirebaseConstants().MESSAGES)
                 ?.child(id)!!
 
-        newAdapter = ChatAdapter(context, ref, itemCount, deleteTill, chat_messages_recycler)
+        newAdapter = ChatAdapter(type, context, ref, itemCount, deleteTill, chat_messages_recycler)
 
         chat_messages_recycler.layoutManager = mLinearLayoutManager
-        //chat_messages_recycler.setAdapter(firebaseAdapter)
         chat_messages_recycler.adapter = newAdapter
         chat_messages_recycler.scrollToPosition(itemCount)
         send_button.visibility = View.VISIBLE

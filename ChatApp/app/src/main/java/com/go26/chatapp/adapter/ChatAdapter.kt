@@ -1,6 +1,7 @@
 package com.go26.chatapp.adapter
 
 import android.content.Context
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
 import android.view.Gravity
 import android.view.View
@@ -10,17 +11,19 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.go26.chatapp.InfiniteFirebaseRecyclerAdapter
 import com.go26.chatapp.R
+import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants.Companion.userMap
 import com.go26.chatapp.model.MessageModel
 import com.go26.chatapp.model.UserModel
 import com.go26.chatapp.util.MyTextUtil
+import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import com.go26.chatapp.util.SharedPrefManager
 import com.google.firebase.database.Query
 
 /**
  * Created by daigo on 2018/02/12.
  */
-class ChatAdapter(var context: Context, ref: Query, itemsPerPage: Int, deleteTill: String, chat_messages_recycler: RecyclerView)  :
+class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerPage: Int, deleteTill: String, chat_messages_recycler: RecyclerView)  :
         InfiniteFirebaseRecyclerAdapter<MessageModel, ChatAdapter.ViewHolder>(
                 MessageModel::class.java, R.layout.item_chat_row,
                 ChatAdapter.ViewHolder::class.java, ref, itemsPerPage, deleteTill, chat_messages_recycler) {
@@ -33,14 +36,19 @@ class ChatAdapter(var context: Context, ref: Query, itemsPerPage: Int, deleteTil
 
         if (chatMessage.sender_id.toString() == currentUser.uid) {
             viewHolder.llParent.gravity = Gravity.END
+            viewHolder.profileImage.visibility = View.GONE
             viewHolder.name.visibility = View.GONE
             lp.gravity = Gravity.END
             viewHolder.message.layoutParams = lp
         } else {
             viewHolder.llParent.gravity = Gravity.START
+            viewHolder.profileImage.visibility = View.VISIBLE
 
-            val name = userMap?.get(chatMessage.sender_id!!)?.name
-            if (name != null) {
+            val member = userMap?.get(chatMessage.sender_id!!)
+            loadRoundImage(viewHolder.profileImage, member?.imageUrl!!)
+
+            val name = member.name
+            if (name != null && type == AppConstants().COMMUNITY_CHAT) {
                 viewHolder.name.visibility = View.VISIBLE
                 viewHolder.name.text = name
             } else {
@@ -61,10 +69,10 @@ class ChatAdapter(var context: Context, ref: Query, itemsPerPage: Int, deleteTil
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var llParent = itemView.findViewById(R.id.ll_parent) as LinearLayout
+        var llParent = itemView.findViewById(R.id.ll_parent) as RelativeLayout
+        var profileImage = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
         var name = itemView.findViewById(R.id.name) as TextView
         var timestamp = itemView.findViewById(R.id.timestamp) as TextView
-//        var rlName = itemView.findViewById(R.id.rl_name) as RelativeLayout
         var message = itemView.findViewById(R.id.message) as TextView
     }
 }

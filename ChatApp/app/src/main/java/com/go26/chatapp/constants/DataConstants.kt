@@ -26,6 +26,7 @@ class DataConstants {
         var communityMap: MutableMap<String, CommunityModel>? = LinkedHashMap()
         var userMap: MutableMap<String, UserModel>? = mutableMapOf()
         var communityMembersMap: MutableMap<String, ArrayList<UserModel>>? = mutableMapOf()
+        var friendMap: MutableMap<String, FriendModel> = mutableMapOf()
 
         // Search
         var popularCommunityList: MutableList<CommunityModel> = mutableListOf()
