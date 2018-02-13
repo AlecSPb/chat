@@ -47,7 +47,7 @@ class InfiniteFirebaseArray(ref: Query, private val numberPerPage: Int, private 
     }
 
     private fun initNextQuery(ref: Query) {
-        ref.orderByChild("timestamp").limitToLast(5)
+        ref.orderByChild("timestamp").limitToLast(10)
                 .startAt(startAt).endAt(endKey).addListenerForSingleValueEvent(this)
         count = 0
         tempList.clear()
