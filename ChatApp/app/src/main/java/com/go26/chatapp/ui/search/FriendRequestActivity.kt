@@ -6,17 +6,16 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
-import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.communityMemberList
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.UserModel
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import kotlinx.android.synthetic.main.activity_friend_request.*
 
 class FriendRequestActivity : AppCompatActivity() {
@@ -40,38 +39,61 @@ class FriendRequestActivity : AppCompatActivity() {
 
     private fun setViews() {
         //actionbar
-        val toolbar: Toolbar? = findViewById(R.id.toolbar)
-        this.setSupportActionBar(toolbar)
-        this.supportActionBar?.setDisplayShowTitleEnabled(true)
+        this.setSupportActionBar(tool_bar)
+        this.supportActionBar?.setDisplayShowTitleEnabled(false)
         this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (type == "search") {
-            this.supportActionBar?.title = "フレンドリクエスト"
-        } else if (type == "communityMember") {
-            this.supportActionBar?.title = "メンバー詳細"
-        }
-
         if (user != null) {
+            // 名前
             name_text_view.text = user?.name
-            if (user?.programmingLanguage != null) {
-                language_text_view.visibility = View.VISIBLE
-                val language = "使用言語: " + user?.programmingLanguage
-                language_text_view.text = language
-            } else {
-                language_text_view.visibility = View.GONE
+
+            // 自己紹介
+            if (user?.selfIntroduction != null) {
+                self_introduction_text_view.visibility = View.VISIBLE
+                self_introduction_text_view.text = user?.selfIntroduction
             }
 
+            // 年齢
+            if (user?.age != null) {
+                age_title_line.visibility = View.VISIBLE
+
+                age_title_text_view.visibility = View.VISIBLE
+                age_title_text_view.text = "年齢"
+
+                age_text_view.visibility = View.VISIBLE
+                val age = user?.age.toString() + "歳"
+                age_text_view.text = age
+
+            }
+            //　使用言語
+            if (user?.programmingLanguage != null) {
+                language_title_line.visibility = View.VISIBLE
+
+                language_title_text_view.visibility = View.VISIBLE
+                language_title_text_view.text = "プログラミング言語"
+
+                language_text_view.visibility = View.VISIBLE
+                language_text_view.text = user?.programmingLanguage
+            }
+
+            // 過去に作ったもの
             if (user?.myApps != null) {
+                my_apps_title_line.visibility = View.VISIBLE
+
                 my_apps_title_text_view.visibility = View.VISIBLE
+                my_apps_title_text_view.text = "過去に作ったアプリ"
+
                 my_apps_text_view.visibility = View.VISIBLE
                 val made = user?.myApps
                 my_apps_text_view.text = made
-            } else {
-                my_apps_text_view.visibility = View.GONE
             }
 
-            loadRoundImage(profile_image_view, user?.imageUrl!!)
+            // profile画像
+            Glide.with(this)
+                    .load(user?.imageUrl)
+                    .into(profile_image_view)
 
+            // フレンド申請
             // 自分を除く
             if (user?.uid != currentUser?.uid) {
                 // フレンドも除く
@@ -104,7 +126,7 @@ class FriendRequestActivity : AppCompatActivity() {
                                     finish()
                                     Toast.makeText(this@FriendRequestActivity, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
                                 }
-                            }, DataConstants.currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
+                            }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
                         }
                     } else {
                         request_button.text = "申請中"
