@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
+import com.bumptech.glide.Glide
 import com.go26.chatapp.MyChatManager
 
 import com.go26.chatapp.R
@@ -32,33 +33,41 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setViews() {
-        val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
-        activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "MyPage"
+        activity.setSupportActionBar(tool_bar)
+        activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
 
+        // 名前
         name_text_view.text = currentUser?.name
 
+        //　使用言語
         if (currentUser?.programmingLanguage != null) {
+            language_title_line.visibility = View.VISIBLE
+
+            language_title_text_view.visibility = View.VISIBLE
+            language_title_text_view.text = "使用言語"
+
             language_text_view.visibility = View.VISIBLE
-            val language = "使用言語: " + currentUser?.programmingLanguage
-            language_text_view.text = language
-        } else {
-            language_text_view.visibility = View.GONE
+            language_text_view.text =  currentUser?.programmingLanguage
         }
 
+        // 過去に作ったもの
         if (currentUser?.whatMade != null) {
+            made_title_line.visibility = View.VISIBLE
+
             made_title_text_view.visibility = View.VISIBLE
+            made_text_view.text = "過去に作ったアプリ"
+
             made_text_view.visibility = View.VISIBLE
             val made = currentUser?.whatMade
             made_text_view.text = made
-        } else {
-            made_text_view.visibility = View.GONE
         }
 
-        loadRoundImage(profile_image_view, currentUser?.imageUrl!!)
+        // profile画像
+        Glide.with(context)
+                .load(currentUser?.imageUrl)
+                .into(profile_image_view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

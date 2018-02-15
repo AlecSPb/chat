@@ -63,4 +63,7 @@
     <color name="text_secondary">#ff808184</color>
     <color name="grey_backround">#ffF6F6F6</color>
     <color name="mdtp_date_picker_text_highlighted">#FFEC1C24</color>
+
+    <color name="profile">#1f1f1f</color>
+    <color name="profile_content">#7f7f7f</color>
 </resources>
