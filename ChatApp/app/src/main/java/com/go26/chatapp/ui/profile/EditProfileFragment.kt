@@ -195,47 +195,7 @@ class EditProfileFragment : Fragment() {
             R.id.select_photo -> {
                 return true
             }
-//            R.id.finish_edit -> {
-//                var isValid = true
-//                var errorMessage = ""
-//                val userModel = UserModel(uid = currentUser?.uid, imageUrl = currentUser?.imageUrl!!)
-//
-//                val name = name_edit_text.text.toString()
-//                if (name.isBlank()) {
-//                    isValid = false
-//                    errorMessage = "name is blank"
-//                } else {
-//                    userModel.name = name
-//                }
-//
-//                val language = language_edit_text.text.toString()
-//                if (!language.isBlank()) {
-//                    userModel.programmingLanguage = language
-//                } else {
-//                    userModel.programmingLanguage = null
-//                }
-//
-//                val made = made_edit_text.text.toString()
-//                if (!made.isBlank()) {
-//                    userModel.myApps = made
-//                } else {
-//                    userModel.myApps = null
-//                }
-//
-//                if (isValid) {
-//                    MyChatManager.setmContext(context)
-//                    MyChatManager.updateUserInfo(object : NotifyMeInterface {
-//                        override fun handleData(obj: Any, requestCode: Int?) {
-//                            Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
-//                            fragmentManager.popBackStack()
-//                            fragmentManager.beginTransaction().remove(this@EditProfileFragment).commit()
-//                        }
-//                    }, userModel, NetworkConstants().UPDATE_INFO)
-//                } else {
-//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-//                }
-//                return true
-//            }
+
             else -> {
                 return false
             }

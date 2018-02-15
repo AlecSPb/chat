@@ -17,9 +17,7 @@ import com.go26.chatapp.constants.AppConstants
 import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
-import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
 import com.go26.chatapp.model.CommunityModel
-import com.go26.chatapp.model.UserModel
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import kotlinx.android.synthetic.main.fragment_contacts_detail.*
 
@@ -34,7 +32,20 @@ class ContactsDetailFragment : Fragment() {
         id = arguments.getString("id")
         type = arguments.getString("type")
 
-        return inflater!!.inflate(R.layout.fragment_contacts_detail, container, false)
+        when (type) {
+            AppConstants().COMMUNITY -> {
+                return inflater!!.inflate(R.layout.fragment_contacts_detail, container, false)
+            }
+            AppConstants().FRIEND -> {
+                return inflater!!.inflate(R.layout.fragment_profile, container, false)
+
+            }
+        }
+        if (type == AppConstants().FRIEND) {
+            return inflater!!.inflate(R.layout.fragment_contacts_detail, container, false)
+        } else {
+            return inflater!!.inflate(R.layout.fragment_contacts_detail, container, false)
+        }
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -90,25 +101,6 @@ class ContactsDetailFragment : Fragment() {
 
                 if (communityModel.members[currentUser?.uid]?.admin != null) {
                     admin = true
-                }
-            }
-            AppConstants().FRIEND -> {
-                activity.supportActionBar?.title = "フレンド詳細"
-
-                val friend: UserModel? = myFriendsMap[id]
-                loadRoundImage(profile_image_view, friend?.imageUrl!!)
-                name_text_view.text = friend.name
-                if (friend.programmingLanguage != null) {
-                    language_text_view.visibility = View.VISIBLE
-                    val language = "使用言語: " + friend.programmingLanguage
-                    language_text_view.text = language
-                }
-
-                if (friend.myApps != null) {
-                    my_apps_title_text_view.visibility = View.VISIBLE
-                    my_apps_text_view.visibility = View.VISIBLE
-                    val made = friend.myApps
-                    my_apps_text_view.text = made
                 }
             }
         }

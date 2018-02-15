@@ -949,30 +949,6 @@ object MyChatManager {
         callback?.handleData(true, requestType)
     }
 
-    fun updateUserInfo(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
-        val updateMap: HashMap<String, Any?> = hashMapOf()
-        updateMap.put(FirebaseConstants().NAME, userModel?.name)
-        updateMap.put(FirebaseConstants().IMAGE_URL, userModel?.imageUrl)
-        updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel?.programmingLanguage)
-        updateMap.put(FirebaseConstants().MY_APPS, userModel?.myApps)
-
-        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
-
-        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {}
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
-                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
-                    }
-                    callback?.handleData(true, requestType)
-                } else {
-                    callback?.handleData(false, requestType)
-                }
-            }
-        })
-    }
-
     fun updateUserName(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, userModel?.name)
