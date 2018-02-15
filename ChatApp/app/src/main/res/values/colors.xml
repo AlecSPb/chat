@@ -66,4 +66,5 @@
 
     <color name="profile">#1f1f1f</color>
     <color name="profile_content">#7f7f7f</color>
+    <color name="profile_hint">#b3b3b3</color>
 </resources>

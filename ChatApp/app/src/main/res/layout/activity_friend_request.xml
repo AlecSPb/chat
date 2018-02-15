@@ -42,7 +42,7 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/made_title_text_view"
+        android:id="@+id/my_apps_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="過去に作ったアプリ: "
@@ -53,11 +53,11 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/made_text_view"
+        android:id="@+id/my_apps_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/description_text_border"
-        android:layout_below="@+id/made_title_text_view"
+        android:layout_below="@+id/my_apps_title_text_view"
         android:padding="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/made_text_view"
+        android:layout_below="@+id/my_apps_text_view"
         android:visibility="gone"/>
 
 </RelativeLayout>

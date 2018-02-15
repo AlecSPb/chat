@@ -954,7 +954,7 @@ object MyChatManager {
         updateMap.put(FirebaseConstants().NAME, userModel?.name)
         updateMap.put(FirebaseConstants().IMAGE_URL, userModel?.imageUrl)
         updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel?.programmingLanguage)
-        updateMap.put(FirebaseConstants().WHAT_MADE, userModel?.whatMade)
+        updateMap.put(FirebaseConstants().MY_APPS, userModel?.myApps)
 
         userRef?.child(userModel?.uid)?.updateChildren(updateMap)
 
@@ -964,14 +964,118 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     dataSnapshot.children.forEach{ it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
-
                     }
+                    callback?.handleData(true, requestType)
                 } else {
                     callback?.handleData(false, requestType)
                 }
             }
         })
-        callback?.handleData(true, requestType)
+    }
+
+    fun updateUserName(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().NAME, userModel?.name)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
+    fun updateUserProgrammingLanguage(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().PROGRAMMING_LANGUAGE, userModel?.programmingLanguage)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
+    fun updateSelfIntroduction(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().SELF_INTRODUCTION, userModel?.selfIntroduction)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
+    fun updateMyApps(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().MY_APPS, userModel?.myApps)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
+    fun updateUserAge(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().AGE, userModel?.age)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
     }
 
     fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
@@ -1387,7 +1491,7 @@ object MyChatManager {
         userModel?.friends?.clear()
         userModel?.unreadCount = 0
         userModel?.programmingLanguage = null
-        userModel?.whatMade = null
+        userModel?.myApps = null
         userModel?.age = null
         userModel?.joinTime = time.toString()
         userModel?.lastSeenMessageTimestamp = time.toString()

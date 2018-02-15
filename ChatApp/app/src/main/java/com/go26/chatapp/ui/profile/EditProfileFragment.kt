@@ -1,23 +1,27 @@
 package com.go26.chatapp.ui.profile
 
 
-import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import com.go26.chatapp.MyChatManager
-import com.go26.chatapp.NotifyMeInterface
+import com.bumptech.glide.Glide
 
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import android.R.string.cancel
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+import android.widget.RelativeLayout
+import android.widget.NumberPicker
+import com.go26.chatapp.MyChatManager
+import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.UserModel
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
-import kotlinx.android.synthetic.main.fragment_edit_profile.*
 
 
 class EditProfileFragment : Fragment() {
@@ -34,21 +38,18 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.title = "プロフィールを編集"
         setHasOptionsMenu(true)
-
-        // focus
-        edit_profile_layout.setOnTouchListener{ _, _ ->
-            val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(edit_profile_layout.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-            edit_profile_layout.requestFocus()
-            return@setOnTouchListener true
-        }
 
         // back buttonイベント
         view?.isFocusableInTouchMode = true
@@ -60,16 +61,122 @@ class EditProfileFragment : Fragment() {
             return@setOnKeyListener true
         }
 
-        name_edit_text.setText(currentUser?.name)
+        // 名前
+        name_text_view.text = currentUser?.name
+
+        // 自己紹介
+        if (currentUser?.selfIntroduction != null) {
+            self_introduction_text_view.visibility = View.VISIBLE
+            self_introduction_text_view.text = currentUser?.selfIntroduction
+        }
+
+        // 年齢
+        if (currentUser?.age != null) {
+            val age = currentUser?.age.toString() + "歳"
+            age_edit_button.text = age
+        }
+
+        // プログラミング言語
         if (currentUser?.programmingLanguage != null) {
-            language_edit_text.setText(currentUser?.programmingLanguage)
+            language_text_view.visibility = View.VISIBLE
+            language_text_view.text = currentUser?.programmingLanguage
         }
-        if (currentUser?.whatMade != null) {
-            made_edit_text.setText(currentUser?.whatMade)
+
+        // 作ったアプリ
+        if (currentUser?.myApps != null) {
+            my_apps_text_view.visibility = View.VISIBLE
+            my_apps_text_view.text = currentUser?.myApps
         }
-        loadRoundImage(profile_image_view, currentUser?.imageUrl!!)
 
+        // profile画像
+        Glide.with(context)
+                .load(currentUser?.imageUrl)
+                .into(profile_image_view)
 
+        setButtonClickListener()
+    }
+
+    private fun setButtonClickListener() {
+        // 名前
+        name_edit_button.setOnClickListener {
+            val editUserNameFragment = EditUserNameFragment.newInstance()
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editUserNameFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        // 自己紹介
+        self_introduction_edit_button.setOnClickListener {
+            val editSelfIntroductionFragment = EditSelfIntroductionFragment.newInstance()
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editSelfIntroductionFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        // 年齢
+        age_edit_button.setOnClickListener {
+            val linearLayout = RelativeLayout(context)
+            val numberPicker = NumberPicker(context)
+            numberPicker.maxValue = 100
+            numberPicker.minValue = 0
+
+            val params = RelativeLayout.LayoutParams(50, 50)
+            val numPicerParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+            numPicerParams.addRule(RelativeLayout.CENTER_HORIZONTAL)
+
+            linearLayout.layoutParams = params
+            linearLayout.addView(numberPicker, numPicerParams)
+
+            val alertDialogBuilder = AlertDialog.Builder(context)
+            alertDialogBuilder.setTitle("年齢")
+            alertDialogBuilder.setView(linearLayout)
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("Ok",
+                             { _, _ ->
+                                 val userModel = UserModel(currentUser?.uid)
+                                 userModel.age = numberPicker.value
+
+                                 MyChatManager.updateUserAge(object : NotifyMeInterface {
+                                     override fun handleData(obj: Any, requestCode: Int?) {
+                                         val age = numberPicker.value.toString() + "歳"
+                                         age_edit_button.text = age
+                                     }
+                                 }, userModel, NetworkConstants().UPDATE_INFO)
+                             })
+                    .setNegativeButton("Cancel",
+                             { dialog, _ -> dialog.cancel() })
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
+        }
+
+        // プログラミング言語
+        language_edit_button.setOnClickListener {
+            val editProgrammingLanguageFragment = EditProgrammingLanguageFragment.newInstance()
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editProgrammingLanguageFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        // 作ったアプリ
+        my_apps_edit_button.setOnClickListener {
+            val editMyAppsFragment = EditMyAppsFragment.newInstance()
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editMyAppsFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -84,47 +191,51 @@ class EditProfileFragment : Fragment() {
                 fragmentManager.popBackStack()
                 return true
             }
-            R.id.finish_edit -> {
-                var isValid = true
-                var errorMessage = ""
-                val userModel = UserModel(uid = currentUser?.uid, imageUrl = currentUser?.imageUrl!!)
 
-                val name = name_edit_text.text.toString()
-                if (name.isBlank()) {
-                    isValid = false
-                    errorMessage = "name is blank"
-                } else {
-                    userModel.name = name
-                }
-
-                val language = language_edit_text.text.toString()
-                if (!language.isBlank()) {
-                    userModel.programmingLanguage = language
-                } else {
-                    userModel.programmingLanguage = null
-                }
-
-                val made = made_edit_text.text.toString()
-                if (!made.isBlank()) {
-                    userModel.whatMade = made
-                } else {
-                    userModel.whatMade = null
-                }
-
-                if (isValid) {
-                    MyChatManager.setmContext(context)
-                    MyChatManager.updateUserInfo(object : NotifyMeInterface {
-                        override fun handleData(obj: Any, requestCode: Int?) {
-                            Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
-                            fragmentManager.popBackStack()
-                            fragmentManager.beginTransaction().remove(this@EditProfileFragment).commit()
-                        }
-                    }, userModel, NetworkConstants().UPDATE_INFO)
-                } else {
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-                }
+            R.id.select_photo -> {
                 return true
             }
+//            R.id.finish_edit -> {
+//                var isValid = true
+//                var errorMessage = ""
+//                val userModel = UserModel(uid = currentUser?.uid, imageUrl = currentUser?.imageUrl!!)
+//
+//                val name = name_edit_text.text.toString()
+//                if (name.isBlank()) {
+//                    isValid = false
+//                    errorMessage = "name is blank"
+//                } else {
+//                    userModel.name = name
+//                }
+//
+//                val language = language_edit_text.text.toString()
+//                if (!language.isBlank()) {
+//                    userModel.programmingLanguage = language
+//                } else {
+//                    userModel.programmingLanguage = null
+//                }
+//
+//                val made = made_edit_text.text.toString()
+//                if (!made.isBlank()) {
+//                    userModel.myApps = made
+//                } else {
+//                    userModel.myApps = null
+//                }
+//
+//                if (isValid) {
+//                    MyChatManager.setmContext(context)
+//                    MyChatManager.updateUserInfo(object : NotifyMeInterface {
+//                        override fun handleData(obj: Any, requestCode: Int?) {
+//                            Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
+//                            fragmentManager.popBackStack()
+//                            fragmentManager.beginTransaction().remove(this@EditProfileFragment).commit()
+//                        }
+//                    }, userModel, NetworkConstants().UPDATE_INFO)
+//                } else {
+//                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+//                }
+//                return true
+//            }
             else -> {
                 return false
             }

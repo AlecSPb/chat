@@ -61,13 +61,13 @@ class FriendRequestActivity : AppCompatActivity() {
                 language_text_view.visibility = View.GONE
             }
 
-            if (user?.whatMade != null) {
-                made_title_text_view.visibility = View.VISIBLE
-                made_text_view.visibility = View.VISIBLE
-                val made = user?.whatMade
-                made_text_view.text = made
+            if (user?.myApps != null) {
+                my_apps_title_text_view.visibility = View.VISIBLE
+                my_apps_text_view.visibility = View.VISIBLE
+                val made = user?.myApps
+                my_apps_text_view.text = made
             } else {
-                made_text_view.visibility = View.GONE
+                my_apps_text_view.visibility = View.GONE
             }
 
             loadRoundImage(profile_image_view, user?.imageUrl!!)

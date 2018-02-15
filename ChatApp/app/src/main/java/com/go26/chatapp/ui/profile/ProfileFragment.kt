@@ -3,10 +3,10 @@ package com.go26.chatapp.ui.profile
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
@@ -15,7 +15,6 @@ import com.go26.chatapp.MyChatManager
 
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -33,6 +32,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.VISIBLE
+
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(tool_bar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -41,27 +44,45 @@ class ProfileFragment : Fragment() {
         // 名前
         name_text_view.text = currentUser?.name
 
+        // 自己紹介
+        if (currentUser?.selfIntroduction != null) {
+            self_introduction_text_view.visibility = View.VISIBLE
+            self_introduction_text_view.text = currentUser?.selfIntroduction
+        }
+
+        // 年齢
+        if (currentUser?.age != null) {
+            age_title_line.visibility = View.VISIBLE
+
+            age_title_text_view.visibility = View.VISIBLE
+            age_title_text_view.text = "年齢"
+
+            age_text_view.visibility = View.VISIBLE
+            val age = currentUser?.age.toString() + "歳"
+            age_text_view.text = age
+
+        }
         //　使用言語
         if (currentUser?.programmingLanguage != null) {
             language_title_line.visibility = View.VISIBLE
 
             language_title_text_view.visibility = View.VISIBLE
-            language_title_text_view.text = "使用言語"
+            language_title_text_view.text = "プログラミング言語"
 
             language_text_view.visibility = View.VISIBLE
-            language_text_view.text =  currentUser?.programmingLanguage
+            language_text_view.text = currentUser?.programmingLanguage
         }
 
         // 過去に作ったもの
-        if (currentUser?.whatMade != null) {
-            made_title_line.visibility = View.VISIBLE
+        if (currentUser?.myApps != null) {
+            my_apps_title_line.visibility = View.VISIBLE
 
-            made_title_text_view.visibility = View.VISIBLE
-            made_text_view.text = "過去に作ったアプリ"
+            my_apps_title_text_view.visibility = View.VISIBLE
+            my_apps_title_text_view.text = "過去に作ったアプリ"
 
-            made_text_view.visibility = View.VISIBLE
-            val made = currentUser?.whatMade
-            made_text_view.text = made
+            my_apps_text_view.visibility = View.VISIBLE
+            val made = currentUser?.myApps
+            my_apps_text_view.text = made
         }
 
         // profile画像
@@ -72,7 +93,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.profile_toolbar_item,menu)
+        inflater!!.inflate(R.menu.profile_toolbar_item, menu)
         for (i in 0 until menu?.size()!!) {
             val item = menu.getItem(i)
             val spanString = SpannableString(menu.getItem(i).title.toString())

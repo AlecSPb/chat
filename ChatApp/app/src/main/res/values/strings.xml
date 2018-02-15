@@ -7,6 +7,18 @@
 
     <string name="empty">検索結果： 0件</string>
 
+    <string name="first_name">名</string>
+    <string name="last_name">姓</string>
+    <string name="programming_language">プログラミング言語</string>
+    <string name="programming_language_content">普段使っているプログラミング言語を教えてください。</string>
+    <string name="self_introduction">自己紹介</string>
+    <string name="self_introduction_content">Codyでは他のユーザーにあなたがどの様な人なのか知ってもらうことが重要です。\n\nどの様なことに興味があるか教えてください。\nまた、作りたい物があればそれも教えてください。</string>
+    <string name="my_apps">作ったアプリ</string>
+    <string name="my_apps_content">これまでに作ったアプリを教えてください。\ngithubのアカウントを持っていれば、githubのurlも教えてください。</string>
+
+    <string name="edit_finish">完了</string>
+    <string name="blank">空欄があります</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

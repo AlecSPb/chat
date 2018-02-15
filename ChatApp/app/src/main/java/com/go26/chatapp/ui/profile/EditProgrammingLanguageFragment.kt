@@ -1,9 +1,8 @@
-package com.go26.chatapp.ui.contacts
+package com.go26.chatapp.ui.profile
 
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -14,46 +13,41 @@ import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
-import com.go26.chatapp.constants.DataConstants.Companion.communityMap
+import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.constants.NetworkConstants
-import com.go26.chatapp.model.CommunityModel
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
-import kotlinx.android.synthetic.main.fragment_edit_community.*
+import com.go26.chatapp.model.UserModel
+import kotlinx.android.synthetic.main.fragment_edit_programming_language.*
 
 
-class EditCommunityFragment : Fragment() {
-    private var communityModel: CommunityModel? = null
+class EditProgrammingLanguageFragment : Fragment() {
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val id = arguments.getString("id")
-        communityModel = communityMap!![id]
-
-        return inflater!!.inflate(R.layout.fragment_edit_community, container, false)
+        // Inflate the layout for this fragment
+        return inflater!!.inflate(R.layout.fragment_edit_programming_language, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setViews()
     }
 
     private fun setViews() {
-        //bottomNavigationView　非表示
-        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
-        bottomNavigationView.visibility = View.GONE
-
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.title = "プログラミング言語を編集"
         setHasOptionsMenu(true)
 
         // focus
-        edit_community_layout.setOnTouchListener{ _, _ ->
+        parent_layout.setOnTouchListener{ _, _ ->
             val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(edit_community_layout.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-            edit_community_layout.requestFocus()
+            inputMethodManager.hideSoftInputFromWindow(parent_layout.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            parent_layout.requestFocus()
             return@setOnTouchListener true
         }
 
@@ -67,15 +61,14 @@ class EditCommunityFragment : Fragment() {
             return@setOnKeyListener true
         }
 
-        loadRoundImage(profile_image_view, communityModel?.imageUrl!!)
-        community_name_edit_text.setText(communityModel?.name)
-        location_edit_text.setText(communityModel?.location)
-        description_edit_text.setText(communityModel?.description)
+        if (currentUser?.programmingLanguage != null) {
+            programming_language_edit_text.setText(currentUser?.programmingLanguage)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.edit_community_toolbar_item, menu)
+        inflater!!.inflate(R.menu.edit_finish_item, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,20 +78,22 @@ class EditCommunityFragment : Fragment() {
                 fragmentManager.popBackStack()
                 return true
             }
-            R.id.finish_edit -> {
-                val name = community_name_edit_text.text.toString()
-                val description = description_edit_text.text.toString()
-                val location = location_edit_text.text.toString()
-                val community = CommunityModel(communityId = communityModel?.communityId,imageUrl = communityModel?.imageUrl, name = name, description = description, location = location)
+            R.id.edit_finish -> {
+                val userModel = UserModel(uid = currentUser?.uid)
+
+                val programmingLanguage = programming_language_edit_text.text.toString()
+                if (!programmingLanguage.isBlank()) {
+                    userModel.programmingLanguage = programmingLanguage
+                }
 
                 MyChatManager.setmContext(context)
-                MyChatManager.updateCommunityInfo(object : NotifyMeInterface {
+                MyChatManager.updateUserProgrammingLanguage(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
-                        Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
                         fragmentManager.popBackStack()
-                        fragmentManager.beginTransaction().remove(this@EditCommunityFragment).commit()
+                        fragmentManager.beginTransaction().remove(this@EditProgrammingLanguageFragment).commit()
                     }
-                }, community, NetworkConstants().UPDATE_INFO)
+                }, userModel, NetworkConstants().UPDATE_INFO)
+
                 return true
             }
             else -> {
@@ -107,12 +102,13 @@ class EditCommunityFragment : Fragment() {
         }
     }
 
+
     companion object {
 
-        fun newInstance(id: String): EditCommunityFragment {
-            val fragment = EditCommunityFragment()
+        fun newInstance(): EditProgrammingLanguageFragment {
+            val fragment = EditProgrammingLanguageFragment()
             val args = Bundle()
-            args.putString("id", id)
+
             fragment.arguments = args
             return fragment
         }
