@@ -21,7 +21,6 @@
     <string name="age_content">歳</string>
 
     <string name="experience_title">開発経験</string>
-    <string name="experience_null">設定しない</string>
     <string name="experience0">未経験</string>
     <string name="experience1">簡単な物なら作れる</string>
     <string name="experience2">ある程度作れる</string>

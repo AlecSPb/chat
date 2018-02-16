@@ -163,124 +163,121 @@ class EditProfileFragment : Fragment() {
             alertDialogBuilder
                     .setCancelable(false)
                     .setPositiveButton(getString(R.string.setting),
-                             { _, _ ->
-                                 val userModel = UserModel(currentUser?.uid)
-                                 userModel.age = numberPicker.value
+                            { _, _ ->
+                                val userModel = UserModel(currentUser?.uid)
+                                userModel.age = numberPicker.value
 
-                                 MyChatManager.updateUserAge(object : NotifyMeInterface {
-                                     override fun handleData(obj: Any, requestCode: Int?) {
+                                MyChatManager.updateUserAge(object : NotifyMeInterface {
+                                    override fun handleData(obj: Any, requestCode: Int?) {
 
-                                         if (currentUser?.age == numberPicker.value) {
-                                             val age = numberPicker.value.toString() + "歳"
-                                             age_edit_button.text = age
+                                        if (currentUser?.age == numberPicker.value) {
+                                            val age = numberPicker.value.toString() + "歳"
+                                            age_edit_button.text = age
 
-                                         } else {
-                                             var count = 0
-                                             val handler = Handler()
+                                        } else {
+                                            var count = 0
+                                            val handler = Handler()
 
-                                             handler.postDelayed(object : Runnable {
-                                                 override fun run() {
-                                                     count ++
-                                                     if (count > 30) {
-                                                         Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                                         return
-                                                     }
-                                                     if (currentUser?.age == numberPicker.value) {
-                                                         val age = numberPicker.value.toString() + "歳"
-                                                         age_edit_button.text = age
-                                                     } else {
-                                                         handler.postDelayed(this, 100)
-                                                     }
-                                                 }
-                                             }, 100)
-                                         }
-                                     }
-                                 }, userModel, NetworkConstants().UPDATE_INFO)
-                             })
+                                            handler.postDelayed(object : Runnable {
+                                                override fun run() {
+                                                    count++
+                                                    if (count > 30) {
+                                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                                        return
+                                                    }
+                                                    if (currentUser?.age == numberPicker.value) {
+                                                        val age = numberPicker.value.toString() + "歳"
+                                                        age_edit_button.text = age
+                                                    } else {
+                                                        handler.postDelayed(this, 100)
+                                                    }
+                                                }
+                                            }, 100)
+                                        }
+                                    }
+                                }, userModel, NetworkConstants().UPDATE_INFO)
+                            })
                     .setNegativeButton(getString(R.string.cancel),
-                             { dialog, _ -> dialog.cancel() })
+                            { dialog, _ -> dialog.cancel() })
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
         }
 
         // 開発経験
         experience_edit_button.setOnClickListener {
-            val list: MutableList<String> = mutableListOf(getString(R.string.experience_null), getString(R.string.experience0),
+            val list: MutableList<String> = mutableListOf(getString(R.string.experience0),
                     getString(R.string.experience1), getString(R.string.experience2), getString(R.string.experience3))
             MaterialDialog.Builder(context)
                     .title(getString(R.string.experience_title))
                     .items(list)
-                    .itemsCallbackSingleChoice(0, MaterialDialog.ListCallbackSingleChoice({_, _, position, _ ->
-                        if (position != 0) {
-                            val userModel = UserModel(currentUser?.uid)
-                            userModel.developmentExperience = position - 1
+                    .itemsCallbackSingleChoice(0, MaterialDialog.ListCallbackSingleChoice({ _, _, position, _ ->
+                        val userModel = UserModel(currentUser?.uid)
+                        userModel.developmentExperience = position
 
-                            MyChatManager.updateUserDevelopmentExperience(object : NotifyMeInterface {
-                                override fun handleData(obj: Any, requestCode: Int?) {
+                        MyChatManager.updateUserDevelopmentExperience(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
 
-                                    if (currentUser?.developmentExperience == position-1) {
-                                        when (currentUser?.developmentExperience) {
-                                            0 -> {
-                                                val experience = getString(R.string.experience0)
-                                                experience_edit_button.text = experience
+                                if (currentUser?.developmentExperience == position) {
+                                    when (currentUser?.developmentExperience) {
+                                        0 -> {
+                                            val experience = getString(R.string.experience0)
+                                            experience_edit_button.text = experience
+                                        }
+                                        1 -> {
+                                            val experience = getString(R.string.experience1)
+                                            experience_edit_button.text = experience
+                                        }
+                                        2 -> {
+                                            val experience = getString(R.string.experience2)
+                                            experience_edit_button.text = experience
+                                        }
+                                        3 -> {
+                                            val experience = getString(R.string.experience3)
+                                            experience_edit_button.text = experience
+                                        }
+                                    }
+
+                                } else {
+                                    var count = 0
+                                    val handler = Handler()
+
+                                    handler.postDelayed(object : Runnable {
+                                        override fun run() {
+                                            count++
+                                            if (count > 30) {
+                                                Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                                return
                                             }
-                                            1 -> {
-                                                val experience = getString(R.string.experience1)
-                                                experience_edit_button.text = experience
-                                            }
-                                            2 -> {
-                                                val experience = getString(R.string.experience2)
-                                                experience_edit_button.text = experience
-                                            }
-                                            3 -> {
-                                                val experience = getString(R.string.experience3)
-                                                experience_edit_button.text = experience
+                                            if (currentUser?.developmentExperience == position - 1) {
+                                                when (currentUser?.developmentExperience) {
+                                                    0 -> {
+                                                        val experience = getString(R.string.experience0)
+                                                        experience_edit_button.text = experience
+                                                    }
+                                                    1 -> {
+                                                        val experience = getString(R.string.experience1)
+                                                        experience_edit_button.text = experience
+                                                    }
+                                                    2 -> {
+                                                        val experience = getString(R.string.experience2)
+                                                        experience_edit_button.text = experience
+                                                    }
+                                                    3 -> {
+                                                        val experience = getString(R.string.experience3)
+                                                        experience_edit_button.text = experience
+                                                    }
+                                                }
+                                            } else {
+                                                handler.postDelayed(this, 100)
                                             }
                                         }
-
-                                    } else {
-                                        var count = 0
-                                        val handler = Handler()
-
-                                        handler.postDelayed(object : Runnable {
-                                            override fun run() {
-                                                count ++
-                                                if (count > 30) {
-                                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                                    return
-                                                }
-                                                if (currentUser?.developmentExperience == position-1) {
-                                                    when (currentUser?.developmentExperience) {
-                                                        0 -> {
-                                                            val experience = getString(R.string.experience0)
-                                                            experience_edit_button.text = experience
-                                                        }
-                                                        1 -> {
-                                                            val experience = getString(R.string.experience1)
-                                                            experience_edit_button.text = experience
-                                                        }
-                                                        2 -> {
-                                                            val experience = getString(R.string.experience2)
-                                                            experience_edit_button.text = experience
-                                                        }
-                                                        3 -> {
-                                                            val experience = getString(R.string.experience3)
-                                                            experience_edit_button.text = experience
-                                                        }
-                                                    }
-                                                } else {
-                                                    handler.postDelayed(this, 100)
-                                                }
-                                            }
-                                        }, 100)
-                                    }
+                                    }, 100)
                                 }
-                            }, userModel, NetworkConstants().UPDATE_INFO)
+                            }
+                        }, userModel, NetworkConstants().UPDATE_INFO)
 
-                            return@ListCallbackSingleChoice true
-                        } else {
-                            return@ListCallbackSingleChoice true
-                        }
+                        return@ListCallbackSingleChoice true
+
                     }))
                     .positiveText(getString(R.string.setting))
                     .negativeText(getString(R.string.cancel))
