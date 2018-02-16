@@ -8,6 +8,8 @@
     <string name="empty">検索結果： 0件</string>
 
     <string name="setting">設定する</string>
+    <string name="cancel">キャンセル</string>
+    <string name="update_failed">更新に失敗しました。アプリを再起動してください。</string>
     
     <string name="friend_request">フレンドリクエスト</string>
     <string name="send_friend_request">フレンドリクエストを送る</string>
@@ -18,11 +20,19 @@
     <string name="age_title">年齢</string>
     <string name="age_content">歳</string>
 
+    <string name="experience_title">開発経験</string>
+    <string name="experience_null">設定しない</string>
+    <string name="experience0">未経験</string>
+    <string name="experience1">簡単な物なら作れる</string>
+    <string name="experience2">ある程度作れる</string>
+    <string name="experience3">なんでも作れる</string>
+
+
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
     <string name="description">コミュニティの説明</string>
     <string name="edit_description">コミュニティの説明を編集</string>
-    <string name="description_content">他のユーザーに向けてこのコミュニティの説明をしてください。\n\nこのコミュニティはどのような特徴を持っていますか？\nまた、どのような人に入ってもらいたいですか？</string>
+    <string name="description_content">他のユーザーに向けてこのコミュニティの紹介をしてください。\n\nこのコミュニティはどのような特徴を持っていますか？\nまた、どのような人に入ってもらいたいですか？</string>
     <string name="location">活動場所</string>
     <string name="edit_location">活動場所を編集</string>
     <string name="location_content">主に活動する場所を教えてください。</string>

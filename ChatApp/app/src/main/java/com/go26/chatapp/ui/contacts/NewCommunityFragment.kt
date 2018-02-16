@@ -203,7 +203,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                             for (i in which) {
                                 selectedUserList.add(myFriends[i])
                             }
-//                            setAdapter()
                             return@ListCallbackMultiChoice true
                         })
                         .positiveText("招待")

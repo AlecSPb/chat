@@ -1054,6 +1054,27 @@ object MyChatManager {
         })
     }
 
+    fun updateUserDevelopmentExperience(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().DEVELOPMENT_EXPERIENCE, userModel?.developmentExperience)
+
+        userRef?.child(userModel?.uid)?.updateChildren(updateMap)
+
+        userRef?.child(userModel?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
     fun updateCommunityName(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, communityModel?.name)

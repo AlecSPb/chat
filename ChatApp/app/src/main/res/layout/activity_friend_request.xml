@@ -103,6 +103,33 @@ tools:context="com.go26.chatapp.ui.search.FriendRequestActivity">
             android:visibility="gone"/>
 
         <View
+            android:id="@+id/experience_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/experience_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/experience_title"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18"
+            android:layout_marginTop="@dimen/dp_22"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/experience_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/profile_content"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_22"
+            android:visibility="gone"/>
+
+        <View
             android:id="@+id/language_title_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"

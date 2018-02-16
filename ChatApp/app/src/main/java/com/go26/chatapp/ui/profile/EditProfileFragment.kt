@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog
 import android.widget.RelativeLayout
 import android.widget.NumberPicker
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.constants.NetworkConstants
@@ -74,6 +75,29 @@ class EditProfileFragment : Fragment() {
         if (currentUser?.age != null) {
             val age = currentUser?.age.toString() + "歳"
             age_edit_button.text = age
+        }
+
+        // 開発経験
+        if (currentUser?.developmentExperience != null) {
+            when (currentUser?.developmentExperience) {
+                0 -> {
+                    val experience = getString(R.string.experience0)
+                    experience_edit_button.text = experience
+                }
+                1 -> {
+                    val experience = getString(R.string.experience1)
+                    experience_edit_button.text = experience
+                }
+                2 -> {
+                    val experience = getString(R.string.experience2)
+                    experience_edit_button.text = experience
+                }
+                3 -> {
+                    val experience = getString(R.string.experience3)
+                    experience_edit_button.text = experience
+                }
+            }
+
         }
 
         // プログラミング言語
@@ -134,11 +158,11 @@ class EditProfileFragment : Fragment() {
             linearLayout.addView(numberPicker, numPicerParams)
 
             val alertDialogBuilder = AlertDialog.Builder(context)
-            alertDialogBuilder.setTitle("年齢")
+            alertDialogBuilder.setTitle(getString(R.string.age_title))
             alertDialogBuilder.setView(linearLayout)
             alertDialogBuilder
                     .setCancelable(false)
-                    .setPositiveButton("Ok",
+                    .setPositiveButton(getString(R.string.setting),
                              { _, _ ->
                                  val userModel = UserModel(currentUser?.uid)
                                  userModel.age = numberPicker.value
@@ -158,7 +182,7 @@ class EditProfileFragment : Fragment() {
                                                  override fun run() {
                                                      count ++
                                                      if (count > 30) {
-                                                         Toast.makeText(context, "更新に失敗しました。アプリを再起動してください。", Toast.LENGTH_SHORT).show()
+                                                         Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
                                                          return
                                                      }
                                                      if (currentUser?.age == numberPicker.value) {
@@ -173,10 +197,94 @@ class EditProfileFragment : Fragment() {
                                      }
                                  }, userModel, NetworkConstants().UPDATE_INFO)
                              })
-                    .setNegativeButton("Cancel",
+                    .setNegativeButton(getString(R.string.cancel),
                              { dialog, _ -> dialog.cancel() })
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
+        }
+
+        // 開発経験
+        experience_edit_button.setOnClickListener {
+            val list: MutableList<String> = mutableListOf(getString(R.string.experience_null), getString(R.string.experience0),
+                    getString(R.string.experience1), getString(R.string.experience2), getString(R.string.experience3))
+            MaterialDialog.Builder(context)
+                    .title(getString(R.string.experience_title))
+                    .items(list)
+                    .itemsCallbackSingleChoice(0, MaterialDialog.ListCallbackSingleChoice({_, _, position, _ ->
+                        if (position != 0) {
+                            val userModel = UserModel(currentUser?.uid)
+                            userModel.developmentExperience = position - 1
+
+                            MyChatManager.updateUserDevelopmentExperience(object : NotifyMeInterface {
+                                override fun handleData(obj: Any, requestCode: Int?) {
+
+                                    if (currentUser?.developmentExperience == position-1) {
+                                        when (currentUser?.developmentExperience) {
+                                            0 -> {
+                                                val experience = getString(R.string.experience0)
+                                                experience_edit_button.text = experience
+                                            }
+                                            1 -> {
+                                                val experience = getString(R.string.experience1)
+                                                experience_edit_button.text = experience
+                                            }
+                                            2 -> {
+                                                val experience = getString(R.string.experience2)
+                                                experience_edit_button.text = experience
+                                            }
+                                            3 -> {
+                                                val experience = getString(R.string.experience3)
+                                                experience_edit_button.text = experience
+                                            }
+                                        }
+
+                                    } else {
+                                        var count = 0
+                                        val handler = Handler()
+
+                                        handler.postDelayed(object : Runnable {
+                                            override fun run() {
+                                                count ++
+                                                if (count > 30) {
+                                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                                    return
+                                                }
+                                                if (currentUser?.developmentExperience == position-1) {
+                                                    when (currentUser?.developmentExperience) {
+                                                        0 -> {
+                                                            val experience = getString(R.string.experience0)
+                                                            experience_edit_button.text = experience
+                                                        }
+                                                        1 -> {
+                                                            val experience = getString(R.string.experience1)
+                                                            experience_edit_button.text = experience
+                                                        }
+                                                        2 -> {
+                                                            val experience = getString(R.string.experience2)
+                                                            experience_edit_button.text = experience
+                                                        }
+                                                        3 -> {
+                                                            val experience = getString(R.string.experience3)
+                                                            experience_edit_button.text = experience
+                                                        }
+                                                    }
+                                                } else {
+                                                    handler.postDelayed(this, 100)
+                                                }
+                                            }
+                                        }, 100)
+                                    }
+                                }
+                            }, userModel, NetworkConstants().UPDATE_INFO)
+
+                            return@ListCallbackSingleChoice true
+                        } else {
+                            return@ListCallbackSingleChoice true
+                        }
+                    }))
+                    .positiveText(getString(R.string.setting))
+                    .negativeText(getString(R.string.cancel))
+                    .show()
         }
 
         // プログラミング言語

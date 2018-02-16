@@ -100,7 +100,7 @@ class EditMyAppsFragment : Fragment() {
                                 override fun run() {
                                     count ++
                                     if (count > 30) {
-                                        Toast.makeText(context, "更新に失敗しました。アプリを再起動してください。", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
                                         return
                                     }
                                     if (currentUser?.myApps == myApps) {

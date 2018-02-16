@@ -26,4 +26,5 @@ data class UserModel(var uid: String? = null,
                      var age: Int? = null,
                      var myApps: String? = null,
                      var selfIntroduction: String? = null,
+                     var developmentExperience: Int? = null,
                      var active: Boolean? = null) : Serializable

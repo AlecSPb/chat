@@ -18,6 +18,7 @@ class FirebaseConstants {
     val PROGRAMMING_LANGUAGE = "programmingLanguage"
     val AGE = "age"
     val SELF_INTRODUCTION = "selfIntroduction"
+    val DEVELOPMENT_EXPERIENCE = "developmentExperience"
     val ONLINE = "online"
     val MEMBERS = "members"
     val MEMBER_COUNT = "memberCount"

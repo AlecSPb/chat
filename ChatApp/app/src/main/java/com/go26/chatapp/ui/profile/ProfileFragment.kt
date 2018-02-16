@@ -61,6 +61,34 @@ class ProfileFragment : Fragment() {
             age_text_view.text = age
 
         }
+
+        // 開発経験
+        if (currentUser?.developmentExperience != null) {
+            experience_title_line.visibility = View.VISIBLE
+
+            experience_title_text_view.visibility = View.VISIBLE
+
+            experience_text_view.visibility = View.VISIBLE
+            when (currentUser?.developmentExperience) {
+                0 -> {
+                    val experience = getString(R.string.experience0)
+                    experience_text_view.text = experience
+                }
+                1 -> {
+                    val experience = getString(R.string.experience1)
+                    experience_text_view.text = experience
+                }
+                2 -> {
+                    val experience = getString(R.string.experience2)
+                    experience_text_view.text = experience
+                }
+                3 -> {
+                    val experience = getString(R.string.experience3)
+                    experience_text_view.text = experience
+                }
+            }
+        }
+
         //　使用言語
         if (currentUser?.programmingLanguage != null) {
             language_title_line.visibility = View.VISIBLE
