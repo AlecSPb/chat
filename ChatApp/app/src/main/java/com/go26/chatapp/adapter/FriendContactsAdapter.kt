@@ -22,7 +22,7 @@ import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.ChatRoomModel
 import com.go26.chatapp.model.UserModel
 import com.go26.chatapp.ui.chat.ChatRoomsFragment
-import com.go26.chatapp.ui.contacts.requests.ContactsFriendDetailFragment
+import com.go26.chatapp.ui.contacts.ContactsFriendDetailFragment
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 
 /**

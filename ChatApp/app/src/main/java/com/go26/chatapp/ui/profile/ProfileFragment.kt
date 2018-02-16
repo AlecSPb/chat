@@ -55,10 +55,9 @@ class ProfileFragment : Fragment() {
             age_title_line.visibility = View.VISIBLE
 
             age_title_text_view.visibility = View.VISIBLE
-            age_title_text_view.text = "年齢"
 
             age_text_view.visibility = View.VISIBLE
-            val age = currentUser?.age.toString() + "歳"
+            val age = currentUser?.age.toString() + getString(R.string.age_content)
             age_text_view.text = age
 
         }
@@ -67,7 +66,6 @@ class ProfileFragment : Fragment() {
             language_title_line.visibility = View.VISIBLE
 
             language_title_text_view.visibility = View.VISIBLE
-            language_title_text_view.text = "プログラミング言語"
 
             language_text_view.visibility = View.VISIBLE
             language_text_view.text = currentUser?.programmingLanguage
@@ -78,7 +76,6 @@ class ProfileFragment : Fragment() {
             my_apps_title_line.visibility = View.VISIBLE
 
             my_apps_title_text_view.visibility = View.VISIBLE
-            my_apps_title_text_view.text = "過去に作ったアプリ"
 
             my_apps_text_view.visibility = View.VISIBLE
             val made = currentUser?.myApps

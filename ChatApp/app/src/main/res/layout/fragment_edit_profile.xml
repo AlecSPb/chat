@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="名前を編集"
+                android:text="@string/edit_name"
                 android:textSize="@dimen/sp_16" />
 
             <View
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
-                android:text="自己紹介"
+                android:text="@string/self_introduction"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18" />
 
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="自己紹介を編集"
+                android:text="@string/edit_self_introduction"
                 android:textSize="@dimen/sp_16" />
 
             <View
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
-                android:text="年齢"
+                android:text="@string/age_title"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18" />
 
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="設定する"
+                android:text="@string/setting"
                 android:textSize="@dimen/sp_16" />
 
             <View
@@ -120,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
-                android:text="プログラミング言語"
+                android:text="@string/programming_language"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18" />
 
@@ -139,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="プログラミング言語を編集"
+                android:text="@string/edit_programming_language"
                 android:textSize="@dimen/sp_16" />
 
             <View
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
-                android:text="過去に作ったアプリ"
+                android:text="@string/my_apps"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18" />
 
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/dp_24"
-                android:text="過去に作ったアプリを編集"
+                android:text="@string/edit_my_apps"
                 android:textSize="@dimen/sp_16" />
 
         </LinearLayout>

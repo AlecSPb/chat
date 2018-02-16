@@ -1,33 +1,29 @@
 package com.go26.chatapp.ui.contacts
 
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
-import com.go26.chatapp.MyChatManager
-import com.go26.chatapp.NotifyMeInterface
+import com.bumptech.glide.Glide
 
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
-import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.CommunityModel
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
 import kotlinx.android.synthetic.main.fragment_edit_community.*
 
 
 class EditCommunityFragment : Fragment() {
+    private var id: String? = null
     private var communityModel: CommunityModel? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val id = arguments.getString("id")
-        communityModel = communityMap!![id]
+        id = arguments.getString("id")
+        communityModel = communityMap!![id!!]
 
         return inflater!!.inflate(R.layout.fragment_edit_community, container, false)
     }
@@ -45,17 +41,9 @@ class EditCommunityFragment : Fragment() {
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.setDisplayShowTitleEnabled(true)
+        activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
-
-        // focus
-        edit_community_layout.setOnTouchListener{ _, _ ->
-            val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(edit_community_layout.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-            edit_community_layout.requestFocus()
-            return@setOnTouchListener true
-        }
 
         // back buttonイベント
         view?.isFocusableInTouchMode = true
@@ -67,15 +55,64 @@ class EditCommunityFragment : Fragment() {
             return@setOnKeyListener true
         }
 
-        loadRoundImage(profile_image_view, communityModel?.imageUrl!!)
-        community_name_edit_text.setText(communityModel?.name)
-        location_edit_text.setText(communityModel?.location)
-        description_edit_text.setText(communityModel?.description)
+        // 名前
+        name_text_view.text = communityModel?.name
+
+        // コミュニティの説明
+        if (communityModel?.description != null) {
+            description_text_view.visibility = View.VISIBLE
+            description_text_view.text = communityModel?.description
+        }
+
+        // 活動場所
+        if (communityModel?.location != null) {
+            location_text_view.visibility = View.VISIBLE
+            location_text_view.text = communityModel?.location
+        }
+
+        // profile画像
+        Glide.with(context)
+                .load(communityModel?.imageUrl)
+                .into(profile_image_view)
+
+        setButtonClickListener()
+    }
+
+    private fun setButtonClickListener() {
+        name_edit_button.setOnClickListener {
+            val editCommunityNameFragment = EditCommunityNameFragment.newInstance(id!!)
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editCommunityNameFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        description_edit_button.setOnClickListener {
+            val editCommunityDescriptionFragment = EditCommunityDescriptionFragment.newInstance(id!!)
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editCommunityDescriptionFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        location_edit_button.setOnClickListener {
+            val editCommunityLocationFragment = EditCommunityLocationFragment.newInstance(id!!)
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.setCustomAnimations(R.anim.fragment_slide_in_right, R.anim.fragment_slide_out_left)
+            fragmentTransaction.replace(R.id.fragment, editCommunityLocationFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.edit_community_toolbar_item, menu)
+        inflater!!.inflate(R.menu.edit_toolbar_item, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,22 +122,11 @@ class EditCommunityFragment : Fragment() {
                 fragmentManager.popBackStack()
                 return true
             }
-            R.id.finish_edit -> {
-                val name = community_name_edit_text.text.toString()
-                val description = description_edit_text.text.toString()
-                val location = location_edit_text.text.toString()
-                val community = CommunityModel(communityId = communityModel?.communityId,imageUrl = communityModel?.imageUrl, name = name, description = description, location = location)
 
-                MyChatManager.setmContext(context)
-                MyChatManager.updateCommunityInfo(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
-                        Toast.makeText(context, "編集しました", Toast.LENGTH_LONG).show()
-                        fragmentManager.popBackStack()
-                        fragmentManager.beginTransaction().remove(this@EditCommunityFragment).commit()
-                    }
-                }, community, NetworkConstants().UPDATE_INFO)
+            R.id.select_photo -> {
                 return true
             }
+
             else -> {
                 return false
             }

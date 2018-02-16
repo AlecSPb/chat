@@ -21,7 +21,7 @@ import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.ChatRoomModel
 import com.go26.chatapp.ui.chat.ChatRoomsFragment
 import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
-import com.go26.chatapp.ui.contacts.ContactsDetailFragment
+import com.go26.chatapp.ui.contacts.ContactsCommunityDetailFragment
 
 
 /**
@@ -76,7 +76,7 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<Comm
                         }
                     }, currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
                 } else if (text.toString() == "詳細") {
-                    val contactsDetailFragment = ContactsDetailFragment.newInstance(community.communityId, AppConstants().COMMUNITY)
+                    val contactsDetailFragment = ContactsCommunityDetailFragment.newInstance(community.communityId)
                     val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
                     val fragmentTransaction = fragmentManager.beginTransaction()
                     fragmentTransaction.replace(R.id.fragment, contactsDetailFragment)

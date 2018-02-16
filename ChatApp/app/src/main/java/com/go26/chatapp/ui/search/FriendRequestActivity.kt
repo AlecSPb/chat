@@ -2,7 +2,6 @@ package com.go26.chatapp.ui.search
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -58,7 +57,6 @@ class FriendRequestActivity : AppCompatActivity() {
                 age_title_line.visibility = View.VISIBLE
 
                 age_title_text_view.visibility = View.VISIBLE
-                age_title_text_view.text = "年齢"
 
                 age_text_view.visibility = View.VISIBLE
                 val age = user?.age.toString() + "歳"
@@ -70,7 +68,6 @@ class FriendRequestActivity : AppCompatActivity() {
                 language_title_line.visibility = View.VISIBLE
 
                 language_title_text_view.visibility = View.VISIBLE
-                language_title_text_view.text = "プログラミング言語"
 
                 language_text_view.visibility = View.VISIBLE
                 language_text_view.text = user?.programmingLanguage
@@ -81,7 +78,6 @@ class FriendRequestActivity : AppCompatActivity() {
                 my_apps_title_line.visibility = View.VISIBLE
 
                 my_apps_title_text_view.visibility = View.VISIBLE
-                my_apps_title_text_view.text = "過去に作ったアプリ"
 
                 my_apps_text_view.visibility = View.VISIBLE
                 val made = user?.myApps
@@ -106,6 +102,8 @@ class FriendRequestActivity : AppCompatActivity() {
                 }
 
                 if (!isMyFriend) {
+                    request_title_line.visibility = View.VISIBLE
+                    request_title_text_view.visibility = View.VISIBLE
                     request_button.visibility = View.VISIBLE
 
                     var isRequested = false
@@ -118,7 +116,7 @@ class FriendRequestActivity : AppCompatActivity() {
                     }
 
                     if (!isRequested) {
-                        request_button.text = "申請"
+                        request_button.text = getString(R.string.send_friend_request)
                         request_button.setOnClickListener {
                             MyChatManager.setmContext(this)
                             MyChatManager.sendFriendRequest(object : NotifyMeInterface {
@@ -129,7 +127,7 @@ class FriendRequestActivity : AppCompatActivity() {
                             }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
                         }
                     } else {
-                        request_button.text = "申請中"
+                        request_button.text = getString(R.string.in_request)
                         request_button.isEnabled = false
                     }
                 }

@@ -1,10 +1,9 @@
-package com.go26.chatapp.ui.contacts.requests
+package com.go26.chatapp.ui.contacts
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.*
 import com.bumptech.glide.Glide
 import com.go26.chatapp.R

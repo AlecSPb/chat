@@ -1,4 +1,4 @@
-package com.go26.chatapp.ui.profile
+package com.go26.chatapp.ui.contacts
 
 
 import android.os.Bundle
@@ -6,26 +6,28 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 
 import com.go26.chatapp.R
-import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import com.go26.chatapp.constants.DataConstants.Companion.communityMap
 import com.go26.chatapp.constants.NetworkConstants
-import com.go26.chatapp.model.UserModel
-import kotlinx.android.synthetic.main.fragment_edit_user_name.*
+import com.go26.chatapp.model.CommunityModel
+import kotlinx.android.synthetic.main.fragment_edit_community_location.*
 
 
-class EditUserNameFragment : Fragment() {
-
+class EditCommunityLocationFragment : Fragment() {
+    private var id: String? = null
+    private var community: CommunityModel? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_edit_user_name, container, false)
+        id = arguments.getString("id")
+        community = communityMap!![id!!]
+
+        return inflater!!.inflate(R.layout.fragment_edit_community_location, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -40,7 +42,7 @@ class EditUserNameFragment : Fragment() {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        activity.supportActionBar?.title = getString(R.string.edit_name)
+        activity.supportActionBar?.title = getString(R.string.edit_description)
         setHasOptionsMenu(true)
 
         // back buttonイベント
@@ -53,10 +55,9 @@ class EditUserNameFragment : Fragment() {
             return@setOnKeyListener true
         }
 
-        val firstName = currentUser?.name?.split(Regex("\\s+"))!![0]
-        val lastName = currentUser?.name?.split(Regex("\\s+"))!![1]
-        first_name_edit_text.setText(firstName)
-        last_name_edit_text.setText(lastName)
+        if (communityMap!![id]?.location != null) {
+            location_edit_text.setText(communityMap!![id]?.location)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -75,26 +76,23 @@ class EditUserNameFragment : Fragment() {
                 var isValid = true
                 var errorMessage = ""
 
-                val userModel = UserModel(uid = currentUser?.uid)
+                val communityModel = CommunityModel(communityId = community?.communityId)
 
-                val firstName = first_name_edit_text.text.toString()
-                val lastName = last_name_edit_text.text.toString()
-                var name: String? = null
-                if (firstName.isBlank() || lastName.isBlank()) {
+                val location = location_edit_text.text.toString()
+                if (location.isBlank()) {
                     isValid = false
                     errorMessage = getString(R.string.blank)
                 } else {
-                    name = firstName + " " + lastName
-                    userModel.name = name
+                    communityModel.location = location
                 }
 
                 if (isValid) {
                     MyChatManager.setmContext(context)
-                    MyChatManager.updateUserName(object : NotifyMeInterface {
+                    MyChatManager.updateCommunityLocation(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            if (currentUser?.name == name) {
+                            if (communityMap!![id!!]?.location == location) {
                                 fragmentManager.popBackStack()
-                                fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
+                                fragmentManager.beginTransaction().remove(this@EditCommunityLocationFragment).commit()
                             } else {
                                 var count = 0
                                 val handler = Handler()
@@ -106,9 +104,9 @@ class EditUserNameFragment : Fragment() {
                                             Toast.makeText(context, "更新に失敗しました。アプリを再起動してください。", Toast.LENGTH_SHORT).show()
                                             return
                                         }
-                                        if (currentUser?.name == name) {
+                                        if (communityMap!![id!!]?.location == location) {
                                             fragmentManager.popBackStack()
-                                            fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
+                                            fragmentManager.beginTransaction().remove(this@EditCommunityLocationFragment).commit()
                                         } else {
                                             handler.postDelayed(this, 100)
                                         }
@@ -116,7 +114,7 @@ class EditUserNameFragment : Fragment() {
                                 }, 100)
                             }
                         }
-                    }, userModel, NetworkConstants().UPDATE_INFO)
+                    }, communityModel, NetworkConstants().UPDATE_INFO)
                 } else {
                     Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -129,11 +127,10 @@ class EditUserNameFragment : Fragment() {
     }
 
     companion object {
-
-        fun newInstance(): EditUserNameFragment {
-            val fragment = EditUserNameFragment()
+        fun newInstance(id: String): EditCommunityLocationFragment {
+            val fragment = EditCommunityLocationFragment()
             val args = Bundle()
-
+            args.putString("id", id)
             fragment.arguments = args
             return fragment
         }

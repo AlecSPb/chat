@@ -3,6 +3,7 @@ package com.go26.chatapp.ui.profile
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -40,7 +41,7 @@ class EditProgrammingLanguageFragment : Fragment() {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        activity.supportActionBar?.title = "プログラミング言語を編集"
+        activity.supportActionBar?.title = getString(R.string.edit_programming_language)
         setHasOptionsMenu(true)
 
         // focus
@@ -89,8 +90,29 @@ class EditProgrammingLanguageFragment : Fragment() {
                 MyChatManager.setmContext(context)
                 MyChatManager.updateUserProgrammingLanguage(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
-                        fragmentManager.popBackStack()
-                        fragmentManager.beginTransaction().remove(this@EditProgrammingLanguageFragment).commit()
+                        if (currentUser?.programmingLanguage == programmingLanguage) {
+                            fragmentManager.popBackStack()
+                            fragmentManager.beginTransaction().remove(this@EditProgrammingLanguageFragment).commit()
+                        } else {
+                            var count = 0
+                            val handler = Handler()
+
+                            handler.postDelayed(object : Runnable {
+                                override fun run() {
+                                    count ++
+                                    if (count > 30) {
+                                        Toast.makeText(context, "更新に失敗しました。アプリを再起動してください。", Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
+                                    if (currentUser?.programmingLanguage == programmingLanguage) {
+                                        fragmentManager.popBackStack()
+                                        fragmentManager.beginTransaction().remove(this@EditProgrammingLanguageFragment).commit()
+                                    } else {
+                                        handler.postDelayed(this, 100)
+                                    }
+                                }
+                            }, 100)
+                        }
                     }
                 }, userModel, NetworkConstants().UPDATE_INFO)
 

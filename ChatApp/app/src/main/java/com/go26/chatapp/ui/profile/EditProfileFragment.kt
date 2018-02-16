@@ -2,6 +2,7 @@ package com.go26.chatapp.ui.profile
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -13,11 +14,10 @@ import com.bumptech.glide.Glide
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import android.R.string.cancel
-import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
 import android.widget.RelativeLayout
 import android.widget.NumberPicker
+import android.widget.Toast
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.constants.NetworkConstants
@@ -145,8 +145,31 @@ class EditProfileFragment : Fragment() {
 
                                  MyChatManager.updateUserAge(object : NotifyMeInterface {
                                      override fun handleData(obj: Any, requestCode: Int?) {
-                                         val age = numberPicker.value.toString() + "歳"
-                                         age_edit_button.text = age
+
+                                         if (currentUser?.age == numberPicker.value) {
+                                             val age = numberPicker.value.toString() + "歳"
+                                             age_edit_button.text = age
+
+                                         } else {
+                                             var count = 0
+                                             val handler = Handler()
+
+                                             handler.postDelayed(object : Runnable {
+                                                 override fun run() {
+                                                     count ++
+                                                     if (count > 30) {
+                                                         Toast.makeText(context, "更新に失敗しました。アプリを再起動してください。", Toast.LENGTH_SHORT).show()
+                                                         return
+                                                     }
+                                                     if (currentUser?.age == numberPicker.value) {
+                                                         val age = numberPicker.value.toString() + "歳"
+                                                         age_edit_button.text = age
+                                                     } else {
+                                                         handler.postDelayed(this, 100)
+                                                     }
+                                                 }
+                                             }, 100)
+                                         }
                                      }
                                  }, userModel, NetworkConstants().UPDATE_INFO)
                              })

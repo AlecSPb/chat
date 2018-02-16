@@ -1054,12 +1054,26 @@ object MyChatManager {
         })
     }
 
-    fun updateCommunityInfo(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+    fun updateCommunityName(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, communityModel?.name)
-        updateMap.put(FirebaseConstants().IMAGE_URL, communityModel?.imageUrl)
+
+        communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
+    }
+
+    fun updateCommunityDescription(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().DESCRIPTION, communityModel?.description)
+
+        communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
+    }
+
+    fun updateCommunityLocation(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().LOCATION, communityModel?.location)
+
         communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
         callback?.handleData(true, requestType)
     }
