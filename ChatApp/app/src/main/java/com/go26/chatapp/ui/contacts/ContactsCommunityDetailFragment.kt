@@ -17,6 +17,7 @@ import com.go26.chatapp.constants.DataConstants
 import com.go26.chatapp.constants.DataConstants.Companion.communityMap
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
 import com.go26.chatapp.model.CommunityModel
+import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import kotlinx.android.synthetic.main.fragment_contacts_community_detail.*
 
 
@@ -101,9 +102,8 @@ class ContactsCommunityDetailFragment : Fragment() {
         }
 
         // profile画像
-        Glide.with(context)
-                .load(communityModel.imageUrl)
-                .into(profile_image_view)
+        loadImageFromUrl(profile_image_view, communityModel.imageUrl!!)
+
     }
 
 

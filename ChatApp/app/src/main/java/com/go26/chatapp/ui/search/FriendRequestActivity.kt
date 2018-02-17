@@ -15,6 +15,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.foundUserList
 import com.go26.chatapp.constants.DataConstants.Companion.myFriends
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.UserModel
+import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import kotlinx.android.synthetic.main.activity_friend_request.*
 
 class FriendRequestActivity : AppCompatActivity() {
@@ -113,9 +114,7 @@ class FriendRequestActivity : AppCompatActivity() {
             }
 
             // profile画像
-            Glide.with(this)
-                    .load(user?.imageUrl)
-                    .into(profile_image_view)
+            loadImageFromUrl(profile_image_view, user?.imageUrl!!)
 
             // フレンド申請
             // 自分を除く

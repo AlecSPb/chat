@@ -15,6 +15,7 @@ import com.go26.chatapp.MyChatManager
 
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.currentUser
+import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -111,9 +112,7 @@ class ProfileFragment : Fragment() {
         }
 
         // profile画像
-        Glide.with(context)
-                .load(currentUser?.imageUrl)
-                .into(profile_image_view)
+        loadImageFromUrl(profile_image_view, currentUser?.imageUrl!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

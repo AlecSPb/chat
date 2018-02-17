@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.go26.chatapp.R
 import com.go26.chatapp.constants.DataConstants.Companion.myFriendsMap
 import com.go26.chatapp.model.UserModel
+import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -125,10 +126,7 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         // profile画像
-        Glide.with(context)
-                .load(friend?.imageUrl)
-                .into(profile_image_view)
-
+        loadImageFromUrl(profile_image_view, friend?.imageUrl!!)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

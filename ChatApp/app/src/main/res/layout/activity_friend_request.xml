@@ -20,7 +20,7 @@ tools:context="com.go26.chatapp.ui.search.FriendRequestActivity">
         android:fitsSystemWindows="true"
         app:expandedTitleTextAppearance="@android:color/transparent"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
-        app:contentScrim="@color/colorPrimary">
+        app:contentScrim="@color/light_blue2">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/profile_image_view"

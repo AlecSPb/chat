@@ -2,11 +2,9 @@ package com.go26.chatapp.ui.search
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.go26.chatapp.MyChatManager
 import com.go26.chatapp.NotifyMeInterface
 import com.go26.chatapp.R
@@ -18,7 +16,7 @@ import com.go26.chatapp.constants.DataConstants.Companion.myCommunities
 import com.go26.chatapp.constants.DataConstants.Companion.popularCommunityList
 import com.go26.chatapp.constants.NetworkConstants
 import com.go26.chatapp.model.CommunityModel
-import com.go26.chatapp.util.MyViewUtils.Companion.loadRoundImage
+import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import kotlinx.android.synthetic.main.activity_community_join_request.*
 
 
@@ -83,9 +81,8 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
             community_member_text_view.text = memberCount
 
             // profile画像
-            Glide.with(this)
-                    .load(community?.imageUrl)
-                    .into(profile_image_view)
+            loadImageFromUrl(profile_image_view, community?.imageUrl!!)
+
 
             // 自分が所属しているコミュニティの場合、申請ボタン非表示
             var isMyCommunity = false

@@ -37,6 +37,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.gson.Gson
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -126,8 +127,6 @@ object MyChatManager {
                         mutableData.value = userModel
                     } else {
                         val newUserData: HashMap<String, Any?> = hashMapOf()
-//                        newUserData.put("imageUrl", userModel?.imageUrl)
-//                        newUserData.put("name", userModel?.name)
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
                     }
@@ -1075,6 +1074,24 @@ object MyChatManager {
         })
     }
 
+    fun updateProfileImage(callback: NotifyMeInterface?,imageUri: String, requestType: Int) {
+        userRef?.child(currentUser?.uid)?.child(FirebaseConstants().IMAGE_URL)?.setValue(imageUri)
+
+        userRef?.child(currentUser?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.children.forEach{ it ->
+                        friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.child(FirebaseConstants().IMAGE_URL)?.setValue(imageUri)
+                    }
+                    callback?.handleData(true, requestType)
+                } else {
+                    callback?.handleData(false, requestType)
+                }
+            }
+        })
+    }
+
     fun updateCommunityName(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().NAME, communityModel?.name)
@@ -1094,6 +1111,14 @@ object MyChatManager {
     fun updateCommunityLocation(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().LOCATION, communityModel?.location)
+
+        communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
+    }
+
+    fun updateCommunityImage(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().IMAGE_URL, communityModel?.imageUrl)
 
         communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
         callback?.handleData(true, requestType)
@@ -1130,49 +1155,6 @@ object MyChatManager {
             context.startActivity(intent)
         }
     }
-
-
-    /**
-     * This creates the new user node
-     *
-     */
-    fun createOrUpdateUserNode(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
-        try {
-            userRef?.child(userModel?.uid)?.runTransaction(object : Transaction.Handler {
-                override fun doTransaction(mutableData: MutableData): Transaction.Result {
-                    val p = mutableData.getValue<UserModel>(UserModel::class.java)
-                    if (p == null) {
-                        mutableData.setValue(userModel)
-                    } else {
-                        var newUserData: HashMap<String, Any?> = hashMapOf()
-                        newUserData.put("imageUrl", userModel?.imageUrl)
-                        newUserData.put("name", userModel?.name)
-                        newUserData.put("online", true)
-                        userRef?.child(userModel?.uid)?.updateChildren(newUserData)
-                    }
-                    return Transaction.success(mutableData)
-
-                }
-
-                override fun onComplete(databaseError: DatabaseError?, p1: Boolean, dataSnapshot: DataSnapshot?) {
-                    try {
-                        Log.d(TAG, "postTransaction:onComplete:" + databaseError)
-
-                        var userModel: UserModel? = dataSnapshot?.getValue<UserModel>(UserModel::class.java)
-                        callback?.handleData(userModel!!, requestType)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-
-
-                }
-            })
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
-
 
     /**
      * This function is called to set user status to offline
@@ -1277,11 +1259,11 @@ object MyChatManager {
 
                             override fun doTransaction(mutabledata: MutableData?): Transaction.Result {
                                 if (mutabledata?.getValue<UserModel>(UserModel::class.java)?.unreadCount == null) {
-                                    var p = mutabledata?.getValue<UserModel>(UserModel::class.java)
+                                    val p = mutabledata?.getValue<UserModel>(UserModel::class.java)
                                     p?.unreadCount = 0
                                     mutabledata?.setValue(p)
                                 } else {
-                                    var p = mutabledata.getValue<UserModel>(UserModel::class.java)
+                                    val p = mutabledata.getValue<UserModel>(UserModel::class.java)
                                     p?.unreadCount = p?.unreadCount as Int + 1
                                     mutabledata.setValue(p)
                                 }
