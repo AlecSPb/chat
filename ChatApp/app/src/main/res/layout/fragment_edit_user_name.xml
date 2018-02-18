@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.go26.chatapp.ui.profile.EditUserNameFragment">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12"
+        android:text="@string/first_name"
+        android:textSize="@dimen/sp_18"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/first_name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_50"
+        android:layout_marginStart="@dimen/dp_50"
+        android:layout_marginRight="@dimen/dp_50"
+        android:layout_marginEnd="@dimen/dp_50"
+        android:background="@drawable/description_text_border"
+        android:maxLength="20"
+        android:inputType="text"
+        android:padding="@dimen/dp_8"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_22"
+        android:text="@string/last_name"
+        android:textSize="@dimen/sp_18"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/last_name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_50"
+        android:layout_marginStart="@dimen/dp_50"
+        android:layout_marginRight="@dimen/dp_50"
+        android:layout_marginEnd="@dimen/dp_50"
+        android:background="@drawable/description_text_border"
+        android:maxLength="20"
+        android:inputType="text"
+        android:padding="@dimen/dp_8"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

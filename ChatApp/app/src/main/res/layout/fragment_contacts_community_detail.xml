@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.go26.chatapp.ui.search.CommunityJoinRequestActivity">
+    tools:context="com.go26.chatapp.ui.contacts.ContactsCommunityDetailFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -48,13 +47,13 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/dp_30"
             android:layout_marginLeft="@dimen/dp_30"
             android:layout_marginRight="@dimen/dp_30"
             android:layout_marginStart="@dimen/dp_30"
+            style="?android:attr/buttonBarStyle"
             android:orientation="vertical">
 
             <TextView
@@ -72,32 +71,6 @@
                 android:layout_marginTop="@dimen/dp_22"
                 android:textColor="@color/profile_content"
                 android:textSize="@dimen/sp_16"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/community_member_title_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dp_22"
-                android:background="@color/inactive_gray"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/community_member_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_22"
-                android:text="@string/community_member"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_18"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/community_member_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_16"
                 android:visibility="gone" />
 
             <View
@@ -127,31 +100,35 @@
                 android:visibility="gone" />
 
             <View
-                android:id="@+id/request_title_line"
+                android:id="@+id/community_member_title_line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/dp_22"
                 android:background="@color/inactive_gray"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
 
             <TextView
-                android:id="@+id/request_title_text_view"
+                android:id="@+id/community_member_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/community_request"
+                android:layout_marginTop="@dimen/dp_22"
+                android:text="@string/community_member"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
                 android:visibility="gone" />
 
             <Button
-                android:id="@+id/request_button"
+                android:id="@+id/community_member_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_22"
+                android:layout_marginTop="@dimen/dp_16"
                 android:layout_gravity="center_horizontal"
+                android:text="@string/community_member_button"
                 style="?android:attr/buttonBarButtonStyle"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

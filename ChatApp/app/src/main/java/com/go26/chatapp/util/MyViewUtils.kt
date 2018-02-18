@@ -42,8 +42,8 @@ class MyViewUtils(val mContext: Context) {
 
             Glide.with(view.context)
                     .load(imageUrl)
-                    .asBitmap().centerCrop()
-                    .placeholder(R.drawable.ic_profile)
+                    .asBitmap()
+                    .centerCrop()
                     .into(object : BitmapImageViewTarget(view) {
                         override fun setResource(resource: Bitmap) {
                             val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(view.context.resources, resource)

@@ -1,11 +1,60 @@
 <resources>
-    <string name="app_name">ChatApp</string>
+    <string name="app_name">Cody</string>
     <string name="home">Home</string>
     <string name="search">検索</string>
     <string name="community">Community</string>
     <string name="profile">Profile</string>
 
     <string name="empty">検索結果： 0件</string>
+
+    <string name="setting">設定する</string>
+    <string name="cancel">キャンセル</string>
+    <string name="update_failed">更新に失敗しました。アプリを再起動してください。</string>
+    
+    <string name="friend_request">フレンドリクエスト</string>
+    <string name="send_friend_request">フレンドリクエストを送る</string>
+    <string name="in_request">申請中</string>
+    <string name="community_request">参加リクエスト</string>
+    <string name="send_community_request">リクエストを送る</string>
+
+    <string name="age_title">年齢</string>
+    <string name="age_content">歳</string>
+
+    <string name="experience_title">開発経験</string>
+    <string name="experience0">未経験</string>
+    <string name="experience1">始めたばかり</string>
+    <string name="experience2">いくつかアプリを作ったことがある</string>
+    <string name="experience3">実務経験あり</string>
+
+
+    <string name="community_name">コミュニティ名</string>
+    <string name="edit_community_name">コミュニティ名を編集</string>
+    <string name="description">コミュニティの説明</string>
+    <string name="edit_description">コミュニティの説明を編集</string>
+    <string name="description_content">他のユーザーに向けてこのコミュニティの紹介をしてください。\n\nこのコミュニティはどのような特徴を持っていますか？\nまた、どのような人に入ってもらいたいですか？</string>
+    <string name="location">活動場所</string>
+    <string name="edit_location">活動場所を編集</string>
+    <string name="location_content">主に活動する場所を教えてください。</string>
+
+    <string name="edit_name">名前を編集</string>
+    <string name="edit_self_introduction">自己紹介を編集</string>
+    <string name="edit_programming_language">プログラミング言語を編集</string>
+    <string name="edit_my_apps">過去に作ったアプリを編集</string>
+
+    <string name="first_name">名</string>
+    <string name="last_name">姓</string>
+    <string name="programming_language">プログラミング言語</string>
+    <string name="programming_language_content">普段使っているプログラミング言語を教えてください。</string>
+    <string name="self_introduction">自己紹介</string>
+    <string name="self_introduction_content">Codyでは他のユーザーにあなたがどのような人なのか知ってもらうことが重要です。\n\nどのようなことに興味があるか教えてください。\nまた、作りたい物があればそれも教えてください。</string>
+    <string name="my_apps">過去に作ったアプリ</string>
+    <string name="my_apps_content">これまでに作ったアプリを教えてください。\ngithubのアカウントを持っていれば、githubのurlも教えてください。</string>
+
+    <string name="community_member">メンバー</string>
+    <string name="community_member_button">メンバーを見る</string>
+
+    <string name="edit_finish">完了</string>
+    <string name="blank">空欄があります</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

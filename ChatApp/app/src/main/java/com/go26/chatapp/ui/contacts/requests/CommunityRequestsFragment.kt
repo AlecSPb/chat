@@ -65,10 +65,10 @@ class CommunityRequestsFragment : Fragment() {
             language_text_view.visibility = View.VISIBLE
             language_text_view.text = language
         }
-        if (user?.whatMade != null) {
-            made_title_text_view.visibility = View.VISIBLE
-            made_text_view.visibility = View.VISIBLE
-            made_text_view.text = user?.whatMade
+        if (user?.myApps != null) {
+            my_apps_title_text_view.visibility = View.VISIBLE
+            my_apps_text_view.visibility = View.VISIBLE
+            my_apps_text_view.text = user?.myApps
         }
         loadRoundImage(profile_image_view, user?.imageUrl!!)
 
