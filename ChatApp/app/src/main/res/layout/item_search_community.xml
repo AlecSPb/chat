@@ -43,7 +43,7 @@
                 android:layout_marginLeft="@dimen/dp_12"
                 android:layout_marginRight="@dimen/dp_12"
                 android:layout_marginStart="@dimen/dp_12"
-                android:layout_marginTop="@dimen/dp_16">
+                android:layout_marginTop="@dimen/dp_24">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/profile_image_view"
