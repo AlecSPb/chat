@@ -22,9 +22,9 @@
 
     <string name="experience_title">開発経験</string>
     <string name="experience0">未経験</string>
-    <string name="experience1">簡単な物なら作れる</string>
-    <string name="experience2">ある程度作れる</string>
-    <string name="experience3">なんでも作れる</string>
+    <string name="experience1">始めたばかり</string>
+    <string name="experience2">いくつかアプリを作ったことがある</string>
+    <string name="experience3">実務経験あり</string>
 
 
     <string name="community_name">コミュニティ名</string>
