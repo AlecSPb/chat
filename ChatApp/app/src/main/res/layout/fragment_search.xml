@@ -1,9 +1,10 @@
 <layout>
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.go26.chatapp.viewmodel.SearchFragmentViewModel"/>
+            type="com.go26.chatapp.viewmodel.SearchFragmentViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,8 +17,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:orientation="vertical"
-            android:background="#ffffff">
+            android:background="#ffffff"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/search_button"
@@ -28,45 +29,50 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:background="#ffffff"
-                android:hint="@string/search"/>
+                android:hint="@string/search" />
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/popular_title_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:layout_marginBottom="@dimen/dp_12"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="@dimen/dp_5"
-            android:layout_marginBottom="@dimen/dp_12"
-            android:text="人気のコミュニティ"
-            android:textSize="25dp"
-            android:textColor="#3a3a3a"
-            android:visibility="gone"/>
+            android:layout_marginTop="@dimen/dp_5">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/search_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/search_recycler_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <TextView
+                    android:id="@+id/popular_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="人気のコミュニティ"
+                    android:textColor="#3a3a3a"
+                    android:textSize="25dp"
+                    android:visibility="gone" />
 
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/search_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:visibility="gone"
-            android:text="communityがありません communityを作りましょう" />
+            android:text="communityがありません communityを作りましょう"
+            android:visibility="gone" />
 
     </LinearLayout>
 

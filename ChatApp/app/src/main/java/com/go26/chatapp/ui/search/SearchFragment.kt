@@ -51,7 +51,6 @@ class SearchFragment : Fragment() {
                     } else {
                         popular_title_text_view.visibility = View.VISIBLE
                         search_recycler_view.visibility = View.VISIBLE
-                        search_refresh.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
                         setAdapter()
                     }
@@ -75,7 +74,6 @@ class SearchFragment : Fragment() {
 
     private fun setAdapter() {
         search_recycler_view.visibility = View.VISIBLE
-        search_refresh.visibility = View.VISIBLE
         search_recycler_view.layoutManager = LinearLayoutManager(context)
         val adapter = SearchAdapter(context) { position ->
             val intent = Intent(context, CommunityJoinRequestActivity::class.java)
@@ -85,35 +83,6 @@ class SearchFragment : Fragment() {
         }
 
         search_recycler_view.adapter = adapter
-
-        search_refresh.setOnRefreshListener {
-            MyChatManager.setmContext(context)
-            MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    Log.d("fetch popular", "success")
-
-                    val valid = obj as Boolean
-
-                    if (search_refresh.isRefreshing) {
-                        search_refresh.isRefreshing = false
-                    }
-
-                    if (popularCommunityList.isEmpty()) {
-                        popular_title_text_view.visibility = View.GONE
-                        search_recycler_view.visibility = View.GONE
-                        search_refresh.visibility = View.GONE
-                        empty_view.visibility = View.VISIBLE
-                    } else if (valid) {
-                        empty_view.visibility = View.GONE
-                        popular_title_text_view.visibility = View.VISIBLE
-                        search_recycler_view.visibility = View.VISIBLE
-                        search_refresh.visibility = View.VISIBLE
-                        popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
-                        setAdapter()
-                    }
-                }
-            }, NetworkConstants().FETCH_POPULAR_COMMUNITY)
-        }
     }
 
     companion object {
