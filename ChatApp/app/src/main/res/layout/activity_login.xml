@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.go26.chatapp.viewmodel.LoginActivityViewModel"/>
+            type="jp.gr.java_conf.cody.viewmodel.LoginActivityViewModel"/>
     </data>
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
