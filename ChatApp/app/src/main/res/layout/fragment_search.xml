@@ -4,7 +4,7 @@
 
         <variable
             name="viewModel"
-            type="com.go26.chatapp.viewmodel.SearchFragmentViewModel" />
+            type="jp.gr.java_conf.cody.viewmodel.SearchFragmentViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
