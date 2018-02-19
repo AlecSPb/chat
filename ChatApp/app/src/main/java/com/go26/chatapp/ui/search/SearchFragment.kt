@@ -49,6 +49,7 @@ class SearchFragment : Fragment() {
                     if (popularCommunityList.isEmpty()) {
                         empty_view.visibility = View.VISIBLE
                     } else {
+                        search_scroll_view.visibility = View.VISIBLE
                         popular_title_text_view.visibility = View.VISIBLE
                         search_recycler_view.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
@@ -73,7 +74,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        search_recycler_view.visibility = View.VISIBLE
         search_recycler_view.layoutManager = LinearLayoutManager(context)
         val adapter = SearchAdapter(context) { position ->
             val intent = Intent(context, CommunityJoinRequestActivity::class.java)
