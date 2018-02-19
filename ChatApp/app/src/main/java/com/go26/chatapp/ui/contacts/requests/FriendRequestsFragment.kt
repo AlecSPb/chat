@@ -2,6 +2,7 @@ package com.go26.chatapp.ui.contacts.requests
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -86,9 +87,46 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.confirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
-                    fragmentManager.popBackStack()
-                    Toast.makeText(context, "リクエストを承認しました", Toast.LENGTH_SHORT).show()
+                    var isExist = false
+                    for (request in friendRequests) {
+                        if (request.uid == user?.uid) {
+                            isExist = true
+                            break
+                        }
+                    }
+                    if (!isExist) {
+                        fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                        fragmentManager.popBackStack()
+                        Toast.makeText(context, "リクエストを承認しました", Toast.LENGTH_SHORT).show()
+                    } else {
+                        var count = 0
+                        val handler = Handler()
+
+                        handler.postDelayed(object : Runnable {
+                            override fun run() {
+                                count ++
+                                if (count > 30) {
+                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                isExist = false
+                                for (request in friendRequests) {
+                                    if (request.uid == user?.uid) {
+                                        isExist = true
+                                        break
+                                    }
+                                }
+                                if (!isExist) {
+                                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                                    fragmentManager.popBackStack()
+                                    Toast.makeText(context, "リクエストを承認しました", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+                        }, 100)
+                    }
                 }
             }, currentUser?.uid!!, user?.uid!!, friendModel, NetworkConstants().CONFIRM_REQUEST)
         }
@@ -101,9 +139,46 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.disconfirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
-                    fragmentManager.popBackStack()
-                    Toast.makeText(context, "リクエストを拒否しました", Toast.LENGTH_SHORT).show()
+                    var isExist = false
+                    for (request in friendRequests) {
+                        if (request.uid == user?.uid) {
+                            isExist = true
+                            break
+                        }
+                    }
+                    if (!isExist) {
+                        fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                        fragmentManager.popBackStack()
+                        Toast.makeText(context, "リクエストを拒否しました", Toast.LENGTH_SHORT).show()
+                    } else {
+                        var count = 0
+                        val handler = Handler()
+
+                        handler.postDelayed(object : Runnable {
+                            override fun run() {
+                                count ++
+                                if (count > 30) {
+                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                isExist = false
+                                for (request in friendRequests) {
+                                    if (request.uid == user?.uid) {
+                                        isExist = true
+                                        break
+                                    }
+                                }
+                                if (!isExist) {
+                                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                                    fragmentManager.popBackStack()
+                                    Toast.makeText(context, "リクエストを拒否しました", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+                        }, 100)
+                    }
                 }
             }, currentUser?.uid!!, user?.uid!!, NetworkConstants().DISCONFIRM_REQUEST)
 
