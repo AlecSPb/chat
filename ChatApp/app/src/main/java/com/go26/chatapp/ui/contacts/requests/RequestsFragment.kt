@@ -40,7 +40,7 @@ class RequestsFragment : Fragment() {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "リクエスト一覧"
+        activity.supportActionBar?.title = getString(R.string.request_title)
         setHasOptionsMenu(true)
 
         // back buttonイベント
@@ -56,6 +56,8 @@ class RequestsFragment : Fragment() {
         if (DataConstants.friendRequests.isEmpty() && DataConstants.communityRequestsList.isEmpty()) {
             empty_view.visibility = View.VISIBLE
         } else {
+            request_scroll_view.visibility = View.VISIBLE
+
             if (!DataConstants.communityRequestsList.isEmpty()) {
                 community_requests_title_text_view.visibility = View.VISIBLE
                 community_requests_recycler_view.visibility = View.VISIBLE

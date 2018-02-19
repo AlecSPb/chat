@@ -3,9 +3,25 @@
     <string name="home">Home</string>
     <string name="search">検索</string>
     <string name="community">Community</string>
+    <string name="contacts">Contacts</string>
     <string name="profile">Profile</string>
 
+
     <string name="empty">検索結果： 0件</string>
+
+    <string name="community_title">コミュニティ</string>
+    <string name="friend_title">フレンド</string>
+    <string name="empty_contacts">コミュニティを探しに行きましょう</string>
+
+    <string name="confirm">承認</string>
+    <string name="disconfirm">拒否</string>
+    <string name="confirm_toast">リクエストを承認しました</string>
+    <string name="disconfirm_toast">リクエストを拒否しました</string>
+    <string name="request_title">リクエスト一覧</string>
+    <string name="community_request_title">Community参加リクエスト</string>
+    <string name="friend_request_title">フレンドリクエスト</string>
+    <string name="empty_requests">リクエストがありません</string>
+
 
     <string name="setting">設定する</string>
     <string name="cancel">キャンセル</string>
@@ -25,7 +41,6 @@
     <string name="experience1">始めたばかり</string>
     <string name="experience2">いくつかアプリを作ったことがある</string>
     <string name="experience3">実務経験あり</string>
-
 
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
@@ -49,6 +64,7 @@
     <string name="self_introduction_content">Codyでは他のユーザーにあなたがどのような人なのか知ってもらうことが重要です。\n\nどのようなことに興味があるか教えてください。\nまた、作りたい物があればそれも教えてください。</string>
     <string name="my_apps">過去に作ったアプリ</string>
     <string name="my_apps_content">これまでに作ったアプリを教えてください。\ngithubのアカウントを持っていれば、githubのurlも教えてください。</string>
+
 
     <string name="community_member">メンバー</string>
     <string name="community_member_button">メンバーを見る</string>

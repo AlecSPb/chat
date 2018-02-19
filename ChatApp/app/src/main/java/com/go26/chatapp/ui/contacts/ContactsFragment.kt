@@ -84,7 +84,7 @@ class ContactsFragment : Fragment() {
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "Contacts"
+        activity.supportActionBar?.title = getString(R.string.contacts)
         setHasOptionsMenu(true)
     }
 

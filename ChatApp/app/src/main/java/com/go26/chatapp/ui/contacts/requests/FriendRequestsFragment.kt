@@ -2,6 +2,7 @@ package com.go26.chatapp.ui.contacts.requests
 
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -42,7 +43,7 @@ class FriendRequestsFragment : Fragment() {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "フレンドリクエスト"
+        activity.supportActionBar?.title = getString(R.string.friend_request_title)
         setHasOptionsMenu(true)
 
         // back buttonイベント
@@ -55,19 +56,75 @@ class FriendRequestsFragment : Fragment() {
             return@setOnKeyListener true
         }
 
+        // 名前
         name_text_view.text = user?.name
-        if (user?.programmingLanguage != null) {
-            val language = "使用言語: " + user?.programmingLanguage
-            language_text_view.visibility = View.VISIBLE
-            language_text_view.text = language
+
+        // 自己紹介
+        if (user?.selfIntroduction != null) {
+            self_introduction_text_view.visibility = View.VISIBLE
+            self_introduction_text_view.text = user?.selfIntroduction
         }
+
+        // 年齢
+        if (user?.age != null) {
+            age_title_line.visibility = View.VISIBLE
+
+            age_title_text_view.visibility = View.VISIBLE
+
+            age_text_view.visibility = View.VISIBLE
+            val age = user?.age.toString() + getString(R.string.age_content)
+            age_text_view.text = age
+        }
+
+        // 開発経験
+        if (user?.developmentExperience != null) {
+            experience_title_line.visibility = View.VISIBLE
+
+            experience_title_text_view.visibility = View.VISIBLE
+
+            experience_text_view.visibility = View.VISIBLE
+            when (user?.developmentExperience) {
+                0 -> {
+                    val experience = getString(R.string.experience0)
+                    experience_text_view.text = experience
+                }
+                1 -> {
+                    val experience = getString(R.string.experience1)
+                    experience_text_view.text = experience
+                }
+                2 -> {
+                    val experience = getString(R.string.experience2)
+                    experience_text_view.text = experience
+                }
+                3 -> {
+                    val experience = getString(R.string.experience3)
+                    experience_text_view.text = experience
+                }
+            }
+        }
+
+        // プログラミング言語
+        if (user?.programmingLanguage != null) {
+            language_title_line.visibility = View.VISIBLE
+
+            language_title_text_view.visibility = View.VISIBLE
+
+            language_text_view.visibility = View.VISIBLE
+            language_text_view.text = user?.programmingLanguage
+        }
+
+        // 過去に作ったもの
         if (user?.myApps != null) {
+            my_apps_title_line.visibility = View.VISIBLE
+
             my_apps_title_text_view.visibility = View.VISIBLE
+
             my_apps_text_view.visibility = View.VISIBLE
             my_apps_text_view.text = user?.myApps
         }
-        loadRoundImage(profile_image_view, user?.imageUrl!!)
 
+        // profile画像
+        loadRoundImage(profile_image_view, user?.imageUrl!!)
         val content = user?.name + "さんからフレンドリクエストが来ています。承認しますか？"
         requests_content_text_view.text = content
 
@@ -86,9 +143,43 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.confirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
-                    fragmentManager.popBackStack()
-                    Toast.makeText(context, "リクエストを承認しました", Toast.LENGTH_SHORT).show()
+                    // fetch されるまでfragmentをremoveしない
+                    var isExist = false
+                    friendRequests
+                            .filter { request -> request.uid == user?.uid }
+                            .forEach { isExist = true }
+
+                    if (!isExist) {
+                        fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                        fragmentManager.popBackStack()
+                        Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
+                    } else {
+                        var count = 0
+                        val handler = Handler()
+
+                        handler.postDelayed(object : Runnable {
+                            override fun run() {
+                                count ++
+                                if (count > 30) {
+                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                isExist = false
+                                friendRequests
+                                        .filter { request -> request.uid == user?.uid }
+                                        .forEach { isExist = true }
+
+                                if (!isExist) {
+                                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                                    fragmentManager.popBackStack()
+                                    Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+                        }, 100)
+                    }
                 }
             }, currentUser?.uid!!, user?.uid!!, friendModel, NetworkConstants().CONFIRM_REQUEST)
         }
@@ -101,9 +192,43 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.disconfirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
-                    fragmentManager.popBackStack()
-                    Toast.makeText(context, "リクエストを拒否しました", Toast.LENGTH_SHORT).show()
+                    // fetch されるまでfragmentをremoveしない
+                    var isExist = false
+                    friendRequests
+                            .filter { request -> request.uid == user?.uid }
+                            .forEach { isExist = true }
+
+                    if (!isExist) {
+                        fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                        fragmentManager.popBackStack()
+                        Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
+                    } else {
+                        var count = 0
+                        val handler = Handler()
+
+                        handler.postDelayed(object : Runnable {
+                            override fun run() {
+                                count ++
+                                if (count > 30) {
+                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+
+                                isExist = false
+                                friendRequests
+                                        .filter { request -> request.uid == user?.uid }
+                                        .forEach { isExist = true }
+
+                                if (!isExist) {
+                                    fragmentManager.beginTransaction().remove(this@FriendRequestsFragment).commit()
+                                    fragmentManager.popBackStack()
+                                    Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
+                                } else {
+                                    handler.postDelayed(this, 100)
+                                }
+                            }
+                        }, 100)
+                    }
                 }
             }, currentUser?.uid!!, user?.uid!!, NetworkConstants().DISCONFIRM_REQUEST)
 
@@ -111,14 +236,14 @@ class FriendRequestsFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+        return when (item?.itemId) {
             android.R.id.home -> {
                 fragmentManager.beginTransaction().remove(this).commit()
                 fragmentManager.popBackStack()
-                return true
+                true
             }
             else -> {
-                return false
+                false
             }
         }
     }

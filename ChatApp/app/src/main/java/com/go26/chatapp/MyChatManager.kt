@@ -674,24 +674,30 @@ object MyChatManager {
                             }
                         }
                         if (isCommunityRequests) {
-                            if (communityRequestsMap[communityModel?.communityId] == null) {
-                                communityRequestsMap[communityModel?.communityId!!] = mutableListOf(user)
-                            } else {
-                                for (requestUser in communityRequestsMap[communityModel?.communityId]!!) {
-                                    if (requestUser.uid == user.uid) {
-                                        communityRequestsMap[communityModel?.communityId]?.remove(requestUser)
-                                    }
+                            // communityRequestsMap
+                            communityRequestsMap[communityModel?.communityId!!] = mutableListOf()
+
+                            val requestsMapItr: MutableIterator<UserModel> = communityRequestsMap[communityModel.communityId!!]?.iterator()!!
+                            while (requestsMapItr.hasNext()) {
+                                val requestUserId: String? = requestsMapItr.next().uid
+                                if (requestUserId == user.uid) {
+                                    requestsMapItr.remove()
                                 }
-                                communityRequestsMap[communityModel?.communityId]?.add(user)
+                            }
+                            communityRequestsMap[communityModel.communityId!!]?.add(user)
+
+
+                            // communityRequestsList
+                            val requestsListItr: MutableIterator<Pair<String, UserModel>> = communityRequestsList.iterator()
+                            while (requestsListItr.hasNext()) {
+                                val communityId: String? = requestsListItr.next().first
+                                if (communityId == communityModel.communityId) {
+                                    requestsListItr.remove()
+                                }
                             }
 
-                            for (communityRequest in communityRequestsList) {
-                                if (communityRequest.first == communityModel?.communityId) {
-                                    communityRequestsList.remove(communityRequest)
-                                }
-                            }
-                            for (communityRequest in communityRequestsMap[communityModel?.communityId]!!) {
-                                val pair = Pair(communityModel?.communityId!!, communityRequest)
+                            for (communityRequest in communityRequestsMap[communityModel.communityId!!]!!) {
+                                val pair = Pair(communityModel.communityId!!, communityRequest)
                                 communityRequestsList.add(pair)
                             }
                         } else {
@@ -708,12 +714,19 @@ object MyChatManager {
             }
 
             override fun onDataChange(communityRequestsSnapshot: DataSnapshot) {
-                communityRequestsMap.clear()
-                communityRequestsList.clear()
+                communityRequestsMap[communityModel?.communityId]?.clear()
+
+                val itr: MutableIterator<Pair<String, UserModel>> = communityRequestsList.iterator()
+                while (itr.hasNext()) {
+                    val communityId: String? = itr.next().first
+                    if (communityId == communityModel?.communityId) {
+                        itr.remove()
+                    }
+                }
+
                 if (communityRequestsSnapshot.exists()) {
                     communityRequestsSnapshot.children.forEach { it ->
-                        userRef?.child(it.key)?.removeEventListener(listener)
-                        userRef?.child(it.key)?.addValueEventListener(listener)
+                        userRef?.child(it.key)?.addListenerForSingleValueEvent(listener)
                     }
                 }
             }

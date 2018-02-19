@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -45,6 +46,7 @@ class EditCommunityFragment : Fragment() {
     var cropImageUri: Uri? = null
 
     private val REQUEST_CODE_CHOOSE = 23
+    private val REQUEST_STORAGE_PERMISSION = 1
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -151,15 +153,7 @@ class EditCommunityFragment : Fragment() {
             }
 
             R.id.select_photo -> {
-                Matisse.from(this)
-                        .choose(MimeType.allOf())
-                        .countable(false)
-                        .theme(R.style.Matisse_Dracula)
-                        .maxSelectable(1)
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                        .thumbnailScale(0.85f)
-                        .imageEngine(GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE)
+                requestPermission()
                 return true
             }
 
@@ -168,6 +162,30 @@ class EditCommunityFragment : Fragment() {
             }
         }
     }
+
+    private fun requestPermission() {
+        // 権限があるかどうか
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Matisse.from(this)
+                    .choose(MimeType.allOf())
+                    .countable(false)
+                    .theme(R.style.Matisse_Dracula)
+                    .maxSelectable(1)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(GlideEngine())
+                    .forResult(REQUEST_CODE_CHOOSE)
+            return
+        }
+        // 許可されていない場合
+        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(context, "パーミッションがOFFになっています。", Toast.LENGTH_SHORT).show()
+        } else {
+            // カメラパーミッションを要求（一度に複数のパーミッションを要求することも可能）
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
+        }
+    }
+
 
     @SuppressLint("NewApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -201,6 +219,23 @@ class EditCommunityFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Matisse.from(this)
+                        .choose(MimeType.allOf())
+                        .countable(false)
+                        .theme(R.style.Matisse_Dracula)
+                        .maxSelectable(1)
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.85f)
+                        .imageEngine(GlideEngine())
+                        .forResult(REQUEST_CODE_CHOOSE)
+            } else {
+                Toast.makeText(context, "パーミッションが許可されないとギャラリーを開けません。", Toast.LENGTH_LONG).show()
+            }
+            return
+        }
+
         if (requestCode == CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE) {
             if (cropImageUri != null && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // required permissions granted, start crop image activity

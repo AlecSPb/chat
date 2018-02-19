@@ -30,6 +30,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.util.Log
 import com.go26.chatapp.util.MyViewUtils.Companion.loadImageFromUrl
 import com.google.firebase.storage.FirebaseStorage
@@ -44,6 +45,7 @@ class EditProfileFragment : Fragment() {
     private var storage = FirebaseStorage.getInstance()
     private var storageRef: StorageReference? = null
     private val REQUEST_CODE_CHOOSE = 23
+    private val REQUEST_STORAGE_PERMISSION = 1
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -339,6 +341,42 @@ class EditProfileFragment : Fragment() {
             }
 
             R.id.select_photo -> {
+                requestPermission()
+                return true
+            }
+
+            else -> {
+                return false
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        // 権限があるかどうか
+        if (checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Matisse.from(this)
+                    .choose(MimeType.allOf())
+                    .countable(false)
+                    .theme(R.style.Matisse_Dracula)
+                    .maxSelectable(1)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(GlideEngine())
+                    .forResult(REQUEST_CODE_CHOOSE)
+            return
+        }
+        // 許可されていない場合
+        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(context, "パーミッションがOFFになっています。", Toast.LENGTH_SHORT).show()
+        } else {
+            // カメラパーミッションを要求（一度に複数のパーミッションを要求することも可能）
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_STORAGE_PERMISSION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Matisse.from(this)
                         .choose(MimeType.allOf())
                         .countable(false)
@@ -348,11 +386,17 @@ class EditProfileFragment : Fragment() {
                         .thumbnailScale(0.85f)
                         .imageEngine(GlideEngine())
                         .forResult(REQUEST_CODE_CHOOSE)
-                return true
+            } else {
+                Toast.makeText(context, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show()
             }
-
-            else -> {
-                return false
+            return
+        }
+        if (requestCode == CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE) {
+            if (cropImageUri != null && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // required permissions granted, start crop image activity
+                startCropImageActivity(cropImageUri)
+            } else {
+                Toast.makeText(context, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -386,17 +430,6 @@ class EditProfileFragment : Fragment() {
         }
         super.onActivityResult(requestCode, resultCode, data)
 
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE) {
-            if (cropImageUri != null && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // required permissions granted, start crop image activity
-                startCropImageActivity(cropImageUri)
-            } else {
-                Toast.makeText(context, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     private fun startCropImageActivity(uri: Uri?) {
