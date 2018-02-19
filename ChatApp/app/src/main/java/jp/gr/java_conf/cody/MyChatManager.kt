@@ -937,7 +937,7 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         }
@@ -952,7 +952,7 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -978,7 +978,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -999,7 +999,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1020,7 +1020,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1041,7 +1041,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1062,7 +1062,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1083,7 +1083,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1101,7 +1101,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
