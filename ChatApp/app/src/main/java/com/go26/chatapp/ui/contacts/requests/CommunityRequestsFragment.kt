@@ -84,9 +84,10 @@ class CommunityRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.confirmCommunityJoinRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
+                    // fetch されるまでfragmentをremoveしない
                     var isExist = false
                     for (request in communityRequestsList) {
-                        if (request.second.uid == user?.uid) {
+                        if (request.first == communityId && request.second.uid == user?.uid) {
                             isExist = true
                             break
                         }
@@ -109,7 +110,7 @@ class CommunityRequestsFragment : Fragment() {
 
                                 isExist = false
                                 for (request in communityRequestsList) {
-                                    if (request.second.uid == user?.uid) {
+                                    if (request.first == communityId && request.second.uid == user?.uid) {
                                         isExist = true
                                         break
                                     }
@@ -136,10 +137,10 @@ class CommunityRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.disconfirmCommunityJoinRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
-
+                    // fetch されるまでfragmentをremoveしない
                     var isExist = false
                     for (request in communityRequestsList) {
-                        if (request.second.uid == user?.uid) {
+                        if (request.first == communityId && request.second.uid == user?.uid) {
                             isExist = true
                             break
                         }
@@ -148,7 +149,6 @@ class CommunityRequestsFragment : Fragment() {
                         fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
                         fragmentManager.popBackStack()
                         Toast.makeText(context, "リクエストを拒否しました", Toast.LENGTH_SHORT).show()
-
                     } else {
                         var count = 0
                         val handler = Handler()
@@ -163,7 +163,7 @@ class CommunityRequestsFragment : Fragment() {
 
                                 isExist = false
                                 for (request in communityRequestsList) {
-                                    if (request.second.uid == user?.uid) {
+                                    if (request.first == communityId && request.second.uid == user?.uid) {
                                         isExist = true
                                         break
                                     }

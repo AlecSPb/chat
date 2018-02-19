@@ -87,6 +87,7 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.confirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
+                    // fetch されるまでfragmentをremoveしない
                     var isExist = false
                     for (request in friendRequests) {
                         if (request.uid == user?.uid) {
@@ -139,6 +140,7 @@ class FriendRequestsFragment : Fragment() {
             MyChatManager.setmContext(context)
             MyChatManager.disconfirmFriendRequest(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
+                    // fetch されるまでfragmentをremoveしない
                     var isExist = false
                     for (request in friendRequests) {
                         if (request.uid == user?.uid) {
