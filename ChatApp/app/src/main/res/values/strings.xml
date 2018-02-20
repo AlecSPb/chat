@@ -74,13 +74,17 @@
     <string name="edit_finish">完了</string>
     <string name="blank">空欄があります</string>
 
-    <string name="profile_content">プロフィールを確認、編集</string>
+    <string name="profile_setting">プロフィールを確認、編集</string>
     <string name="profile_first">Codyへようこそ!\nまずは、プロフィールを完成させましょう</string>
-    <string name="feedback_content">フィードバックを送る</string>
+    <string name="feedback_setting">フィードバックを送る</string>
     <string name="email">cody1dev@gmail.com</string>
-    <string name="privacy_policy_content">プライバシーポリシー</string>
-    <string name="license_content">ライセンス</string>
-    <string name="logout_content">ログアウト</string>
+    <string name="privacy_policy_setting">プライバシーポリシー</string>
+    <string name="privacy_policy_content">
+        画像/メディア/ファイルへのアクセスは、プロフィール画像を設定する際に利用しています。\n\n
+        
+    </string>
+    <string name="license_setting">ライセンス</string>
+    <string name="logout_setting">ログアウト</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

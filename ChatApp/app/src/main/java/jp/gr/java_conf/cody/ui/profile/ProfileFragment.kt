@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
-    var isFirst = false
+    private var isFirst = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -70,7 +70,12 @@ class ProfileFragment : Fragment() {
 
         // プライバシーポリシー
         privacy_policy_text_view.setOnClickListener {
-
+            val privacyPolicyFragment = PrivacyPolicyFragment.newInstance()
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment, privacyPolicyFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         // ライセンス

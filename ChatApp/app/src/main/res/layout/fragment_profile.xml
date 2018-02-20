@@ -46,7 +46,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/name_text_view"
-            android:text="@string/profile_content"
+            android:text="@string/profile_setting"
             android:textSize="@dimen/sp_18"/>
 
         <TextView
@@ -72,7 +72,7 @@
         android:id="@+id/feedback_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/feedback_content"
+        android:text="@string/feedback_setting"
         android:textColor="@color/profile"
         android:textSize="@dimen/sp_18"
         android:layout_marginTop="@dimen/dp_22"/>
@@ -88,7 +88,7 @@
         android:id="@+id/privacy_policy_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/privacy_policy_content"
+        android:text="@string/privacy_policy_setting"
         android:textColor="@color/profile"
         android:textSize="@dimen/sp_18"
         android:layout_marginTop="@dimen/dp_22"/>
@@ -104,7 +104,7 @@
         android:id="@+id/license_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/license_content"
+        android:text="@string/license_setting"
         android:textColor="@color/profile"
         android:textSize="@dimen/sp_18"
         android:layout_marginTop="@dimen/dp_22"/>
@@ -120,7 +120,7 @@
         android:id="@+id/logout_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/logout_content"
+        android:text="@string/logout_setting"
         android:textColor="@color/profile"
         android:textSize="@dimen/sp_18"
         android:layout_marginTop="@dimen/dp_22" />
