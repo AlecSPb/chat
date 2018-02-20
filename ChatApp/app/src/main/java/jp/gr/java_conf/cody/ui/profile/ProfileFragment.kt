@@ -11,6 +11,10 @@ import android.view.ViewGroup
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.webianks.easy_feedback.EasyFeedback
+import de.psdev.licensesdialog.LicensesDialogFragment
+import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20
+import de.psdev.licensesdialog.model.Notice
+import de.psdev.licensesdialog.model.Notices
 import jp.gr.java_conf.cody.MyChatManager
 
 import jp.gr.java_conf.cody.R
@@ -80,7 +84,16 @@ class ProfileFragment : Fragment() {
 
         // ライセンス
         license_text_view.setOnClickListener {
+            val notices = Notices()
 
+            notices.addNotice(Notice(getString(R.string.licenses_dialog), "", getString(R.string.licenses_dialog_copyright), ApacheSoftwareLicense20()))
+
+            LicensesDialogFragment.Builder(context)
+                    .setNotices(notices)
+                    .setShowFullLicenseText(false)
+                    .setIncludeOwnLicense(false)
+                    .build()
+                    .show(fragmentManager, null)
         }
 
         // logout

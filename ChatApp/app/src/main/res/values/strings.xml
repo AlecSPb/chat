@@ -86,6 +86,9 @@
     <string name="license_setting">ライセンス</string>
     <string name="logout_setting">ログアウト</string>
 
+    <string name="licenses_dialog">LicensesDialog</string>
+    <string name="licenses_dialog_copyright">Copyright 2013\-2017 Philip Schiffer</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

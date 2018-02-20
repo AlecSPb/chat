@@ -52,6 +52,7 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.4.0'
     compile 'com.zhihu.android:matisse:0.4.3'
     compile 'com.webianks.library:easy-feedback:1.0.2'
+    compile('de.psdev.licensesdialog:licensesdialog:1.8.3')
 
 }
 
