@@ -88,7 +88,20 @@
 
     <string name="licenses_dialog">LicensesDialog</string>
     <string name="licenses_dialog_copyright">Copyright 2013\-2017 Philip Schiffer</string>
+    <string name="easy_feedback">EasyFeedback</string>
+    <string name="easy_feedback_copyright">Copyright 2017 Ramankit Singh</string>
+    <string name="matisse">Matisse</string>
+    <string name="matisse_copyright">Copyright 2017 Zhihu Inc.</string>
+    <string name="android_image_cropper">Android Image Cropper</string>
+    <string name="android_image_cropper_copyright">Copyright 2016, Arthur Teplitzki, 2013, Edmodo, Inc.</string>
+    <string name="glide">Glide</string>
+    <string name="glide_copyright">Copyright 2014 Google, Inc.</string>
+    <string name="secure_preferences">Secure-preferences</string>
+    <string name="secure_preferences_copyright">Copyright (C) 2013, Daniel Abraham, Scott Alexander-Bown</string>
+    <string name="google_gson">google-gson</string>
+    <string name="google_gson_copyright">Copyright 2008 Google Inc.</string>
+    <string name="material_dialog">Material Dialog</string>
+    <string name="material_dialog_copyright">Copyright 2014 drakeet</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
