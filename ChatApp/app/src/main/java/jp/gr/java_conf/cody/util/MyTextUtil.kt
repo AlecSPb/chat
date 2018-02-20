@@ -2,6 +2,7 @@ package jp.gr.java_conf.cody.util
 
 import android.text.InputFilter
 import android.text.TextUtils
+import android.text.format.DateFormat
 import android.util.Patterns
 import java.text.SimpleDateFormat
 import java.util.*
@@ -13,6 +14,8 @@ class MyTextUtil {
     fun getTimestamp(milliseconds: Long): String =
             SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date(milliseconds)) + " " +
                     SimpleDateFormat("hh:mm", Locale.getDefault()).format(Date(milliseconds)).replace("", "").toLowerCase()
+
+    fun getTime(milliseconds: Long): String = DateFormat.format("yyyy/MM/dd, E, kk:mm", milliseconds).toString()
 
     fun getEmojiFIlter(): Array<InputFilter> {
         return arrayOf(InputFilter { src, _, _, _, _, _ ->
