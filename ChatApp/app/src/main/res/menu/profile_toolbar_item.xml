@@ -4,18 +4,9 @@
 
     <item
         android:id="@+id/edit"
-        android:title="編集"
+        android:title="@string/edit_toolbar"
+        android:icon="@drawable/ic_edit"
         android:orderInCategory="0"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/license"
-        android:title="ライセンス"
-        android:orderInCategory="1"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/logout"
-        android:title="ログアウト"
-        android:orderInCategory="2"
-        app:showAsAction="never"/>
 </menu>

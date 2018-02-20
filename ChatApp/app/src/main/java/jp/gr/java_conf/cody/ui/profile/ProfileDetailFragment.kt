@@ -1,25 +1,21 @@
-package jp.gr.java_conf.cody.ui.contacts
+package jp.gr.java_conf.cody.ui.profile
+
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
 import jp.gr.java_conf.cody.R
-import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriendsMap
-import jp.gr.java_conf.cody.model.UserModel
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
 import kotlinx.android.synthetic.main.fragment_profile_detail.*
 
-/**
- * Created by daigo on 2018/02/16.
- */
-class ContactsFriendDetailFragment : Fragment() {
-    var id: String? = null
 
+class ProfileDetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        id = arguments.getString("id")
 
         return inflater!!.inflate(R.layout.fragment_profile_detail, container, false)
     }
@@ -33,55 +29,41 @@ class ContactsFriendDetailFragment : Fragment() {
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
         bottomNavigationView.visibility = View.GONE
 
-        //actionbar
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(tool_bar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
 
-        // back buttonイベント
-        view?.isFocusableInTouchMode = true
-        view?.setOnKeyListener { _, keyCode, keyEvent ->
-            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_UP) {
-                fragmentManager.popBackStack()
-                fragmentManager.beginTransaction().remove(this).commit()
-            }
-            return@setOnKeyListener true
-        }
-
-        val friend: UserModel? = myFriendsMap[id]
-
         // 名前
-        name_text_view.text = friend?.name
+        name_text_view.text = currentUser?.name
 
         // 自己紹介
-        if (friend?.selfIntroduction != null) {
+        if (currentUser?.selfIntroduction != null) {
             self_introduction_text_view.visibility = View.VISIBLE
-            self_introduction_text_view.text = friend.selfIntroduction
+            self_introduction_text_view.text = currentUser?.selfIntroduction
         }
 
         // 年齢
-        if (friend?.age != null) {
+        if (currentUser?.age != null) {
             age_title_line.visibility = View.VISIBLE
 
             age_title_text_view.visibility = View.VISIBLE
-            age_title_text_view.text = "年齢"
 
             age_text_view.visibility = View.VISIBLE
-            val age = friend.age.toString() + "歳"
+            val age = currentUser?.age.toString() + getString(R.string.age_content)
             age_text_view.text = age
 
         }
 
         // 開発経験
-        if (friend?.developmentExperience != null) {
+        if (currentUser?.developmentExperience != null) {
             experience_title_line.visibility = View.VISIBLE
 
             experience_title_text_view.visibility = View.VISIBLE
 
             experience_text_view.visibility = View.VISIBLE
-            when (friend.developmentExperience) {
+            when (currentUser?.developmentExperience) {
                 0 -> {
                     val experience = getString(R.string.experience0)
                     experience_text_view.text = experience
@@ -102,30 +84,33 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         //　使用言語
-        if (friend?.programmingLanguage != null) {
+        if (currentUser?.programmingLanguage != null) {
             language_title_line.visibility = View.VISIBLE
 
             language_title_text_view.visibility = View.VISIBLE
-            language_title_text_view.text = "プログラミング言語"
 
             language_text_view.visibility = View.VISIBLE
-            language_text_view.text = friend.programmingLanguage
+            language_text_view.text = currentUser?.programmingLanguage
         }
 
         // 過去に作ったもの
-        if (friend?.myApps != null) {
+        if (currentUser?.myApps != null) {
             my_apps_title_line.visibility = View.VISIBLE
 
             my_apps_title_text_view.visibility = View.VISIBLE
-            my_apps_title_text_view.text = "過去に作ったアプリ"
 
             my_apps_text_view.visibility = View.VISIBLE
-            val made = friend.myApps
+            val made = currentUser?.myApps
             my_apps_text_view.text = made
         }
 
         // profile画像
-        loadImageFromUrl(profile_image_view, friend?.imageUrl!!)
+        loadImageFromUrl(profile_image_view, currentUser?.imageUrl!!)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater!!.inflate(R.menu.profile_toolbar_item, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -135,6 +120,16 @@ class ContactsFriendDetailFragment : Fragment() {
                 fragmentManager.popBackStack()
                 return true
             }
+            R.id.edit -> {
+                val editProfileFragment = EditProfileFragment.newInstance()
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, editProfileFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+                return true
+            }
+
             else -> {
                 return false
             }
@@ -143,10 +138,10 @@ class ContactsFriendDetailFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(id: String?): ContactsFriendDetailFragment {
-            val fragment = ContactsFriendDetailFragment()
+        fun newInstance(): ProfileDetailFragment {
+            val fragment = ProfileDetailFragment()
             val args = Bundle()
-            args.putString("id", id)
+
             fragment.arguments = args
             return fragment
         }

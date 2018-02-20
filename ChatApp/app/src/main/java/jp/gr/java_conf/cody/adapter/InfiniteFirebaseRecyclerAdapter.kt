@@ -1,4 +1,4 @@
-package jp.gr.java_conf.cody
+package jp.gr.java_conf.cody.adapter
 
 import com.google.firebase.database.DatabaseError
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.support.annotation.LayoutRes
 import android.util.Log
 import android.view.View
 import com.google.firebase.database.Query
+import jp.gr.java_conf.cody.InfiniteFirebaseArray
 import java.lang.reflect.InvocationTargetException
 
 

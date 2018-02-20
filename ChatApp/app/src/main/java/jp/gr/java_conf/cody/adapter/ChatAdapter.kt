@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.google.firebase.database.Query
-import jp.gr.java_conf.cody.InfiniteFirebaseRecyclerAdapter
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.userMap
