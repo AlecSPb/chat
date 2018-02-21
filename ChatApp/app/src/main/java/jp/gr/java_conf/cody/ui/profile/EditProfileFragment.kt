@@ -460,6 +460,7 @@ class EditProfileFragment : Fragment() {
 
             // progress
             progress_view.visibility = View.VISIBLE
+            avi.visibility = View.VISIBLE
             avi.show()
 
             val imageGalleryRef = storageReference.child(currentUser?.uid!!)

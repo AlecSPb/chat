@@ -82,11 +82,20 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
         if (currentUser != null) {
             if (NetUtils(this).isOnline()) {
+                // progress
+                progress_view.visibility = View.VISIBLE
+                avi.visibility = View.VISIBLE
+                avi.show()
+
                 MyChatManager.setmContext(this)
                 MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
+                        // progress
+                        progress_view.visibility = View.GONE
+                        avi.hide()
+                        avi.visibility = View.GONE
+
                         val isFirst = obj as Boolean
-                        viewModel.setProgressBarVisibility(View.INVISIBLE)
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         intent.putExtra("isFirst", isFirst)
                         startActivity(intent)
@@ -100,7 +109,6 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
         } else {
             viewModel.setLoginButtonEnabled(true)
-            viewModel.setProgressBarVisibility(View.INVISIBLE)
         }
     }
 
@@ -111,15 +119,24 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        viewModel.setProgressBarVisibility(View.INVISIBLE)
         viewModel.setLoginButtonEnabled(false)
 
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
+                // progress
+                progress_view.visibility = View.VISIBLE
+                avi.visibility = View.VISIBLE
+                avi.show()
+
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
                 viewModel.firebaseAuthWithGoogle(account, auth)
             } catch (e: ApiException) {
+                // progress
+                progress_view.visibility = View.GONE
+                avi.hide()
+                avi.visibility = View.GONE
+
                 Toast.makeText(this, "signin failed", Toast.LENGTH_SHORT).show()
                 viewModel.setLoginButtonEnabled(true)
             }
@@ -127,7 +144,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-        viewModel.setProgressBarVisibility(View.INVISIBLE)
+        // progress
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
     }
 
@@ -136,7 +156,11 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 val isFirst = obj as Boolean
-                viewModel.setProgressBarVisibility(View.INVISIBLE)
+                // progress
+                progress_view.visibility = View.GONE
+                avi.hide()
+                avi.visibility = View.GONE
+
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.putExtra("isFirst", isFirst)
                 startActivity(intent)
@@ -146,6 +170,11 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun toastSignInError(task: Task<AuthResult>) {
+        // progress
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
+
         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
     }
 }

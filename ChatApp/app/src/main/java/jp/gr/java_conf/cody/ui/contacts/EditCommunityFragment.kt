@@ -270,6 +270,7 @@ class EditCommunityFragment : Fragment() {
         if (storageReference != null) {
 
             progress_view.visibility = View.VISIBLE
+            avi.visibility = View.VISIBLE
             avi.show()
 
             val imageGalleryRef = storageReference.child(id!!)
