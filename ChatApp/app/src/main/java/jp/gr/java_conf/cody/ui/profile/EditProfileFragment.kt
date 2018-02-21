@@ -23,7 +23,6 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.util.Log
 import com.example.circulardialog.CDialog
