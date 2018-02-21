@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -17,7 +18,6 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -257,7 +257,8 @@ class EditCommunityFragment : Fragment() {
     private fun sendFileFirebase(storageReference: StorageReference?, file: Uri) {
         if (storageReference != null) {
 
-            val progress = MaterialDialog.Builder(context).content("読み込み中").progress(true, 0).show()
+            progress_view.visibility = View.VISIBLE
+            avi.show()
 
             val imageGalleryRef = storageReference.child(id!!)
             val uploadTask = imageGalleryRef.putFile(file)
@@ -271,7 +272,8 @@ class EditCommunityFragment : Fragment() {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         val isValid = obj as Boolean
                         if (isValid) {
-                            progress.dismiss()
+                            progress_view.visibility = View.GONE
+                            avi.hide()
                             setProfileImage(file)
                         }
                     }

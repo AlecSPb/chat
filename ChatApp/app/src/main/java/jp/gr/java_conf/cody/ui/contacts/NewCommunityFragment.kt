@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -20,7 +22,6 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
@@ -81,13 +82,13 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "Create Community"
+        activity.supportActionBar?.title = getString(R.string.create_community)
         setHasOptionsMenu(true)
 
         paticipants?.layoutManager = LinearLayoutManager(context)
 
         // Group Creation Page
-        create_group_button.text = "Create community"
+        create_group_button.text = getString(R.string.create_community)
 
         participants_recycler_view.visibility = View.GONE
 
@@ -115,14 +116,14 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 fragmentManager.beginTransaction().remove(this).commit()
                 fragmentManager.popBackStack()
-                return true
+                true
             }
             else -> {
-                return false
+                false
             }
         }
     }
@@ -211,19 +212,19 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                 for (myFriend in myFriends) {
                     friendNameList.add(myFriend.name!!)
                 }
-
-                MaterialDialog.Builder(context)
-                        .title("招待")
-                        .items(friendNameList)
-                        .itemsCallbackMultiChoice(null, MaterialDialog.ListCallbackMultiChoice { _, which, _ ->
-                            for (i in which) {
-                                selectedUserList.add(myFriends[i])
+                val items = friendNameList.toTypedArray()
+                AlertDialog.Builder(context)
+                        .setTitle(getString(R.string.invite))
+                        .setMultiChoiceItems(items, null, { _, pos, isSelected ->
+                            if (isSelected) {
+                                selectedUserList.add(myFriends[pos])
+                            } else {
+                                selectedUserList.remove(myFriends[pos])
                             }
-                            return@ListCallbackMultiChoice true
                         })
-                        .positiveText("招待")
-                        .negativeText("キャンセル")
-                        .dismissListener { setAdapter() }
+                        .setPositiveButton(getString(R.string.setting), null)
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .setOnDismissListener { setAdapter() }
                         .show()
             }
         }
@@ -340,7 +341,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
     private fun sendFileFirebase(storageReference: StorageReference?, file: Uri, newCommunity: CommunityModel) {
         if (storageReference != null) {
 
-            val progress = MaterialDialog.Builder(context).content("読み込み中").progress(true, 0).show()
+            progress_view.visibility = View.VISIBLE
+            avi.show()
 
             val imageGalleryRef = storageReference.child(DataConstants.currentUser?.uid!!)
             val uploadTask = imageGalleryRef.putFile(file)
@@ -352,7 +354,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                 MyChatManager.createCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
-                        progress.dismiss()
+                        progress_view.visibility = View.GONE
+                        avi.hide()
                         Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()
                         activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
                     }

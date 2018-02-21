@@ -92,6 +92,7 @@ class ContactsFragment : Fragment() {
         contacts_community_title_text_view.visibility = View.VISIBLE
         contacts_community_recycler_view.visibility = View.VISIBLE
         contacts_community_recycler_view.layoutManager = LinearLayoutManager(context)
+        contacts_community_recycler_view.isNestedScrollingEnabled = false
         contacts_community_recycler_view.adapter = CommunityContactsAdapter(context)
     }
 
@@ -100,6 +101,7 @@ class ContactsFragment : Fragment() {
         contacts_friend_title_text_view.visibility = View.VISIBLE
         contacts_friend_recycler_view.visibility = View.VISIBLE
         contacts_friend_recycler_view.layoutManager = LinearLayoutManager(context)
+        contacts_friend_recycler_view.isNestedScrollingEnabled = false
         contacts_friend_recycler_view.adapter = FriendContactsAdapter(context)
     }
 

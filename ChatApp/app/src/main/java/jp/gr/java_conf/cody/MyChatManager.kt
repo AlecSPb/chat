@@ -122,12 +122,15 @@ object MyChatManager {
      */
     fun loginCreateAndUpdate(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
         try {
+            var isFirst = false
             userRef?.child(userModel?.uid)?.runTransaction(object : Transaction.Handler {
                 override fun doTransaction(mutableData: MutableData): Transaction.Result {
                     val p = mutableData.getValue<UserModel>(UserModel::class.java)
                     if (p == null) {
+                        isFirst = true
                         mutableData.value = userModel
                     } else {
+                        isFirst = false
                         val newUserData: HashMap<String, Any?> = hashMapOf()
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
@@ -139,7 +142,7 @@ object MyChatManager {
                 override fun onComplete(databaseError: DatabaseError?, p1: Boolean, dataSnapshot: DataSnapshot?) {
                     try {
                         Log.d(TAG, "postTransaction:onComplete:" + databaseError)
-                        callback?.handleData(true, requestType)
+                        callback?.handleData(isFirst, requestType)
 //                        val user: UserModel? = dataSnapshot?.getValue<UserModel>(UserModel::class.java)
 //                        fetchCurrentUser(callback, user, requestType)
 //                        fetchMyCommunities(callback, requestType, userModel, true)

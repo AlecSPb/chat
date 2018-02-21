@@ -72,8 +72,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
             MyChatManager.setmContext(this)
             MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
                 override fun handleData(obj: Any, requestCode: Int?) {
+                    val isFirst = obj as Boolean
                     viewModel.setProgressBarVisibility(View.INVISIBLE)
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.putExtra("isFirst", isFirst)
                     startActivity(intent)
                     finish()
                 }
@@ -117,8 +119,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         MyChatManager.setmContext(this)
         MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
+                val isFirst = obj as Boolean
                 viewModel.setProgressBarVisibility(View.INVISIBLE)
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.putExtra("isFirst", isFirst)
                 startActivity(intent)
                 finish()
             }

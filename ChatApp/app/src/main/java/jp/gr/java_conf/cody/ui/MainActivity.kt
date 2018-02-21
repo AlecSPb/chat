@@ -14,16 +14,20 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.contract.MainActivityContract
 import jp.gr.java_conf.cody.databinding.ActivityMainBinding
+import jp.gr.java_conf.cody.ui.profile.ProfileFragment
 import jp.gr.java_conf.cody.ui.search.SearchFragment
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import jp.gr.java_conf.cody.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
+    private var isFirst = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        isFirst = intent.getBooleanExtra("isFirst", false)
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = MainViewModel(this, this)
@@ -100,12 +104,17 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         bottomNavigationView?.let { bottomNavigationViewHelper.disableShiftMode(it) }
 
         // default
-        val f =fragmentManager.findFragmentByTag("Search")
-        if(f == null) {
-            val searchFragment = SearchFragment
-            supportFragmentManager.beginTransaction().replace(R.id.fragment, searchFragment.newInstance(),"Search").commit()
+        if (isFirst) {
+            val profileFragment = ProfileFragment.newInstance(true)
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, profileFragment).commit()
         } else {
-            fragmentManager.beginTransaction().replace(R.id.fragment,f).commit()
+            val f = fragmentManager.findFragmentByTag("Search")
+            if (f == null) {
+                val searchFragment = SearchFragment.newInstance()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, searchFragment, "Search").commit()
+            } else {
+                fragmentManager.beginTransaction().replace(R.id.fragment, f).commit()
+            }
         }
     }
 

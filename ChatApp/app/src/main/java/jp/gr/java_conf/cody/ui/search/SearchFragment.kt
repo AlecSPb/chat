@@ -74,6 +74,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
+        search_recycler_view.isNestedScrollingEnabled = false
         search_recycler_view.layoutManager = LinearLayoutManager(context)
         val adapter = SearchAdapter(context) { position ->
             val intent = Intent(context, CommunityJoinRequestActivity::class.java)

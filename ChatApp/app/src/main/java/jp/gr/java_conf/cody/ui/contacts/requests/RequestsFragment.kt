@@ -62,6 +62,7 @@ class RequestsFragment : Fragment() {
                 community_requests_title_text_view.visibility = View.VISIBLE
                 community_requests_recycler_view.visibility = View.VISIBLE
                 community_requests_recycler_view.layoutManager = LinearLayoutManager(context)
+                community_requests_recycler_view.isNestedScrollingEnabled = false
                 val communityRequestsAdapter = CommunityRequestsAdapter(context, DataConstants.communityRequestsList)
                 community_requests_recycler_view.adapter = communityRequestsAdapter
             }
@@ -70,6 +71,7 @@ class RequestsFragment : Fragment() {
                 friend_requests_title_text_view.visibility = View.VISIBLE
                 friend_requests_recycler_view.visibility = View.VISIBLE
                 friend_requests_recycler_view.layoutManager = LinearLayoutManager(context)
+                friend_requests_recycler_view.isNestedScrollingEnabled = false
                 val friendRequestsAdapter = FriendRequestsAdapter(context, DataConstants.friendRequests)
                 friend_requests_recycler_view.adapter = friendRequestsAdapter
             }

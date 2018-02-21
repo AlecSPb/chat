@@ -41,6 +41,7 @@ class LoginActivityViewModel(val view: LoginActivityContract, val context: Conte
                 ?.addOnCompleteListener{ task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+
                         userModel?.uid = user?.uid
                         userModel?.name = user?.displayName
                         userModel?.email = user?.email
