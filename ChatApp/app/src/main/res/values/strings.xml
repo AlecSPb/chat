@@ -109,6 +109,7 @@
     <string name="google_gson_copyright">Copyright 2008 Google Inc.</string>
     <string name="indicator">AVLoadingIndicatorView</string>
     <string name="indicator_copyright">Copyright 2015 jack wang</string>
+    <string name="circular_dialogs">CircularDialogs</string>
 
     <string name="connection_alert">インターネットに\n接続されていません</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
