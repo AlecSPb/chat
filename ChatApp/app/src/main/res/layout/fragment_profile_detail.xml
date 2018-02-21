@@ -16,8 +16,7 @@
             android:layout_height="250dp"
             android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="@color/light_blue2">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/profile_image_view"

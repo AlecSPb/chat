@@ -38,7 +38,7 @@
                 android:layout_marginStart="@dimen/dp_50"
                 android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/description_text_border"
-                android:maxLength="300"
+                android:maxLength="100"
                 android:padding="@dimen/dp_8" />
 
             <TextView
