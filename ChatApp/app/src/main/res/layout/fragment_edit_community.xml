@@ -131,7 +131,7 @@
             android:layout_height="match_parent"
             android:background="#B3ffffff"
             android:visibility="gone" />
-        
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
             android:layout_width="wrap_content"

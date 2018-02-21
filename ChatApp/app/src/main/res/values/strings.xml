@@ -107,8 +107,8 @@
     <string name="secure_preferences_copyright">Copyright (C) 2013, Daniel Abraham, Scott Alexander-Bown</string>
     <string name="google_gson">google-gson</string>
     <string name="google_gson_copyright">Copyright 2008 Google Inc.</string>
-    <string name="material_dialog">Material Dialog</string>
-    <string name="material_dialog_copyright">Copyright 2014 drakeet</string>
+    <string name="indicator">AVLoadingIndicatorView</string>
+    <string name="indicator_copyright">Copyright 2015 jack wang</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

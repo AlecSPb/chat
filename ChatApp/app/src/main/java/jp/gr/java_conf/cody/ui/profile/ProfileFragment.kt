@@ -93,8 +93,7 @@ class ProfileFragment : Fragment() {
             notices.addNotice(Notice(getString(R.string.glide), "", getString(R.string.glide_copyright), ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.secure_preferences), "", getString(R.string.secure_preferences_copyright), ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.google_gson), "", getString(R.string.google_gson_copyright), ApacheSoftwareLicense20()))
-            notices.addNotice(Notice(getString(R.string.material_dialog), "", getString(R.string.material_dialog_copyright), ApacheSoftwareLicense20()))
-
+            notices.addNotice(Notice(getString(R.string.indicator), "", getString(R.string.indicator_copyright), ApacheSoftwareLicense20()))
 
             LicensesDialogFragment.Builder(context)
                     .setNotices(notices)
