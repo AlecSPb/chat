@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -17,6 +19,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.popularCommunityLi
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.activity_community_join_request.*
 
 
@@ -111,13 +114,22 @@ class CommunityJoinRequestActivity : AppCompatActivity() {
                 if (!isRequested) {
                     request_button.text = getString(R.string.send_community_request)
                     request_button.setOnClickListener {
-                        MyChatManager.setmContext(this)
-                        MyChatManager.sendCommunityJoinRequest(object : NotifyMeInterface {
-                            override fun handleData(obj: Any, requestCode: Int?) {
-                                finish()
-                                Toast.makeText(this@CommunityJoinRequestActivity, "参加リクエストを送信しました", Toast.LENGTH_SHORT).show()
-                            }
-                        }, currentUser, community!!, NetworkConstants().SEND_COMMUNITY_JOIN_REQUEST)
+                        if (NetUtils(this).isOnline()) {
+                            MyChatManager.setmContext(this)
+                            MyChatManager.sendCommunityJoinRequest(object : NotifyMeInterface {
+                                override fun handleData(obj: Any, requestCode: Int?) {
+                                    finish()
+                                    Toast.makeText(this@CommunityJoinRequestActivity, "参加リクエストを送信しました", Toast.LENGTH_SHORT).show()
+                                }
+                            }, currentUser, community!!, NetworkConstants().SEND_COMMUNITY_JOIN_REQUEST)
+                        } else {
+                            CDialog(this)
+                                    .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                                    .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                                    .setDuration(2000)
+                                    .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                                    .show()
+                        }
                     }
                 } else {
                     request_button.text = getString(R.string.in_request)

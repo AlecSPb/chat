@@ -50,8 +50,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginEnd="@dimen/dp_50"
-                    android:layout_marginRight="@dimen/dp_50"
-                    app:srcCompat="@drawable/ic_profile" />
+                    android:layout_marginRight="@dimen/dp_50" />
 
                 <TextView
                     android:id="@+id/description_text_view"

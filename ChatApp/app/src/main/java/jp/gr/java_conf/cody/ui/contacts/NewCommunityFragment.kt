@@ -22,6 +22,8 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
@@ -40,6 +42,7 @@ import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadRoundImage
+import jp.gr.java_conf.cody.util.NetUtils
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import kotlinx.android.synthetic.main.fragment_new_community.*
 
@@ -202,7 +205,16 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.create_group_button -> {
-                createCommunity()
+                if (NetUtils(context).isOnline()) {
+                    createCommunity()
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
             }
 
             R.id.invite_friend_button -> {

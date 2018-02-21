@@ -122,12 +122,4 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         return bottomNavigationView?.selectedItemId
     }
 
-    override fun onDestroy() {
-        MyChatManager.goOffline(object : NotifyMeInterface {
-            override fun handleData(obj: Any, requestCode: Int?) {
-            }
-
-        }, currentUser, NetworkConstants().GO_OFFLINE)
-        super.onDestroy()
-    }
 }
