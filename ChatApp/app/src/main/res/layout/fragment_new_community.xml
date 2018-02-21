@@ -1,11 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:id="@+id/new_community_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    >
+    android:focusableInTouchMode="true">
 
     <include
         android:id="@+id/toolbar"
@@ -13,88 +11,115 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/profile_image_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_margin="@dimen/dp_16"
-        app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
-
-
-    <EditText
-        android:id="@+id/community_name_edit_text"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:inputType="text"
-        android:maxLength="25"
-        android:layout_marginRight="@dimen/dp_16"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_24"
-        android:layout_toRightOf="@+id/profile_image_view"
-        android:layout_toEndOf="@+id/profile_image_view"
-        android:hint="Community Name" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
-    <EditText
-        android:id="@+id/location_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/community_name_edit_text"
-        android:inputType="text"
-        android:maxLength="10"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/profile_image_view"
-        android:layout_toEndOf="@+id/profile_image_view"
-        android:hint="活動場所" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/description_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/description_text_border"
-        android:layout_below="@+id/location_edit_text"
-        android:gravity="top|start"
-        android:textSize="15sp"
-        android:maxLength="225"
-        android:maxLines="13"
-        android:minLines="13"
-        android:padding="@dimen/dp_16"
-        android:layout_marginRight="@dimen/dp_16"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_16"
-        android:layout_toRightOf="@+id/profile_image_view"
-        android:layout_toEndOf="@+id/profile_image_view"
-        android:hint="コミュニティーの説明" />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="@dimen/dp_16"
+                app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
 
-    <Button
-        android:id="@+id/invite_friend_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/description_edit_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="@dimen/dp_16"
-        android:layout_marginRight="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_8"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:text="友達を招待する"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/participants_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/invite_friend_button" />
+            <EditText
+                android:id="@+id/community_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLength="25"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_toRightOf="@+id/profile_image_view"
+                android:layout_toEndOf="@+id/profile_image_view"
+                android:hint="Community Name" />
 
-    <Button
-        android:id="@+id/create_group_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/dp_16"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:background="@color/sky_blue"
-        android:text="Create Group"
-        android:textColor="@color/white" />
+            <EditText
+                android:id="@+id/location_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/community_name_edit_text"
+                android:inputType="text"
+                android:maxLength="10"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_toRightOf="@+id/profile_image_view"
+                android:layout_toEndOf="@+id/profile_image_view"
+                android:hint="活動場所" />
+
+            <EditText
+                android:id="@+id/description_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/description_text_border"
+                android:layout_below="@+id/location_edit_text"
+                android:gravity="top|start"
+                android:textSize="15sp"
+                android:maxLength="225"
+                android:maxLines="13"
+                android:minLines="13"
+                android:padding="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_toRightOf="@+id/profile_image_view"
+                android:layout_toEndOf="@+id/profile_image_view"
+                android:hint="コミュニティーの説明" />
+
+            <Button
+                android:id="@+id/invite_friend_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/description_edit_text"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:text="友達を招待する"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/participants_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/invite_friend_button" />
+
+            <Button
+                android:id="@+id/create_group_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_16"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:background="@color/sky_blue"
+                android:text="Create Group"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#B3ffffff"
+            android:visibility="gone" />
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/AVLoadingIndicatorView"
+            app:indicatorName="BallPulseIndicator"
+            app:indicatorColor="@color/light_blue2"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package jp.gr.java_conf.cody.adapter
 
 import android.content.Context
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.afollestad.materialdialogs.MaterialDialog
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -45,23 +45,17 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<Comm
         holder.layout.setOnClickListener({
 
             val community = communityList[position]
-            val list: MutableList<String> = mutableListOf("トーク", "詳細")
+            MyChatManager.setmContext(context)
 
-            MaterialDialog.Builder(context).title(community.name!!).items(list).itemsCallback { _, _, _, text ->
-                MyChatManager.setmContext(context)
-                if (text.toString() == "トーク") {
-                    val chatRoomModel = ChatRoomModel(community.communityId!!, community.name!!, community.imageUrl!!,
-                            community.lastMessage?.message!!, community.members[currentUser?.uid]?.unreadCount!!, AppConstants().COMMUNITY_CHAT)
-                    MyChatManager.hasChatRoom(object : NotifyMeInterface {
-                        override fun handleData(obj: Any, requestCode: Int?) {
-                            if (obj as Boolean) {
-                                val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
-                                val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-                                val fragmentTransaction = fragmentManager.beginTransaction()
-                                fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
-                                fragmentTransaction.commit()
-                            } else {
-                                MyChatManager.createChatRoom(object : NotifyMeInterface {
+            val list = arrayOf(context.getString(R.string.dialog_talk), context.getString(R.string.dialog_detail))
+            AlertDialog.Builder(context)
+                    .setTitle(community.name)
+                    .setItems(list, { _, pos ->
+                        when (pos) {
+                            0 -> {
+                                val chatRoomModel = ChatRoomModel(community.communityId!!, community.name!!, community.imageUrl!!,
+                                        community.lastMessage?.message!!, community.members[currentUser?.uid]?.unreadCount!!, AppConstants().COMMUNITY_CHAT)
+                                MyChatManager.hasChatRoom(object : NotifyMeInterface {
                                     override fun handleData(obj: Any, requestCode: Int?) {
                                         if (obj as Boolean) {
                                             val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
@@ -69,21 +63,34 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<Comm
                                             val fragmentTransaction = fragmentManager.beginTransaction()
                                             fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
                                             fragmentTransaction.commit()
+                                        } else {
+                                            MyChatManager.createChatRoom(object : NotifyMeInterface {
+                                                override fun handleData(obj: Any, requestCode: Int?) {
+                                                    if (obj as Boolean) {
+                                                        val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
+                                                        val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                                                        val fragmentTransaction = fragmentManager.beginTransaction()
+                                                        fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
+                                                        fragmentTransaction.commit()
+                                                    }
+                                                }
+                                            }, currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
                                         }
                                     }
                                 }, currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
                             }
+                            1 -> {
+                                val contactsDetailFragment = ContactsCommunityDetailFragment.newInstance(community.communityId)
+                                val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                                val fragmentTransaction = fragmentManager.beginTransaction()
+                                fragmentTransaction.replace(R.id.fragment, contactsDetailFragment)
+                                fragmentTransaction.addToBackStack(null)
+                                fragmentTransaction.commit()
+                            }
                         }
-                    }, currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
-                } else if (text.toString() == "詳細") {
-                    val contactsDetailFragment = ContactsCommunityDetailFragment.newInstance(community.communityId)
-                    val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-                    val fragmentTransaction = fragmentManager.beginTransaction()
-                    fragmentTransaction.replace(R.id.fragment, contactsDetailFragment)
-                    fragmentTransaction.addToBackStack(null)
-                    fragmentTransaction.commit()
-                }
-            }.show()
+
+                    })
+                    .show()
         })
     }
 
