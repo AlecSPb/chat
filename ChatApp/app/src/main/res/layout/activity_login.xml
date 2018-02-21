@@ -15,13 +15,12 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.go26.chatapp.ui.LoginActivity" >
 
-        <Button
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleLoginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login by Google"
-            android:id="@+id/googleLoginButton"
             android:enabled="@{viewModel.loginButtonIsEnabled}"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <View
             android:id="@+id/progress_view"
