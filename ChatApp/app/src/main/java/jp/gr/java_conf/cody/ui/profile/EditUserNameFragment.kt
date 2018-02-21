@@ -8,12 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_edit_user_name.*
 
 
@@ -70,53 +73,62 @@ class EditUserNameFragment : Fragment() {
                 return true
             }
             R.id.edit_finish -> {
-                var isValid = true
-                var errorMessage = ""
+                if (NetUtils(context).isOnline()) {
+                    var isValid = true
+                    var errorMessage = ""
 
-                val userModel = UserModel(uid = currentUser?.uid)
+                    val userModel = UserModel(uid = currentUser?.uid)
 
-                val firstName = first_name_edit_text.text.toString()
-                val lastName = last_name_edit_text.text.toString()
-                var name: String? = null
-                if (firstName.isBlank() || lastName.isBlank()) {
-                    isValid = false
-                    errorMessage = getString(R.string.blank)
-                } else {
-                    name = firstName + " " + lastName
-                    userModel.name = name
-                }
+                    val firstName = first_name_edit_text.text.toString()
+                    val lastName = last_name_edit_text.text.toString()
+                    var name: String? = null
+                    if (firstName.isBlank() || lastName.isBlank()) {
+                        isValid = false
+                        errorMessage = getString(R.string.blank)
+                    } else {
+                        name = firstName + " " + lastName
+                        userModel.name = name
+                    }
 
-                if (isValid) {
-                    MyChatManager.setmContext(context)
-                    MyChatManager.updateUserName(object : NotifyMeInterface {
-                        override fun handleData(obj: Any, requestCode: Int?) {
-                            if (currentUser?.name == name) {
-                                fragmentManager.popBackStack()
-                                fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
-                            } else {
-                                var count = 0
-                                val handler = Handler()
+                    if (isValid) {
+                        MyChatManager.setmContext(context)
+                        MyChatManager.updateUserName(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
+                                if (currentUser?.name == name) {
+                                    fragmentManager.popBackStack()
+                                    fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
+                                } else {
+                                    var count = 0
+                                    val handler = Handler()
 
-                                handler.postDelayed(object : Runnable {
-                                    override fun run() {
-                                        count ++
-                                        if (count > 30) {
-                                            Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                            return
+                                    handler.postDelayed(object : Runnable {
+                                        override fun run() {
+                                            count++
+                                            if (count > 30) {
+                                                Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                                return
+                                            }
+                                            if (currentUser?.name == name) {
+                                                fragmentManager.popBackStack()
+                                                fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
+                                            } else {
+                                                handler.postDelayed(this, 100)
+                                            }
                                         }
-                                        if (currentUser?.name == name) {
-                                            fragmentManager.popBackStack()
-                                            fragmentManager.beginTransaction().remove(this@EditUserNameFragment).commit()
-                                        } else {
-                                            handler.postDelayed(this, 100)
-                                        }
-                                    }
-                                }, 100)
+                                    }, 100)
+                                }
                             }
-                        }
-                    }, userModel, NetworkConstants().UPDATE_INFO)
+                        }, userModel, NetworkConstants().UPDATE_INFO)
+                    } else {
+                        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
                 }
                 return true
             }

@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.model.CommunityModel
@@ -43,7 +43,7 @@ class SearchCommunityNameAdapter(private val foundCommunityList: MutableList<Com
         val description: TextView = itemView.findViewById(R.id.description_text_view)
         val location: TextView = itemView.findViewById(R.id.location_text_view)
         val memberCount: TextView = itemView.findViewById(R.id.member_count_text_view)
-        val layout: RelativeLayout = itemView.findViewById(R.id.parent_layout)
+        val layout: LinearLayout = itemView.findViewById(R.id.parent_layout)
 
         fun setUp(position: Int) {
             layout.setOnClickListener { itemClick(position) }

@@ -1,128 +1,134 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/dp_30"
-    android:layout_marginStart="@dimen/dp_30"
-    android:layout_marginRight="@dimen/dp_30"
     android:layout_marginEnd="@dimen/dp_30"
-    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/dp_30"
+    android:layout_marginRight="@dimen/dp_30"
+    android:layout_marginStart="@dimen/dp_30"
+    android:paddingBottom="@dimen/dp_32"
     tools:context="jp.gr.java_conf.cody.ui.profile.ProfileFragment">
 
-    <RelativeLayout
-        android:id="@+id/profile_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/profile_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dp_50"
+                android:layout_toLeftOf="@+id/profile_image_view"
+                android:layout_toStartOf="@+id/profile_image_view"
+                android:textColor="@color/profile"
+                android:textSize="28sp" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_50" />
+
+            <TextView
+                android:id="@+id/profile_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/name_text_view"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_24"
+                android:layout_toLeftOf="@+id/profile_image_view"
+                android:layout_toStartOf="@+id/profile_image_view"
+                android:text="@string/profile_setting"
+                android:textSize="@dimen/sp_18" />
+
+            <TextView
+                android:id="@+id/first_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_text_view"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:text="@string/profile_first"
+                android:textSize="@dimen/sp_18"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/feedback_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
         <TextView
-            android:id="@+id/name_text_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/feedback_text_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_50"
-            android:layout_toLeftOf="@+id/profile_image_view"
-            android:layout_toStartOf="@+id/profile_image_view"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/feedback_setting"
             android:textColor="@color/profile"
-            android:textSize="28sp" />
+            android:textSize="@dimen/sp_18" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/profile_image_view"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="@dimen/dp_50"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
-
-        <TextView
-            android:id="@+id/profile_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_24"
-            android:layout_marginBottom="@dimen/dp_24"
-            android:layout_toLeftOf="@+id/profile_image_view"
-            android:layout_toStartOf="@+id/profile_image_view"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/name_text_view"
-            android:text="@string/profile_setting"
-            android:textSize="@dimen/sp_18"/>
+        <View
+            android:id="@+id/privacy_policy_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
         <TextView
-            android:id="@+id/first_text_view"
-            android:layout_width="wrap_content"
+            android:id="@+id/privacy_policy_text_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_24"
-            android:layout_below="@+id/profile_text_view"
-            android:text="@string/profile_first"
-            android:textSize="@dimen/sp_18"
-            android:visibility="gone"/>
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/privacy_policy_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
 
-    </RelativeLayout>
+        <View
+            android:id="@+id/license_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
-    <View
-        android:id="@+id/feedback_title_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/dp_22"
-        android:background="@color/inactive_gray" />
+        <TextView
+            android:id="@+id/license_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/license_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
 
-    <TextView
-        android:id="@+id/feedback_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/feedback_setting"
-        android:textColor="@color/profile"
-        android:textSize="@dimen/sp_18"
-        android:layout_marginTop="@dimen/dp_22"/>
+        <View
+            android:id="@+id/logout_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
-    <View
-        android:id="@+id/privacy_policy_title_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/dp_22"
-        android:background="@color/inactive_gray" />
+        <TextView
+            android:id="@+id/logout_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/logout_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/privacy_policy_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/privacy_policy_setting"
-        android:textColor="@color/profile"
-        android:textSize="@dimen/sp_18"
-        android:layout_marginTop="@dimen/dp_22"/>
-
-    <View
-        android:id="@+id/license_title_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/dp_22"
-        android:background="@color/inactive_gray" />
-
-    <TextView
-        android:id="@+id/license_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/license_setting"
-        android:textColor="@color/profile"
-        android:textSize="@dimen/sp_18"
-        android:layout_marginTop="@dimen/dp_22"/>
-
-    <View
-        android:id="@+id/logout_title_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/dp_22"
-        android:background="@color/inactive_gray" />
-
-    <TextView
-        android:id="@+id/logout_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/logout_setting"
-        android:textColor="@color/profile"
-        android:textSize="@dimen/sp_18"
-        android:layout_marginTop="@dimen/dp_22" />
-
-</LinearLayout>
+</ScrollView>

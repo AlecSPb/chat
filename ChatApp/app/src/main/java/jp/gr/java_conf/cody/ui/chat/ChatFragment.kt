@@ -22,6 +22,8 @@ import java.io.File
 import java.util.*
 import android.text.style.ForegroundColorSpan
 import android.text.SpannableString
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -36,6 +38,7 @@ import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.ChatRoomModel
 import jp.gr.java_conf.cody.model.MessageModel
 import jp.gr.java_conf.cody.ui.contacts.CommunityMemberFragment
+import jp.gr.java_conf.cody.util.NetUtils
 
 
 class ChatFragment : Fragment(), View.OnClickListener {
@@ -116,8 +119,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 if (id != null) {
                     MyChatManager.fetchCommunityMembersDetails(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            readMessagesFromFirebase()
-                            getLastMessageAndUpdateUnreadCount()
+                            val isValid = obj as Boolean
+                            if (isValid) {
+                                readMessagesFromFirebase()
+                                getLastMessageAndUpdateUnreadCount()
+                            }
                         }
 
                     }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS, id)
@@ -128,8 +134,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 if (id != null) {
                     MyChatManager.fetchFriendMembersDetails(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            readMessagesFromFirebase()
-                            getLastMessageAndUpdateUnreadCount()
+                            val isValid = obj as Boolean
+                            if (isValid) {
+                                readMessagesFromFirebase()
+                                getLastMessageAndUpdateUnreadCount()
+                            }
                         }
                     }, NetworkConstants().FETCH_COMMUNITY_MEMBERS_DETAILS)
                 }
@@ -161,17 +170,23 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 return true
             }
             R.id.leave -> {
-                MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
+                if (NetUtils(context).isOnline()) {
+                    MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
+                            fragmentManager.popBackStack()
+                            fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
+                        }
 
-//                        DataConstants.communityMap?.get(id)?.members?.remove(DataConstants.currentUser?.uid)
-
-                        Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
-                        fragmentManager.popBackStack()
-                        fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
-                    }
-
-                }, id, DataConstants.currentUser?.uid)
+                    }, id, DataConstants.currentUser?.uid)
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
                 return true
             }
             else -> {

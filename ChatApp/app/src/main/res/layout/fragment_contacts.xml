@@ -13,7 +13,10 @@
         android:id="@+id/contacts_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginStart="@dimen/dp_16"
         android:visibility="gone">
 
         <LinearLayout
@@ -25,6 +28,7 @@
                 android:id="@+id/contacts_community_title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/community_title"
                 android:visibility="gone"/>
 

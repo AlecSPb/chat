@@ -26,6 +26,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.util.Log
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.zhihu.matisse.Matisse
@@ -38,6 +40,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 
 class EditProfileFragment : Fragment() {
     private var cropImageUri: Uri? = null
@@ -343,7 +346,16 @@ class EditProfileFragment : Fragment() {
             }
 
             R.id.select_photo -> {
-                requestPermission()
+                if (NetUtils(context).isOnline()) {
+                    requestPermission()
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
                 return true
             }
 

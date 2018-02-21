@@ -1,6 +1,7 @@
 package jp.gr.java_conf.cody.ui.profile
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -8,6 +9,8 @@ import android.support.v4.app.FragmentManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.webianks.easy_feedback.EasyFeedback
@@ -16,10 +19,13 @@ import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20
 import de.psdev.licensesdialog.model.Notice
 import de.psdev.licensesdialog.model.Notices
 import jp.gr.java_conf.cody.MyChatManager
+import jp.gr.java_conf.cody.NotifyMeInterface
 
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
+import jp.gr.java_conf.cody.ui.LoginActivity
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadRoundImage
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 
@@ -67,7 +73,6 @@ class ProfileFragment : Fragment() {
         feedback_text_view.setOnClickListener {
             EasyFeedback.Builder(context)
                     .withEmail(getString(R.string.email))
-                    .withSystemInfo()
                     .build()
                     .start()
         }
@@ -105,14 +110,31 @@ class ProfileFragment : Fragment() {
 
         // logout
         logout_text_view.setOnClickListener {
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken((R.string.default_web_client_id).toString())
-                    .requestEmail()
-                    .build()
+            // オンライン出ないとログアウトできないようにする
+            if (NetUtils(context).isOnline()) {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken((R.string.default_web_client_id).toString())
+                        .requestEmail()
+                        .build()
 
-            val googleSignInClient = GoogleSignIn.getClient(this.activity, gso)
+                val googleSignInClient = GoogleSignIn.getClient(this.activity, gso)
 
-            MyChatManager.logout(context, googleSignInClient)
+                MyChatManager.logout(object : NotifyMeInterface {
+                    override fun handleData(obj: Any, requestCode: Int?) {
+                        val intent = Intent(context, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                        activity.finish()
+                    }
+                }, context, googleSignInClient)
+            } else {
+                CDialog(context)
+                        .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                        .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                        .setDuration(2000)
+                        .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                        .show()
+            }
         }
     }
 
