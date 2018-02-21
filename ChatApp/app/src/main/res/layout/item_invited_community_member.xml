@@ -14,8 +14,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="@dimen/dp_2"
-            android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_profile" />
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:id="@+id/user_name_text_view"

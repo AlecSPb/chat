@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -16,6 +18,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_contacts_community_detail.*
 
 
@@ -132,15 +135,24 @@ class ContactsCommunityDetailFragment : Fragment() {
                 return true
             }
             R.id.leave_community -> {
-                MyChatManager.setmContext(context)
-                MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
-                        Toast.makeText(context, "You have been exited from community", Toast.LENGTH_LONG).show()
-                        fragmentManager.popBackStack()
-                        fragmentManager.beginTransaction().remove(this@ContactsCommunityDetailFragment).commit()
-                    }
-                }, id, DataConstants.currentUser?.uid)
-                return false
+                if (NetUtils(context).isOnline()) {
+                    MyChatManager.setmContext(context)
+                    MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            Toast.makeText(context, "You have been exited from community", Toast.LENGTH_LONG).show()
+                            fragmentManager.popBackStack()
+                            fragmentManager.beginTransaction().remove(this@ContactsCommunityDetailFragment).commit()
+                        }
+                    }, id, DataConstants.currentUser?.uid)
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
+                return true
             }
             else -> {
                 return false

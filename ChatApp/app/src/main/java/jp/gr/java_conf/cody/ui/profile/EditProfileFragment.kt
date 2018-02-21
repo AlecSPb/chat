@@ -18,7 +18,6 @@ import android.support.v7.app.AlertDialog
 import android.widget.RelativeLayout
 import android.widget.NumberPicker
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.theartofdev.edmodo.cropper.CropImage
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -26,6 +25,8 @@ import android.net.Uri
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.util.Log
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.zhihu.matisse.Matisse
@@ -38,6 +39,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 
 class EditProfileFragment : Fragment() {
     private var cropImageUri: Uri? = null
@@ -225,12 +227,17 @@ class EditProfileFragment : Fragment() {
 
         // 開発経験
         experience_edit_button.setOnClickListener {
-            val list: MutableList<String> = mutableListOf(getString(R.string.experience0),
+            val list: Array<String> = arrayOf(getString(R.string.experience0),
                     getString(R.string.experience1), getString(R.string.experience2), getString(R.string.experience3))
-            MaterialDialog.Builder(context)
-                    .title(getString(R.string.experience_title))
-                    .items(list)
-                    .itemsCallbackSingleChoice(0, MaterialDialog.ListCallbackSingleChoice({ _, _, position, _ ->
+
+            var position = 0
+
+            AlertDialog.Builder(context)
+                    .setTitle(getString(R.string.experience_title))
+                    .setSingleChoiceItems(list, 0, { _, pos ->
+                        position = pos
+                    })
+                    .setPositiveButton(getString(R.string.setting), { _, _ ->
                         val userModel = UserModel(currentUser?.uid)
                         userModel.developmentExperience = position
 
@@ -295,13 +302,10 @@ class EditProfileFragment : Fragment() {
                                 }
                             }
                         }, userModel, NetworkConstants().UPDATE_INFO)
-
-                        return@ListCallbackSingleChoice true
-
-                    }))
-                    .positiveText(getString(R.string.setting))
-                    .negativeText(getString(R.string.cancel))
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .show()
+
         }
 
         // プログラミング言語
@@ -341,7 +345,16 @@ class EditProfileFragment : Fragment() {
             }
 
             R.id.select_photo -> {
-                requestPermission()
+                if (NetUtils(context).isOnline()) {
+                    requestPermission()
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
                 return true
             }
 
@@ -445,7 +458,10 @@ class EditProfileFragment : Fragment() {
     private fun sendFileFirebase(storageReference: StorageReference?, file: Uri) {
         if (storageReference != null) {
 
-            val progress = MaterialDialog.Builder(context).content("読み込み中").progress(true, 0).show()
+            // progress
+            progress_view.visibility = View.VISIBLE
+            avi.visibility = View.VISIBLE
+            avi.show()
 
             val imageGalleryRef = storageReference.child(currentUser?.uid!!)
             val uploadTask = imageGalleryRef.putFile(file)
@@ -457,7 +473,8 @@ class EditProfileFragment : Fragment() {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         val isValid = obj as Boolean
                         if (isValid) {
-                            progress.dismiss()
+                            progress_view.visibility = View.GONE
+                            avi.hide()
                             setProfileImage(file)
                         }
                     }

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -15,6 +17,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriends
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.activity_friend_request.*
 
 class FriendRequestActivity : AppCompatActivity() {
@@ -144,13 +147,22 @@ class FriendRequestActivity : AppCompatActivity() {
                     if (!isRequested) {
                         request_button.text = getString(R.string.send_friend_request)
                         request_button.setOnClickListener {
-                            MyChatManager.setmContext(this)
-                            MyChatManager.sendFriendRequest(object : NotifyMeInterface {
-                                override fun handleData(obj: Any, requestCode: Int?) {
-                                    finish()
-                                    Toast.makeText(this@FriendRequestActivity, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
-                                }
-                            }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
+                            if (NetUtils(this).isOnline()) {
+                                MyChatManager.setmContext(this)
+                                MyChatManager.sendFriendRequest(object : NotifyMeInterface {
+                                    override fun handleData(obj: Any, requestCode: Int?) {
+                                        finish()
+                                        Toast.makeText(this@FriendRequestActivity, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
+                                    }
+                                }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
+                            } else {
+                                CDialog(this)
+                                        .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                                        .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                                        .setDuration(2000)
+                                        .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                                        .show()
+                            }
                         }
                     } else {
                         request_button.text = getString(R.string.in_request)

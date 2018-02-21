@@ -21,19 +21,10 @@ import jp.gr.java_conf.cody.util.SharedPrefManager
 class LoginActivityViewModel(val view: LoginActivityContract, val context: Context) {
     var userModel: UserModel? = UserModel()
     var loginButtonIsEnabled: ObservableField<Boolean> = ObservableField(false)
-    var progressBarVisibility: ObservableField<Int> = ObservableField(View.INVISIBLE)
-
-    fun setProgressBarVisibility(visibility: Int) {
-//        progressBarVisibility.set(visibility)
-    }
 
     fun setLoginButtonEnabled(enabled: Boolean) {
         loginButtonIsEnabled.set(enabled)
     }
-
-//    fun onLoginButtonClicked(view: View) {
-//
-//    }
 
     fun firebaseAuthWithGoogle(acct: GoogleSignInAccount?, auth: FirebaseAuth?) {
         val credential = GoogleAuthProvider.getCredential(acct?.idToken, null)
@@ -41,6 +32,7 @@ class LoginActivityViewModel(val view: LoginActivityContract, val context: Conte
                 ?.addOnCompleteListener{ task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+
                         userModel?.uid = user?.uid
                         userModel?.name = user?.displayName
                         userModel?.email = user?.email

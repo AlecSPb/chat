@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -17,6 +19,7 @@ import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadRoundImage
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_community_requests.*
 
 
@@ -134,102 +137,119 @@ class CommunityRequestsFragment : Fragment() {
         val content = user?.name + "さんから" +  community?.name + "へ参加リクエストが来ています。承認しますか？"
         requests_content_text_view.text = content
         request_confirm_button.setOnClickListener {
-            // buttonを押せない様にする
-            request_confirm_button.isEnabled = false
-            request_disconfirm_button.isEnabled = false
+            if (NetUtils(context).isOnline()) {
+                // buttonを押せない様にする
+                request_confirm_button.isEnabled = false
+                request_disconfirm_button.isEnabled = false
 
-            MyChatManager.setmContext(context)
-            MyChatManager.confirmCommunityJoinRequest(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    // fetch されるまでfragmentをremoveしない
-                    var isExist = false
-                    communityRequestsList
-                            .filter { request -> request.first == communityId && request.second.uid == user?.uid }
-                            .forEach { isExist = true }
+                MyChatManager.setmContext(context)
+                MyChatManager.confirmCommunityJoinRequest(object : NotifyMeInterface {
+                    override fun handleData(obj: Any, requestCode: Int?) {
+                        // fetch されるまでfragmentをremoveしない
+                        var isExist = false
+                        communityRequestsList
+                                .filter { request -> request.first == communityId && request.second.uid == user?.uid }
+                                .forEach { isExist = true }
 
-                    if (!isExist) {
-                        fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
-                        fragmentManager.popBackStack()
-                        Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
-                    } else {
-                        var count = 0
-                        val handler = Handler()
+                        if (!isExist) {
+                            fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
+                            fragmentManager.popBackStack()
+                            Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
+                        } else {
+                            var count = 0
+                            val handler = Handler()
 
-                        handler.postDelayed(object : Runnable {
-                            override fun run() {
-                                count ++
-                                if (count > 30) {
-                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                    return
+                            handler.postDelayed(object : Runnable {
+                                override fun run() {
+                                    count++
+                                    if (count > 30) {
+                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
+
+                                    isExist = false
+                                    communityRequestsList
+                                            .filter { request -> request.first == communityId && request.second.uid == user?.uid }
+                                            .forEach { isExist = true }
+
+                                    if (!isExist) {
+                                        fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
+                                        fragmentManager.popBackStack()
+                                        Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        handler.postDelayed(this, 100)
+                                    }
                                 }
-
-                                isExist = false
-                                communityRequestsList
-                                        .filter { request -> request.first == communityId && request.second.uid == user?.uid }
-                                        .forEach { isExist = true }
-
-                                if (!isExist) {
-                                    fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
-                                    fragmentManager.popBackStack()
-                                    Toast.makeText(context, getString(R.string.confirm_toast), Toast.LENGTH_SHORT).show()
-                                } else {
-                                    handler.postDelayed(this, 100)
-                                }
-                            }
-                        }, 100)
+                            }, 100)
+                        }
                     }
-                }
-            }, user?.uid!!, community?.communityId!!, NetworkConstants().CONFIRM_REQUEST)
+                }, user?.uid!!, community?.communityId!!, NetworkConstants().CONFIRM_REQUEST)
+            } else {
+                CDialog(context)
+                        .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                        .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                        .setDuration(2000)
+                        .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                        .show()
+            }
         }
 
         request_disconfirm_button.setOnClickListener{
-            // buttonを押せない様にする
-            request_confirm_button.isEnabled = false
-            request_disconfirm_button.isEnabled = false
+            if (NetUtils(context).isOnline()) {
+                // buttonを押せない様にする
+                request_confirm_button.isEnabled = false
+                request_disconfirm_button.isEnabled = false
 
-            MyChatManager.setmContext(context)
-            MyChatManager.disconfirmCommunityJoinRequest(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    // fetch されるまでfragmentをremoveしない
-                    var isExist = false
-                    communityRequestsList
-                            .filter { request -> request.first == communityId && request.second.uid == user?.uid }
-                            .forEach { isExist = true }
+                MyChatManager.setmContext(context)
+                MyChatManager.disconfirmCommunityJoinRequest(object : NotifyMeInterface {
+                    override fun handleData(obj: Any, requestCode: Int?) {
+                        // fetch されるまでfragmentをremoveしない
+                        var isExist = false
+                        communityRequestsList
+                                .filter { request -> request.first == communityId && request.second.uid == user?.uid }
+                                .forEach { isExist = true }
 
-                    if (!isExist) {
-                        fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
-                        fragmentManager.popBackStack()
-                        Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
-                    } else {
-                        var count = 0
-                        val handler = Handler()
+                        if (!isExist) {
+                            fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
+                            fragmentManager.popBackStack()
+                            Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
+                        } else {
+                            var count = 0
+                            val handler = Handler()
 
-                        handler.postDelayed(object : Runnable {
-                            override fun run() {
-                                count ++
-                                if (count > 30) {
-                                    Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                    return
+                            handler.postDelayed(object : Runnable {
+                                override fun run() {
+                                    count++
+                                    if (count > 30) {
+                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
+
+                                    isExist = false
+                                    communityRequestsList
+                                            .filter { request -> request.first == communityId && request.second.uid == user?.uid }
+                                            .forEach { isExist = true }
+
+                                    if (!isExist) {
+                                        fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
+                                        fragmentManager.popBackStack()
+                                        Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        handler.postDelayed(this, 100)
+                                    }
                                 }
-
-                                isExist = false
-                                communityRequestsList
-                                        .filter { request -> request.first == communityId && request.second.uid == user?.uid }
-                                        .forEach { isExist = true }
-
-                                if (!isExist) {
-                                    fragmentManager.beginTransaction().remove(this@CommunityRequestsFragment).commit()
-                                    fragmentManager.popBackStack()
-                                    Toast.makeText(context, getString(R.string.disconfirm_toast), Toast.LENGTH_SHORT).show()
-                                } else {
-                                    handler.postDelayed(this, 100)
-                                }
-                            }
-                        }, 100)
+                            }, 100)
+                        }
                     }
-                }
-            }, user?.uid!!, community?.communityId!!, NetworkConstants().DISCONFIRM_REQUEST)
-
+                }, user?.uid!!, community?.communityId!!, NetworkConstants().DISCONFIRM_REQUEST)
+            } else {
+                CDialog(context)
+                        .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                        .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                        .setDuration(2000)
+                        .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                        .show()
+            }
         }
     }
 

@@ -36,7 +36,7 @@ class MainViewModel(private val activity: AppCompatActivity, val view: MainActiv
                     return true
                 }
                 R.id.navigation_profile -> {
-                    val profileFragment = ProfileFragment.newInstance()
+                    val profileFragment = ProfileFragment.newInstance(false)
                     fragmentManager.beginTransaction().replace(R.id.fragment, profileFragment).commit()
                     return true
                 }

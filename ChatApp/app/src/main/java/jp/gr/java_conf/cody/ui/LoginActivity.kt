@@ -9,6 +9,8 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import android.view.View
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,6 +26,7 @@ import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.contract.LoginActivityContract
 import jp.gr.java_conf.cody.databinding.ActivityLoginBinding
 import jp.gr.java_conf.cody.model.UserModel
+import jp.gr.java_conf.cody.util.NetUtils
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import jp.gr.java_conf.cody.viewmodel.LoginActivityViewModel
 import kotlinx.android.synthetic.main.activity_login.*
@@ -60,8 +63,17 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
         // loginボタン
         googleLoginButton.setOnClickListener {
-            viewModel.setLoginButtonEnabled(false)
-            moveToSignInPage()
+            if (NetUtils(this).isOnline()) {
+                viewModel.setLoginButtonEnabled(false)
+                moveToSignInPage()
+            } else {
+                CDialog(this)
+                        .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                        .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                        .setDuration(2000)
+                        .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                        .show()
+            }
         }
     }
 
@@ -69,20 +81,34 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         super.onStart()
 
         if (currentUser != null) {
-            MyChatManager.setmContext(this)
-            MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
-                override fun handleData(obj: Any, requestCode: Int?) {
-                    viewModel.setProgressBarVisibility(View.INVISIBLE)
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+            if (NetUtils(this).isOnline()) {
+                // progress
+                progress_view.visibility = View.VISIBLE
+                avi.visibility = View.VISIBLE
+                avi.show()
 
-            }, currentUser, NetworkConstants().LOGIN_REQUEST)
+                MyChatManager.setmContext(this)
+                MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
+                    override fun handleData(obj: Any, requestCode: Int?) {
+                        // progress
+                        progress_view.visibility = View.GONE
+                        avi.hide()
+                        avi.visibility = View.GONE
+
+                        val isFirst = obj as Boolean
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        intent.putExtra("isFirst", isFirst)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                }, currentUser, NetworkConstants().LOGIN_REQUEST)
+            } else {
+                viewModel.setLoginButtonEnabled(true)
+            }
 
         } else {
             viewModel.setLoginButtonEnabled(true)
-            viewModel.setProgressBarVisibility(View.INVISIBLE)
         }
     }
 
@@ -93,15 +119,24 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        viewModel.setProgressBarVisibility(View.INVISIBLE)
         viewModel.setLoginButtonEnabled(false)
 
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
+                // progress
+                progress_view.visibility = View.VISIBLE
+                avi.visibility = View.VISIBLE
+                avi.show()
+
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
                 viewModel.firebaseAuthWithGoogle(account, auth)
             } catch (e: ApiException) {
+                // progress
+                progress_view.visibility = View.GONE
+                avi.hide()
+                avi.visibility = View.GONE
+
                 Toast.makeText(this, "signin failed", Toast.LENGTH_SHORT).show()
                 viewModel.setLoginButtonEnabled(true)
             }
@@ -109,7 +144,10 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-        viewModel.setProgressBarVisibility(View.INVISIBLE)
+        // progress
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
     }
 
@@ -117,8 +155,14 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         MyChatManager.setmContext(this)
         MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
-                viewModel.setProgressBarVisibility(View.INVISIBLE)
+                val isFirst = obj as Boolean
+                // progress
+                progress_view.visibility = View.GONE
+                avi.hide()
+                avi.visibility = View.GONE
+
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.putExtra("isFirst", isFirst)
                 startActivity(intent)
                 finish()
             }
@@ -126,6 +170,11 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun toastSignInError(task: Task<AuthResult>) {
+        // progress
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
+
         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
     }
 }

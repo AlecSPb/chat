@@ -52,19 +52,17 @@ import kotlin.collections.HashMap
  */
 object MyChatManager {
     val TAG = "MyChatManager"
-    var myChatManager: MyChatManager? = null
     var auth: FirebaseAuth? = FirebaseAuth.getInstance()
-    var database: FirebaseDatabase? = FirebaseDatabase.getInstance()
-    var authListener: FirebaseAuth.AuthStateListener? = null
-    var isFirebaseAuthSuccessfull = false
-    var firebaseUserId = ""
-    var firebaseDatabaseReference: DatabaseReference? = FirebaseDatabase.getInstance().reference
+    var database: FirebaseDatabase? = null
+    private var authListener: FirebaseAuth.AuthStateListener? = null
+    private var isFirebaseAuthSuccessfull = false
+    private var firebaseUserId = ""
     val gson = Gson()
     var context: Context? = null
-    var userRef: DatabaseReference? = firebaseDatabaseReference?.child(FirebaseConstants().USERS)
-    var communityRef: DatabaseReference? = firebaseDatabaseReference?.child(FirebaseConstants().COMMUNITY)
-    var messageRef: DatabaseReference? = firebaseDatabaseReference?.child(FirebaseConstants().MESSAGES)
-    var friendRef: DatabaseReference? = firebaseDatabaseReference?.child(FirebaseConstants().FRIENDS)
+    var userRef: DatabaseReference? = null
+    var communityRef: DatabaseReference? = null
+    private var messageRef: DatabaseReference? = null
+    var friendRef: DatabaseReference? = null
 
     var communityListener: ValueEventListener? = null
 
@@ -122,12 +120,33 @@ object MyChatManager {
      */
     fun loginCreateAndUpdate(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
         try {
+            if (database == null) {
+                database = FirebaseDatabase.getInstance()
+                database?.setPersistenceEnabled(true)
+
+                userRef = database?.reference?.child(FirebaseConstants().USERS)
+                communityRef = database?.reference?.child(FirebaseConstants().COMMUNITY)
+                messageRef = database?.reference?.child(FirebaseConstants().MESSAGES)
+                friendRef = database?.reference?.child(FirebaseConstants().FRIENDS)
+
+            } else {
+                userRef = database?.reference?.child(FirebaseConstants().USERS)
+                communityRef = database?.reference?.child(FirebaseConstants().COMMUNITY)
+                messageRef = database?.reference?.child(FirebaseConstants().MESSAGES)
+                friendRef = database?.reference?.child(FirebaseConstants().FRIENDS)
+
+            }
+
+            var isFirst = false
             userRef?.child(userModel?.uid)?.runTransaction(object : Transaction.Handler {
                 override fun doTransaction(mutableData: MutableData): Transaction.Result {
                     val p = mutableData.getValue<UserModel>(UserModel::class.java)
+
                     if (p == null) {
+                        isFirst = true
                         mutableData.value = userModel
                     } else {
+                        isFirst = false
                         val newUserData: HashMap<String, Any?> = hashMapOf()
                         newUserData.put("online", true)
                         userRef?.child(userModel?.uid)?.updateChildren(newUserData)
@@ -139,7 +158,7 @@ object MyChatManager {
                 override fun onComplete(databaseError: DatabaseError?, p1: Boolean, dataSnapshot: DataSnapshot?) {
                     try {
                         Log.d(TAG, "postTransaction:onComplete:" + databaseError)
-                        callback?.handleData(true, requestType)
+                        callback?.handleData(isFirst, requestType)
 //                        val user: UserModel? = dataSnapshot?.getValue<UserModel>(UserModel::class.java)
 //                        fetchCurrentUser(callback, user, requestType)
 //                        fetchMyCommunities(callback, requestType, userModel, true)
@@ -937,7 +956,7 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         }
@@ -952,7 +971,7 @@ object MyChatManager {
                 if (dataSnapshot.exists()) {
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -999,7 +1018,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1020,7 +1039,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1041,7 +1060,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1062,7 +1081,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1083,7 +1102,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1101,7 +1120,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(true, requestType)
+                    callback?.handleData(false, requestType)
                 }
             }
         })
@@ -1147,7 +1166,7 @@ object MyChatManager {
         userRef?.child(currentUser?.uid)?.child("deviceIds")?.setValue(deviceIdMap)
     }
 
-    fun logout(context: Context, googleSignInClient: GoogleSignInClient) {
+    fun logout(callback: NotifyMeInterface?, context: Context, googleSignInClient: GoogleSignInClient) {
         val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
         val deviceIdMap: MutableMap<String, Any> = hashMapOf()
@@ -1166,17 +1185,8 @@ object MyChatManager {
 
             googleSignInClient.signOut()
 
-            val intent = Intent(context, LoginActivity::class.java)
-            context.startActivity(intent)
+            callback?.handleData(true, null)
         }
-    }
-
-    /**
-     * This function is called to set user status to offline
-     */
-    fun goOffline(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {
-        userRef?.child(userModel?.uid)?.child(FirebaseConstants().ONLINE)?.setValue(false)
-        callback?.handleData(true, requestType)
     }
 
     /**
@@ -1335,6 +1345,9 @@ object MyChatManager {
     }
 
     fun fetchCommunityMembersDetails(callback: NotifyMeInterface?, requestType: Int?, communityId: String?) {
+        if (communityMembersMap?.get(communityId) == null) {
+            callback?.handleData(false, requestType)
+        }
         var i: Int = communityMembersMap?.get(communityId)?.size!!
         userMap?.clear()
         if (i == 0) {

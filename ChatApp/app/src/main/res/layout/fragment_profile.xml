@@ -1,192 +1,134 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.go26.chatapp.ui.profile.ProfileFragment">
+    android:layout_marginEnd="@dimen/dp_30"
+    android:layout_marginLeft="@dimen/dp_30"
+    android:layout_marginRight="@dimen/dp_30"
+    android:layout_marginStart="@dimen/dp_30"
+    android:paddingBottom="@dimen/dp_32"
+    tools:context="jp.gr.java_conf.cody.ui.profile.ProfileFragment">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:orientation="vertical">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <RelativeLayout
+            android:id="@+id/profile_layout"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:fitsSystemWindows="true"
-            app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="@color/light_blue2">
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/profile_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:contentDescription="@string/app_name"
-                android:scaleType="centerCrop"
-                android:background="@color/inactive_gray"
-                app:layout_collapseMode="parallax" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/tool_bar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/dp_30"
-            android:layout_marginStart="@dimen/dp_30"
-            android:layout_marginRight="@dimen/dp_30"
-            android:layout_marginEnd="@dimen/dp_30"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/name_text_view"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/dp_50"
+                android:layout_toLeftOf="@+id/profile_image_view"
+                android:layout_toStartOf="@+id/profile_image_view"
+                android:textColor="@color/profile"
+                android:textSize="28sp" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_50" />
+
+            <TextView
+                android:id="@+id/profile_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/name_text_view"
+                android:layout_marginBottom="@dimen/dp_24"
                 android:layout_marginTop="@dimen/dp_24"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_24" />
+                android:layout_toLeftOf="@+id/profile_image_view"
+                android:layout_toStartOf="@+id/profile_image_view"
+                android:text="@string/profile_setting"
+                android:textSize="@dimen/sp_18" />
 
             <TextView
-                android:id="@+id/self_introduction_text_view"
+                android:id="@+id/first_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/profile_content"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone"/>
-
-            <View
-                android:id="@+id/age_title_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dp_22"
-                android:background="@color/inactive_gray"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/age_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/age_title"
-                android:textColor="@color/profile"
+                android:layout_below="@+id/profile_text_view"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:text="@string/profile_first"
                 android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/age_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/profile_content"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone"/>
+        </RelativeLayout>
 
-            <View
-                android:id="@+id/experience_title_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dp_22"
-                android:background="@color/inactive_gray"
-                android:visibility="gone"/>
+        <View
+            android:id="@+id/feedback_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
-            <TextView
-                android:id="@+id/experience_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/experience_title"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone" />
+        <TextView
+            android:id="@+id/feedback_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/feedback_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
 
-            <TextView
-                android:id="@+id/experience_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/profile_content"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone"/>
+        <View
+            android:id="@+id/privacy_policy_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
-            <View
-                android:id="@+id/language_title_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dp_22"
-                android:background="@color/inactive_gray"
-                android:visibility="gone"/>
+        <TextView
+            android:id="@+id/privacy_policy_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/privacy_policy_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
 
-            <TextView
-                android:id="@+id/language_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/programming_language"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone" />
+        <View
+            android:id="@+id/license_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
-            <TextView
-                android:id="@+id/language_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/profile_content"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone"/>
+        <TextView
+            android:id="@+id/license_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/license_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
 
-            <View
-                android:id="@+id/my_apps_title_line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dp_22"
-                android:background="@color/inactive_gray"
-                android:visibility="gone"/>
+        <View
+            android:id="@+id/logout_title_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dp_22"
+            android:background="@color/inactive_gray" />
 
+        <TextView
+            android:id="@+id/logout_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_22"
+            android:text="@string/logout_setting"
+            android:textColor="@color/profile"
+            android:textSize="@dimen/sp_18" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/my_apps_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_apps"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/my_apps_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/profile_content"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginTop="@dimen/dp_22"
-                android:gravity="top|start"
-                android:visibility="gone"/>
-
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

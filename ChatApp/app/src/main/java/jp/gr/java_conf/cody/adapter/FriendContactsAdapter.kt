@@ -2,6 +2,7 @@ package jp.gr.java_conf.cody.adapter
 
 import android.content.Context
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.RecyclerView
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.afollestad.materialdialogs.MaterialDialog
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -44,24 +44,18 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<FriendC
             holder.friendName.text = friend.name
             loadRoundImage(holder.profileImage, friend.imageUrl!!)
 
-
             holder.layout.setOnClickListener({
-                val list: MutableList<String> = mutableListOf("トーク", "詳細")
-                MaterialDialog.Builder(context).title(friend.name!!).items(list).itemsCallback { _, _, _, text ->
-                    MyChatManager.setmContext(context)
-                    if (text == "トーク") {
-                        val chatRoomModel = ChatRoomModel(friendList[position].friendId!!, friend.name!!, friend.imageUrl!!,
-                                friendList[position].lastMessage?.message!!, friendList[position].members[DataConstants.currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
-                        MyChatManager.hasChatRoom(object : NotifyMeInterface {
-                            override fun handleData(obj: Any, requestCode: Int?) {
-                                if (obj as Boolean) {
-                                    val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
-                                    val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-                                    val fragmentTransaction = fragmentManager.beginTransaction()
-                                    fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
-                                    fragmentTransaction.commit()
-                                } else {
-                                    MyChatManager.createChatRoom(object : NotifyMeInterface {
+                MyChatManager.setmContext(context)
+
+                val list = arrayOf(context.getString(R.string.dialog_talk), context.getString(R.string.dialog_detail))
+                AlertDialog.Builder(context)
+                        .setTitle(friend.name)
+                        .setItems(list, { _, pos ->
+                            when (pos) {
+                                0 -> {
+                                    val chatRoomModel = ChatRoomModel(friendList[position].friendId!!, friend.name!!, friend.imageUrl!!,
+                                            friendList[position].lastMessage?.message!!, friendList[position].members[DataConstants.currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
+                                    MyChatManager.hasChatRoom(object : NotifyMeInterface {
                                         override fun handleData(obj: Any, requestCode: Int?) {
                                             if (obj as Boolean) {
                                                 val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
@@ -69,21 +63,34 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<FriendC
                                                 val fragmentTransaction = fragmentManager.beginTransaction()
                                                 fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
                                                 fragmentTransaction.commit()
+                                            } else {
+                                                MyChatManager.createChatRoom(object : NotifyMeInterface {
+                                                    override fun handleData(obj: Any, requestCode: Int?) {
+                                                        if (obj as Boolean) {
+                                                            val chatRoomsFragment = ChatRoomsFragment.newInstance(true, chatRoomModel)
+                                                            val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                                                            val fragmentTransaction = fragmentManager.beginTransaction()
+                                                            fragmentTransaction.replace(R.id.fragment, chatRoomsFragment)
+                                                            fragmentTransaction.commit()
+                                                        }
+                                                    }
+                                                }, DataConstants.currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
                                             }
                                         }
                                     }, DataConstants.currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
                                 }
+                                1 -> {
+                                    val contactsFriendDetailFragment = ContactsFriendDetailFragment.newInstance(friend.uid)
+                                    val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+                                    val fragmentTransaction = fragmentManager.beginTransaction()
+                                    fragmentTransaction.replace(R.id.fragment, contactsFriendDetailFragment)
+                                    fragmentTransaction.addToBackStack(null)
+                                    fragmentTransaction.commit()
+                                }
                             }
-                        }, DataConstants.currentUser?.uid!!, chatRoomModel, NetworkConstants().CHECK_CHAT_ROOMS_EXISTS)
-                    }  else if (text.toString() == "詳細") {
-                        val contactsFriendDetailFragment = ContactsFriendDetailFragment.newInstance(friend.uid)
-                        val fragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
-                        val fragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.fragment, contactsFriendDetailFragment)
-                        fragmentTransaction.addToBackStack(null)
-                        fragmentTransaction.commit()
-                    }
-                }.show()
+                        })
+                        .show()
+
             })
         }
     }

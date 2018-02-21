@@ -10,12 +10,15 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_edit_my_apps.*
 
 
@@ -78,42 +81,50 @@ class EditMyAppsFragment : Fragment() {
                 return true
             }
             R.id.edit_finish -> {
-                val userModel = UserModel(uid = currentUser?.uid)
+                if (NetUtils(context).isOnline()) {
+                    val userModel = UserModel(uid = currentUser?.uid)
 
-                val myApps  = my_apps_edit_text.text.toString()
-                if (!myApps.isBlank()) {
-                    userModel.myApps = myApps
-                }
-
-                MyChatManager.setmContext(context)
-                MyChatManager.updateMyApps(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
-                        if (currentUser?.myApps == myApps) {
-                            fragmentManager.popBackStack()
-                            fragmentManager.beginTransaction().remove(this@EditMyAppsFragment).commit()
-                        } else {
-                            var count = 0
-                            val handler = Handler()
-
-                            handler.postDelayed(object : Runnable {
-                                override fun run() {
-                                    count ++
-                                    if (count > 30) {
-                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
-                                        return
-                                    }
-                                    if (currentUser?.myApps == myApps) {
-                                        fragmentManager.popBackStack()
-                                        fragmentManager.beginTransaction().remove(this@EditMyAppsFragment).commit()
-                                    } else {
-                                        handler.postDelayed(this, 100)
-                                    }
-                                }
-                            }, 100)
-                        }
+                    val myApps = my_apps_edit_text.text.toString()
+                    if (!myApps.isBlank()) {
+                        userModel.myApps = myApps
                     }
-                }, userModel, NetworkConstants().UPDATE_INFO)
 
+                    MyChatManager.setmContext(context)
+                    MyChatManager.updateMyApps(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            if (currentUser?.myApps == myApps) {
+                                fragmentManager.popBackStack()
+                                fragmentManager.beginTransaction().remove(this@EditMyAppsFragment).commit()
+                            } else {
+                                var count = 0
+                                val handler = Handler()
+
+                                handler.postDelayed(object : Runnable {
+                                    override fun run() {
+                                        count++
+                                        if (count > 30) {
+                                            Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                            return
+                                        }
+                                        if (currentUser?.myApps == myApps) {
+                                            fragmentManager.popBackStack()
+                                            fragmentManager.beginTransaction().remove(this@EditMyAppsFragment).commit()
+                                        } else {
+                                            handler.postDelayed(this, 100)
+                                        }
+                                    }
+                                }, 100)
+                            }
+                        }
+                    }, userModel, NetworkConstants().UPDATE_INFO)
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
                 return true
             }
             else -> {

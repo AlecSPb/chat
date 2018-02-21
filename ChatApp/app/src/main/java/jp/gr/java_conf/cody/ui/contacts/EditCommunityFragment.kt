@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -17,8 +18,9 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
@@ -32,6 +34,7 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
+import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_edit_community.*
 
 
@@ -151,7 +154,16 @@ class EditCommunityFragment : Fragment() {
             }
 
             R.id.select_photo -> {
-                requestPermission()
+                if (NetUtils(context).isOnline()) {
+                    requestPermission()
+                } else {
+                    CDialog(context)
+                            .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
+                            .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
+                            .setDuration(2000)
+                            .setTextSize(CDConstants.NORMAL_TEXT_SIZE)
+                            .show()
+                }
                 return true
             }
 
@@ -257,7 +269,9 @@ class EditCommunityFragment : Fragment() {
     private fun sendFileFirebase(storageReference: StorageReference?, file: Uri) {
         if (storageReference != null) {
 
-            val progress = MaterialDialog.Builder(context).content("読み込み中").progress(true, 0).show()
+            progress_view.visibility = View.VISIBLE
+            avi.visibility = View.VISIBLE
+            avi.show()
 
             val imageGalleryRef = storageReference.child(id!!)
             val uploadTask = imageGalleryRef.putFile(file)
@@ -271,7 +285,8 @@ class EditCommunityFragment : Fragment() {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         val isValid = obj as Boolean
                         if (isValid) {
-                            progress.dismiss()
+                            progress_view.visibility = View.GONE
+                            avi.hide()
                             setProfileImage(file)
                         }
                     }
