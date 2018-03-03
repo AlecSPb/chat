@@ -25,7 +25,7 @@
             android:layout_toRightOf="@+id/profile_image_view"
             android:layout_toEndOf="@+id/profile_image_view"
             android:textColor="@color/black"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:layout_marginTop="@dimen/dp_1"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
     </RelativeLayout>

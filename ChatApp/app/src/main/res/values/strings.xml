@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Cody</string>
     <string name="home">Home</string>
+    <string name="chat">トーク</string>
     <string name="search">検索</string>
     <string name="community">Community</string>
-    <string name="contacts">Contacts</string>
+    <string name="contacts">コンタクト</string>
     <string name="profile">プロフィール</string>
 
     <string name="dialog_talk">トーク</string>
@@ -55,7 +56,11 @@
     <string name="edit_community_name">コミュニティ名を編集</string>
     <string name="description">コミュニティの説明</string>
     <string name="edit_description">コミュニティの説明を編集</string>
-    <string name="description_content">他のユーザーに向けてこのコミュニティの紹介をしてください。\n\nこのコミュニティはどのような特徴を持っていますか？\nまた、どのような人に入ってもらいたいですか？</string>
+    <string name="description_content">
+        他のユーザーに向けてこのコミュニティの紹介をしてください。\n\n
+        このコミュニティの特徴はなんでしょう？\n
+        どのような人に入ってもらいたいですか？\n
+    </string>
     <string name="location">活動場所</string>
     <string name="edit_location">活動場所を編集</string>
     <string name="location_content">主に活動する場所を教えてください。</string>

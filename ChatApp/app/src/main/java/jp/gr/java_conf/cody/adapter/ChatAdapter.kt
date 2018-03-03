@@ -66,7 +66,8 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
         viewHolder.message.text = chatMessage.message
 
         try {
-            viewHolder.timestamp.text = MyTextUtil().getTimestamp(chatMessage.timestamp?.toLong()!!)
+            viewHolder.timestamp.text = MyTextUtil().getTime(chatMessage.timestamp?.toLong()!!)
+
         } catch (e: Exception) {
             e.printStackTrace()
         }

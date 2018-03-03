@@ -5,16 +5,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        </android.support.design.widget.AppBarLayout>
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FDF5E6"
+            android:background="@color/chat_gray"
             android:orientation="vertical">
 
 

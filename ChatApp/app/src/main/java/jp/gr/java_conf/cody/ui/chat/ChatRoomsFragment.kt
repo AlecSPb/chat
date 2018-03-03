@@ -67,7 +67,7 @@ class ChatRoomsFragment : Fragment() {
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
         activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = "Chat"
+        activity.supportActionBar?.title = getString(R.string.chat)
 
         val recycler: RecyclerView? = view?.findViewById(R.id.chat_rooms_recycler_view)
         recycler?.layoutManager = LinearLayoutManager(context)
