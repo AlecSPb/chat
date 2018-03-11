@@ -15,7 +15,7 @@
             android:layout_height="250dp"
             android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/profile_image_view"
@@ -72,6 +72,33 @@
                 android:visibility="gone" />
 
             <View
+                android:id="@+id/feature_title_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/dp_22"
+                android:background="@color/inactive_gray"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/feature_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                android:text="@string/feature"
+                android:textColor="@color/profile"
+                android:textSize="@dimen/sp_18"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/feature_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                android:textColor="@color/profile_content"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
+
+            <View
                 android:id="@+id/location_title_line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -84,6 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
+                android:text="@string/location"
                 android:textColor="@color/profile"
                 android:textSize="@dimen/sp_18"
                 android:visibility="gone" />
@@ -93,6 +121,93 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_22"
+                android:textColor="@color/profile_content"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/activity_title_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/dp_22"
+                android:background="@color/inactive_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/activity_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_22"
+                    android:layout_toLeftOf="@+id/activity_post_button"
+                    android:layout_toStartOf="@+id/activity_post_button"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/last_activity"
+                    android:textColor="@color/profile"
+                    android:textSize="@dimen/sp_18"/>
+
+                <Button
+                    android:id="@+id/activity_post_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:layout_marginRight="@dimen/dp_12"
+                    android:layout_marginEnd="@dimen/dp_12"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/activity_post"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/activity_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                android:textColor="@color/profile_content"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/activity_location_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:textColor="@color/profile_content"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/activity_contents_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_8"
+                android:textColor="@color/profile_content"
+                android:textSize="@dimen/sp_16"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/activity_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/move_activity_history"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/activity_empty_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/activity_empty"
                 android:textColor="@color/profile_content"
                 android:textSize="@dimen/sp_16"
                 android:visibility="gone" />

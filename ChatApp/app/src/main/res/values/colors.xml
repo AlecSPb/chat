@@ -6,6 +6,8 @@
     <color name="toolbarPrimaryText">#FFFFFF</color>
     <color name="toolbar">#4CAF50</color>
 
+    <color name="background">#fffafafa</color>
+
     <color name="chat_gray">#f7f7f7</color>
     <color name="denim_blue">#ff3851a3</color>
     <color name="watermelon">#fff94359</color>

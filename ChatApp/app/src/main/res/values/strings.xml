@@ -29,6 +29,13 @@
 
 
     <string name="create_community">コミュニティ作成</string>
+    <string name="feature_default">設定しない</string>
+    <string name="feature1">初心者歓迎</string>
+    <string name="feature2">経験者募集</string>
+    <string name="feature3">少数精鋭</string>
+    <string name="feature4">学生募集</string>
+
+    <string name="friend_invite">友達を招待する</string>
     <string name="invite">招待</string>
     <string name="loading">Loading</string>
 
@@ -47,10 +54,11 @@
     <string name="age_content">歳</string>
 
     <string name="experience_title">開発経験</string>
-    <string name="experience0">未経験</string>
-    <string name="experience1">始めたばかり</string>
-    <string name="experience2">いくつかアプリを作ったことがある</string>
-    <string name="experience3">実務経験あり</string>
+    <string name="experience_default">設定しない</string>
+    <string name="experience1">未経験</string>
+    <string name="experience2">始めたばかり</string>
+    <string name="experience3">いくつかアプリを作ったことがある</string>
+    <string name="experience4">実務経験あり</string>
 
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
@@ -61,9 +69,23 @@
         このコミュニティの特徴はなんでしょう？\n
         どのような人に入ってもらいたいですか？\n
     </string>
-    <string name="location">活動場所</string>
+    <string name="feature">特徴</string>
+    <string name="edit_feature">特徴を編集</string>
+    <string name="feature_content">このコミュニティの特徴を教えてください。</string>
+    <string name="location">主な活動場所</string>
     <string name="edit_location">活動場所を編集</string>
     <string name="location_content">主に活動する場所を教えてください。</string>
+    <string name="last_activity">最近の活動</string>
+    <string name="activity_empty">活動がありません</string>
+    <string name="move_activity_history">過去の活動を見る</string>
+    <string name="activity_post">活動を投稿する</string>
+    <string name="activity_date">活動日　</string>
+    <string name="activity_content">活動内容</string>
+    <string name="activity_content_hint">活動内容を入力してください</string>
+    <string name="activity_location">活動場所</string>
+    <string name="activity_location_hint">活動場所を入力してください</string>
+    <string name="post">投稿</string>
+    <string name="activity_history">活動履歴</string>
 
     <string name="edit_name">名前を編集</string>
     <string name="edit_self_introduction">自己紹介を編集</string>

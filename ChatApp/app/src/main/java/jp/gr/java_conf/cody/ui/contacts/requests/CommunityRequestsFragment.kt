@@ -92,19 +92,19 @@ class CommunityRequestsFragment : Fragment() {
             experience_text_view.visibility = View.VISIBLE
             when (user?.developmentExperience) {
                 0 -> {
-                    val experience = getString(R.string.experience0)
-                    experience_text_view.text = experience
-                }
-                1 -> {
                     val experience = getString(R.string.experience1)
                     experience_text_view.text = experience
                 }
-                2 -> {
+                1 -> {
                     val experience = getString(R.string.experience2)
                     experience_text_view.text = experience
                 }
-                3 -> {
+                2 -> {
                     val experience = getString(R.string.experience3)
+                    experience_text_view.text = experience
+                }
+                3 -> {
+                    val experience = getString(R.string.experience4)
                     experience_text_view.text = experience
                 }
             }

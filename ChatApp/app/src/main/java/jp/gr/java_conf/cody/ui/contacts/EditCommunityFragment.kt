@@ -9,14 +9,17 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.circulardialog.CDialog
@@ -96,6 +99,29 @@ class EditCommunityFragment : Fragment() {
             description_text_view.text = communityModel?.description
         }
 
+        // 特徴
+        if (communityModel?.feature != null) {
+            when (communityModel?.feature) {
+                0 -> {
+                    feature_button.text = getString(R.string.setting)
+                }
+                1 -> {
+                    feature_button.text = getString(R.string.feature1)
+                }
+                2 -> {
+                    feature_button.text = getString(R.string.feature2)
+                }
+                3 -> {
+                    feature_button.text = getString(R.string.feature3)
+                }
+                4 -> {
+                    feature_button.text = getString(R.string.feature4)
+                }
+            }
+        } else {
+            feature_button.text = getString(R.string.setting)
+        }
+
         // 活動場所
         if (communityModel?.location != null) {
             location_text_view.visibility = View.VISIBLE
@@ -127,6 +153,84 @@ class EditCommunityFragment : Fragment() {
             fragmentTransaction.replace(R.id.fragment, editCommunityDescriptionFragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
+        }
+
+        feature_button.setOnClickListener {
+            val featureList: Array<String> = arrayOf(getString(R.string.feature_default), getString(R.string.feature1),
+                    getString(R.string.feature2), getString(R.string.feature3), getString(R.string.feature4))
+
+            var position = 0
+
+            AlertDialog.Builder(context)
+                    .setTitle(getString(R.string.experience_title))
+                    .setSingleChoiceItems(featureList, 0, { _, pos ->
+                        position = pos
+                    })
+                    .setPositiveButton(getString(R.string.setting), { _, _ ->
+                        val id = communityModel?.communityId
+                        val newCommunity = CommunityModel(communityId = id, feature = position)
+                        MyChatManager.updateCommunityFeature(object : NotifyMeInterface {
+                            override fun handleData(obj: Any, requestCode: Int?) {
+                                if (communityMap!![id!!]?.feature == position) {
+                                    when (position) {
+                                        0 -> {
+                                            feature_button.text = getString(R.string.setting)
+                                        }
+                                        1 -> {
+                                            feature_button.text = getString(R.string.feature1)
+                                        }
+                                        2 -> {
+                                            feature_button.text = getString(R.string.feature2)
+                                        }
+                                        3 -> {
+                                            feature_button.text = getString(R.string.feature3)
+                                        }
+                                        4 -> {
+                                            feature_button.text = getString(R.string.feature4)
+                                        }
+                                    }
+                                } else {
+                                    var count = 0
+                                    val handler = Handler()
+
+                                    handler.postDelayed(object : Runnable {
+                                        override fun run() {
+                                            count ++
+                                            if (count > 30) {
+
+                                                Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                                return
+                                            }
+                                            if (communityMap!![id]?.feature == position) {
+
+                                                when (position) {
+                                                    0 -> {
+                                                        feature_button.text = getString(R.string.setting)
+                                                    }
+                                                    1 -> {
+                                                        feature_button.text = getString(R.string.feature1)
+                                                    }
+                                                    2 -> {
+                                                        feature_button.text = getString(R.string.feature2)
+                                                    }
+                                                    3 -> {
+                                                        feature_button.text = getString(R.string.feature3)
+                                                    }
+                                                    4 -> {
+                                                        feature_button.text = getString(R.string.feature4)
+                                                    }
+                                                }
+                                            } else {
+                                                handler.postDelayed(this, 100)
+                                            }
+                                        }
+                                    }, 100)
+                                }
+                            }
+                        }, newCommunity, NetworkConstants().UPDATE_INFO)
+                    })
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .show()
         }
 
         location_edit_button.setOnClickListener {

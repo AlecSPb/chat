@@ -1,9 +1,6 @@
 package jp.gr.java_conf.cody.constants
 
-import jp.gr.java_conf.cody.model.CommunityModel
-import jp.gr.java_conf.cody.model.FriendModel
-import jp.gr.java_conf.cody.model.MessageModel
-import jp.gr.java_conf.cody.model.UserModel
+import jp.gr.java_conf.cody.model.*
 
 /**
  * Created by daigo on 2018/01/14.
@@ -49,5 +46,8 @@ class DataConstants {
         var communityList: MutableList<CommunityModel> = mutableListOf()
         var friendList: MutableList<FriendModel> = mutableListOf()
         var communityMemberList: MutableList<UserModel> = mutableListOf()
+
+        // community活動履歴
+        var communityActivity: MutableMap<String, CommunityActivityModel> = mutableMapOf()
     }
 }

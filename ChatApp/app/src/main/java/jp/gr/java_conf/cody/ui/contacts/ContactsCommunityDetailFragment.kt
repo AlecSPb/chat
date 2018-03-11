@@ -20,6 +20,7 @@ import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
 import jp.gr.java_conf.cody.util.NetUtils
 import kotlinx.android.synthetic.main.fragment_contacts_community_detail.*
+import java.util.*
 
 
 class ContactsCommunityDetailFragment : Fragment() {
@@ -75,16 +76,86 @@ class ContactsCommunityDetailFragment : Fragment() {
             description_text_view.text = communityModel.description
         }
 
+        // 特徴
+        if (communityModel.feature != null) {
+            if (communityModel.feature != 0) {
+                feature_title_line.visibility = View.VISIBLE
+
+                feature_title_text_view.visibility = View.VISIBLE
+
+                feature_text_view.visibility = View.VISIBLE
+                when (communityModel.feature) {
+                    1 -> {
+                        val feature = getString(R.string.feature1)
+                        feature_text_view.text = feature
+                    }
+                    2 -> {
+                        val feature = getString(R.string.feature2)
+                        feature_text_view.text = feature
+                    }
+                    3 -> {
+                        val feature = getString(R.string.feature3)
+                        feature_text_view.text = feature
+                    }
+                    4 -> {
+                        val feature = getString(R.string.feature4)
+                        feature_text_view.text = feature
+                    }
+                }
+            }
+        }
+
         // 活動場所
         if (communityModel.location != null) {
             location_title_line.visibility = View.VISIBLE
 
             location_title_text_view.visibility = View.VISIBLE
-            location_title_text_view.text = getString(R.string.location)
 
             location_text_view.visibility = View.VISIBLE
             location_text_view.text = communityModel.location
 
+        }
+
+        // 最近の活動
+        if (communityModel.lastActivity != null) {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = communityModel.lastActivity?.date?.toLong()!!
+            val year = cal.get(Calendar.YEAR)
+            val month = cal.get(Calendar.MONTH)
+            val day = cal.get(Calendar.DAY_OF_MONTH)
+
+            activity_date_text_view.visibility = View.VISIBLE
+            activity_date_text_view.text = String.format("%d / %02d / %02d", year, month+1, day)
+
+            activity_location_text_view.visibility = View.VISIBLE
+            activity_location_text_view.text = communityModel.lastActivity?.location
+
+            activity_contents_text_view.visibility = View.VISIBLE
+            activity_contents_text_view.text = communityModel.lastActivity?.activityContents
+
+            activity_button.visibility = View.VISIBLE
+            activity_button.setOnClickListener {
+                val communityActivityHistoryFragment = CommunityActivityHistoryFragment.newInstance(id)
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, communityActivityHistoryFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+            }
+        } else {
+            activity_empty_text_view.visibility = View.VISIBLE
+        }
+
+        if (communityModel.members[currentUser?.uid!!]?.admin!!) {
+            activity_post_button.visibility = View.VISIBLE
+            activity_post_button.setOnClickListener {
+                val communityActivityPostFragment = CommunityActivityPostFragment.newInstance(id)
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, communityActivityPostFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+            }
         }
 
         // メンバー

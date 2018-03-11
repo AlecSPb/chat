@@ -105,7 +105,7 @@ class EditProfileFragment : Fragment() {
         if (currentUser?.developmentExperience != null) {
             when (currentUser?.developmentExperience) {
                 0 -> {
-                    val experience = getString(R.string.experience0)
+                    val experience = getString(R.string.setting)
                     experience_edit_button.text = experience
                 }
                 1 -> {
@@ -120,8 +120,14 @@ class EditProfileFragment : Fragment() {
                     val experience = getString(R.string.experience3)
                     experience_edit_button.text = experience
                 }
+                4 -> {
+                    val experience = getString(R.string.experience4)
+                    experience_edit_button.text = experience
+                }
             }
-
+        } else {
+            val experience = getString(R.string.setting)
+            experience_edit_button.text = experience
         }
 
         // プログラミング言語
@@ -227,8 +233,8 @@ class EditProfileFragment : Fragment() {
 
         // 開発経験
         experience_edit_button.setOnClickListener {
-            val list: Array<String> = arrayOf(getString(R.string.experience0),
-                    getString(R.string.experience1), getString(R.string.experience2), getString(R.string.experience3))
+            val list: Array<String> = arrayOf(getString(R.string.experience_default), getString(R.string.experience1),
+                    getString(R.string.experience2), getString(R.string.experience3), getString(R.string.experience4))
 
             var position = 0
 
@@ -247,7 +253,7 @@ class EditProfileFragment : Fragment() {
                                 if (currentUser?.developmentExperience == position) {
                                     when (currentUser?.developmentExperience) {
                                         0 -> {
-                                            val experience = getString(R.string.experience0)
+                                            val experience = getString(R.string.setting)
                                             experience_edit_button.text = experience
                                         }
                                         1 -> {
@@ -260,6 +266,10 @@ class EditProfileFragment : Fragment() {
                                         }
                                         3 -> {
                                             val experience = getString(R.string.experience3)
+                                            experience_edit_button.text = experience
+                                        }
+                                        4 -> {
+                                            val experience = getString(R.string.experience4)
                                             experience_edit_button.text = experience
                                         }
                                     }
@@ -278,7 +288,7 @@ class EditProfileFragment : Fragment() {
                                             if (currentUser?.developmentExperience == position - 1) {
                                                 when (currentUser?.developmentExperience) {
                                                     0 -> {
-                                                        val experience = getString(R.string.experience0)
+                                                        val experience = getString(R.string.setting)
                                                         experience_edit_button.text = experience
                                                     }
                                                     1 -> {
@@ -291,6 +301,10 @@ class EditProfileFragment : Fragment() {
                                                     }
                                                     3 -> {
                                                         val experience = getString(R.string.experience3)
+                                                        experience_edit_button.text = experience
+                                                    }
+                                                    4 -> {
+                                                        val experience = getString(R.string.experience4)
                                                         experience_edit_button.text = experience
                                                     }
                                                 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import android.databinding.DataBindingUtil
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -62,6 +63,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.VISIBLE
+
         search_button.setOnClickListener {
             val searchRootFragment = SearchRootFragment.newInstance()
             val fragmentManager = activity.supportFragmentManager

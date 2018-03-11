@@ -2,7 +2,6 @@ package jp.gr.java_conf.cody
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityList
@@ -29,7 +28,6 @@ import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriends
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriendsMap
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.popularCommunityList
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.userMap
-import jp.gr.java_conf.cody.ui.LoginActivity
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
@@ -62,6 +60,7 @@ object MyChatManager {
     var userRef: DatabaseReference? = null
     var communityRef: DatabaseReference? = null
     private var messageRef: DatabaseReference? = null
+    private var communityActivityRef: DatabaseReference? = null
     var friendRef: DatabaseReference? = null
 
     var communityListener: ValueEventListener? = null
@@ -127,12 +126,14 @@ object MyChatManager {
                 userRef = database?.reference?.child(FirebaseConstants().USERS)
                 communityRef = database?.reference?.child(FirebaseConstants().COMMUNITY)
                 messageRef = database?.reference?.child(FirebaseConstants().MESSAGES)
+                communityActivityRef = database?.reference?.child(FirebaseConstants().COMMUNITY_ACTIVITIES)
                 friendRef = database?.reference?.child(FirebaseConstants().FRIENDS)
 
             } else {
                 userRef = database?.reference?.child(FirebaseConstants().USERS)
                 communityRef = database?.reference?.child(FirebaseConstants().COMMUNITY)
                 messageRef = database?.reference?.child(FirebaseConstants().MESSAGES)
+                communityActivityRef = database?.reference?.child(FirebaseConstants().COMMUNITY_ACTIVITIES)
                 friendRef = database?.reference?.child(FirebaseConstants().FRIENDS)
 
             }
@@ -1142,6 +1143,14 @@ object MyChatManager {
         callback?.handleData(true, requestType)
     }
 
+    fun updateCommunityFeature(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
+        val updateMap: HashMap<String, Any?> = hashMapOf()
+        updateMap.put(FirebaseConstants().FEATURE, communityModel?.feature)
+
+        communityRef?.child(communityModel?.communityId)?.updateChildren(updateMap)
+        callback?.handleData(true, requestType)
+    }
+
     fun updateCommunityLocation(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
         val updateMap: HashMap<String, Any?> = hashMapOf()
         updateMap.put(FirebaseConstants().LOCATION, communityModel?.location)
@@ -1262,7 +1271,7 @@ object MyChatManager {
                                 messageModel: MessageModel?) {
 
         val messageKey = messageRef?.child(communityId)?.push()?.key
-        messageModel?.message_id = messageKey
+        messageModel?.messageId = messageKey
 
         messageRef?.child(communityId)?.child(messageKey)?.setValue(messageModel)
 
@@ -1305,7 +1314,7 @@ object MyChatManager {
                                 messageModel: MessageModel?) {
 
         val messageKey = messageRef?.child(friendId)?.push()?.key
-        messageModel?.message_id = messageKey
+        messageModel?.messageId = messageKey
 
         messageRef?.child(friendId)?.child(messageKey)?.setValue(messageModel)
 
@@ -1342,6 +1351,17 @@ object MyChatManager {
             }
         }
 
+    }
+
+    fun postCommunityActivity(callback: NotifyMeInterface?, requestType: Int?, communityId: String?,
+                              communityActivityModel: CommunityActivityModel?) {
+        val communityActivityKey = communityActivityRef?.child(communityId)?.push()?.key
+        communityActivityModel?.activityId = communityActivityKey
+
+        communityActivityRef?.child(communityId)?.child(communityActivityKey)?.setValue(communityActivityModel)
+        communityRef?.child(communityId)?.child(FirebaseConstants().LAST_ACTIVITY)?.setValue(communityActivityModel)
+
+        callback?.handleData(true, requestType)
     }
 
     fun fetchCommunityMembersDetails(callback: NotifyMeInterface?, requestType: Int?, communityId: String?) {
@@ -1439,7 +1459,7 @@ object MyChatManager {
                 communityMember.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
                 communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(communityMember)
 
-                lastMessageModel.read_status = hashMapOf()
+                lastMessageModel.readStatus = hashMapOf()
                 communityRef?.child(communityId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
         }
@@ -1458,7 +1478,7 @@ object MyChatManager {
                 me.put(FirebaseConstants().L_S_M_T, lastMessageModel.timestamp)
                 friendRef?.child(friendId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(me)
 
-                lastMessageModel.read_status = hashMapOf()
+                lastMessageModel.readStatus = hashMapOf()
                 friendRef?.child(friendId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
         }
