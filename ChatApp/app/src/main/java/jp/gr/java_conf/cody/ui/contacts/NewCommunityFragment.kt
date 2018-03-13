@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -51,13 +50,14 @@ import java.util.*
 
 class NewCommunityFragment : Fragment(), View.OnClickListener {
 
-    var paticipants: RecyclerView? = null
+    private var participants: RecyclerView? = null
     var adapter: ParticipantsAdapter? = null
     private var resultUri: Uri? = null
     var storage = FirebaseStorage.getInstance()
     var communityId: String? = null
     var storageRef: StorageReference? = null
     var cropImageUri: Uri? = null
+    var feature_position: Int? = 0
     private val REQUEST_CODE_CHOOSE = 23
     private val REQUEST_STORAGE_PERMISSION = 1
 
@@ -88,15 +88,15 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         activity.supportActionBar?.title = getString(R.string.create_community)
         setHasOptionsMenu(true)
 
-        paticipants?.layoutManager = LinearLayoutManager(context)
+        participants?.layoutManager = LinearLayoutManager(context)
 
-        // Group Creation Page
-        create_group_button.text = getString(R.string.create_community)
+        create_community_button.text = getString(R.string.create_community)
 
         participants_recycler_view.visibility = View.GONE
 
         profile_image_view.setOnClickListener(this)
-        create_group_button.setOnClickListener(this)
+        feature_button.setOnClickListener(this)
+        create_community_button.setOnClickListener(this)
         invite_friend_button.setOnClickListener(this)
 
         // focus
@@ -160,7 +160,8 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
         val communityImage = "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/128/groups.png"
         val newCommunity = CommunityModel(communityName, communityImage, communityDeleted = false,
-                community = true, description = description, location = location)
+                community = true, description = description, location = location, feature = feature_position)
+
         val adminUserModel: UserModel? = SharedPrefManager.getInstance(context).savedUserModel
         adminUserModel?.admin = true
 
@@ -203,8 +204,40 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
             R.id.profile_image_view -> {
                 requestPermission()
             }
+            R.id.feature_button -> {
+                val featureList: Array<String> = arrayOf(getString(R.string.feature_default), getString(R.string.feature1),
+                        getString(R.string.feature2), getString(R.string.feature3), getString(R.string.feature4))
 
-            R.id.create_group_button -> {
+                AlertDialog.Builder(context)
+                        .setTitle(getString(R.string.feature))
+                        .setSingleChoiceItems(featureList, 0, { _, pos ->
+                            feature_position = pos
+                        })
+                        .setPositiveButton(getString(R.string.setting), { _, _ ->
+                            when (feature_position) {
+                                0 -> {
+                                    feature_button.text = getString(R.string.setting)
+                                }
+                                1 -> {
+                                    feature_button.text = getString(R.string.feature1)
+                                }
+                                2 -> {
+                                    feature_button.text = getString(R.string.feature2)
+                                }
+                                3 -> {
+                                    feature_button.text = getString(R.string.feature3)
+                                }
+                                4 -> {
+                                    feature_button.text = getString(R.string.feature4)
+                                }
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.cancel), null)
+                        .show()
+
+            }
+
+            R.id.create_community_button -> {
                 if (NetUtils(context).isOnline()) {
                     createCommunity()
                 } else {
@@ -216,7 +249,6 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
                             .show()
                 }
             }
-
             R.id.invite_friend_button -> {
                 selectedUserList.clear()
 

@@ -33,7 +33,7 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
         val chatMessage = model!!
         val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-        if (chatMessage.sender_id.toString() == currentUser.uid) {
+        if (chatMessage.senderId.toString() == currentUser.uid) {
             viewHolder.llParent.gravity = Gravity.END
             viewHolder.profileImage.visibility = View.GONE
             viewHolder.name.visibility = View.GONE
@@ -43,7 +43,7 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
             viewHolder.llParent.gravity = Gravity.START
             viewHolder.profileImage.visibility = View.VISIBLE
 
-            val member = userMap?.get(chatMessage.sender_id!!)
+            val member = userMap?.get(chatMessage.senderId!!)
             // 退会した人はnull
             if (member != null) {
                 loadRoundImage(viewHolder.profileImage, member.imageUrl!!)

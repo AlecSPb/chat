@@ -22,8 +22,6 @@ class SearchAdapter(val context: Context, private val itemClick: (Int) -> Unit) 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         holder.communityName.text = popularCommunityList[position].name
 
-        holder.description.text = popularCommunityList[position].description
-
         if (popularCommunityList[position].location != null) {
             val location = "活動場所: " + popularCommunityList[position].location
             holder.location.text = location
@@ -32,7 +30,7 @@ class SearchAdapter(val context: Context, private val itemClick: (Int) -> Unit) 
         val memberCount = "メンバー: " + popularCommunityList[position].memberCount?.toString() + "人"
         holder.memberCount.text = memberCount
 
-        MyViewUtils.loadRoundImage(holder.profileImage, popularCommunityList[position].imageUrl!!)
+        MyViewUtils.loadImageFromUrl(holder.profileImage, popularCommunityList[position].imageUrl!!)
 
         holder.setUp(position)
     }
@@ -42,7 +40,6 @@ class SearchAdapter(val context: Context, private val itemClick: (Int) -> Unit) 
     class SearchViewHolder(itemView: View, private val itemClick: (Int) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val profileImage: AppCompatImageView = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
         val communityName: TextView = itemView.findViewById(R.id.name_text_view)
-        val description: TextView = itemView.findViewById(R.id.description_text_view)
         val location: TextView = itemView.findViewById(R.id.location_text_view)
         val memberCount: TextView = itemView.findViewById(R.id.member_count_text_view)
         val layout: LinearLayout = itemView.findViewById(R.id.parent_layout)

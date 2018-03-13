@@ -92,7 +92,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
         chatRoomModel = arguments.getSerializable("chatRoomModel") as ChatRoomModel
         id = chatRoomModel?.id
         type = chatRoomModel?.type
-//        tv_loadmore.setOnClickListener(this)
 
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
@@ -242,7 +241,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
 
         val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
-                read_status = readStatusTemp)
+                readStatus = readStatusTemp)
 
         MyChatManager.sendMessageToACommunity(object : NotifyMeInterface {
 
@@ -259,7 +258,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
 
         val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
-                read_status = readStatusTemp)
+                readStatus = readStatusTemp)
 
         MyChatManager.sendMessageToAFriend(object : NotifyMeInterface {
 

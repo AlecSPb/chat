@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import android.databinding.DataBindingUtil
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -50,8 +52,6 @@ class SearchFragment : Fragment() {
                         empty_view.visibility = View.VISIBLE
                     } else {
                         search_scroll_view.visibility = View.VISIBLE
-                        popular_title_text_view.visibility = View.VISIBLE
-                        search_recycler_view.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
                         setAdapter()
                     }
@@ -62,11 +62,22 @@ class SearchFragment : Fragment() {
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.VISIBLE
+
         search_button.setOnClickListener {
-            val searchRootFragment = SearchRootFragment.newInstance()
+//            val searchRootFragment = SearchRootFragment.newInstance()
+//            val fragmentManager = activity.supportFragmentManager
+//            val fragmentTransaction = fragmentManager.beginTransaction()
+//            fragmentTransaction.replace(R.id.fragment, searchRootFragment)
+//            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//            fragmentTransaction.addToBackStack(null)
+//            fragmentTransaction.commit()
+            val searchCommunityLocationFragment = SearchCommunityLocationFragment.newInstance()
             val fragmentManager = activity.supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment, searchRootFragment)
+            fragmentTransaction.replace(R.id.fragment, searchCommunityLocationFragment)
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
@@ -77,10 +88,12 @@ class SearchFragment : Fragment() {
         search_recycler_view.isNestedScrollingEnabled = false
         search_recycler_view.layoutManager = LinearLayoutManager(context)
         val adapter = SearchAdapter(context) { position ->
-            val intent = Intent(context, CommunityJoinRequestActivity::class.java)
-            intent.putExtra("position", position)
-            intent.putExtra("type", AppConstants().POPULAR_COMMUNITY)
-            activity.startActivity(intent)
+            val communityJoinRequestFragment = CommunityJoinRequestFragment.newInstance(AppConstants().POPULAR_COMMUNITY, position)
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment, communityJoinRequestFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         search_recycler_view.adapter = adapter

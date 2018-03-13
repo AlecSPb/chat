@@ -16,6 +16,7 @@ class MyTextUtil {
                     SimpleDateFormat("hh:mm", Locale.getDefault()).format(Date(milliseconds)).replace("", "").toLowerCase()
 
     fun getTime(milliseconds: Long): String = DateFormat.format("yyyy/MM/dd, E, kk:mm", milliseconds).toString()
+    fun getDate(milliseconds: Long): String = DateFormat.format("yyyy/MM/dd", milliseconds).toString()
 
     fun getEmojiFIlter(): Array<InputFilter> {
         return arrayOf(InputFilter { src, _, _, _, _, _ ->

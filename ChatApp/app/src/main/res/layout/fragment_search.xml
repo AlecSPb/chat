@@ -26,7 +26,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:background="#ffffff"
-                android:hint="@string/search" />
+                android:hint="@string/location_search" />
 
         </FrameLayout>
 
@@ -35,10 +35,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="@dimen/dp_5"
             android:paddingBottom="@dimen/dp_12"
             android:visibility="gone">
@@ -46,23 +46,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp_12"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_marginRight="@dimen/dp_12"
+                android:layout_marginStart="@dimen/dp_12"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/popular_title_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="人気のコミュニティ"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:text="@string/popular_community"
                     android:textColor="#3a3a3a"
-                    android:textSize="25dp"
-                    android:visibility="gone" />
+                    android:textSize="25sp"/>
 
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/search_recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
@@ -72,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="communityがありません communityを作りましょう"
+            android:text="@string/empty_community"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -88,6 +88,32 @@
                     android:textSize="@dimen/sp_16" />
 
                 <View
+                    android:id="@+id/feature_title_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_22"
+                    android:background="@color/inactive_gray" />
+
+                <TextView
+                    android:id="@+id/feature_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_22"
+                    android:text="@string/feature"
+                    android:textColor="@color/profile"
+                    android:textSize="@dimen/sp_18" />
+
+                <Button
+                    android:id="@+id/feature_button"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/setting"
+                    android:textSize="@dimen/sp_16" />
+
+                <View
                     android:id="@+id/location_title_line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

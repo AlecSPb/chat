@@ -3,6 +3,7 @@ package jp.gr.java_conf.cody.ui.search
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
@@ -43,6 +44,10 @@ class SearchRootFragment : Fragment(), SearchRootFragmentContract {
     }
 
     private fun setViews(view: View) {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         //viewPagerの設定
         val fragmentManager = childFragmentManager
 

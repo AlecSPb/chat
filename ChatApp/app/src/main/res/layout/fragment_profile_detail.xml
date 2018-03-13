@@ -16,7 +16,7 @@
             android:layout_height="250dp"
             android:fitsSystemWindows="true"
             app:expandedTitleTextAppearance="@android:color/transparent"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/profile_image_view"
