@@ -4,6 +4,7 @@ package jp.gr.java_conf.cody.ui.contacts
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -15,10 +16,11 @@ import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.adapter.CommunityMemberAdapter
+import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.CommunityModel
-import jp.gr.java_conf.cody.ui.search.FriendRequestActivity
+import jp.gr.java_conf.cody.ui.search.FriendRequestFragment
 import kotlinx.android.synthetic.main.fragment_community_member.*
 
 
@@ -54,10 +56,12 @@ class CommunityMemberFragment : Fragment() {
                 val isValid = obj as Boolean
                 if (isValid) {
                     val communityMemberAdapter = CommunityMemberAdapter(context) { position ->
-                        val intent = Intent(context, FriendRequestActivity::class.java)
-                        intent.putExtra("position", position)
-                        intent.putExtra("type", "communityMember")
-                        activity.startActivity(intent)
+                        val friendRequestFragment = FriendRequestFragment.newInstance(AppConstants().COMMUNITY_MEMBER, position)
+                        val fragmentManager: FragmentManager = activity.supportFragmentManager
+                        val fragmentTransaction = fragmentManager.beginTransaction()
+                        fragmentTransaction.replace(R.id.fragment, friendRequestFragment)
+                        fragmentTransaction.addToBackStack(null)
+                        fragmentTransaction.commit()
                     }
                     community_member__recycler_view.layoutManager = LinearLayoutManager(context)
                     community_member__recycler_view.adapter = communityMemberAdapter

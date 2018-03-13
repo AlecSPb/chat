@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.*
 import android.databinding.DataBindingUtil
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -87,10 +88,12 @@ class SearchFragment : Fragment() {
         search_recycler_view.isNestedScrollingEnabled = false
         search_recycler_view.layoutManager = LinearLayoutManager(context)
         val adapter = SearchAdapter(context) { position ->
-            val intent = Intent(context, CommunityJoinRequestActivity::class.java)
-            intent.putExtra("position", position)
-            intent.putExtra("type", AppConstants().POPULAR_COMMUNITY)
-            activity.startActivity(intent)
+            val communityJoinRequestFragment = CommunityJoinRequestFragment.newInstance(AppConstants().POPULAR_COMMUNITY, position)
+            val fragmentManager: FragmentManager = activity.supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment, communityJoinRequestFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
 
         search_recycler_view.adapter = adapter

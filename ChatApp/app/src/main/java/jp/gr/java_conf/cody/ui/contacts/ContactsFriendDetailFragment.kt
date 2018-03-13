@@ -129,14 +129,14 @@ class ContactsFriendDetailFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 fragmentManager.beginTransaction().remove(this).commit()
                 fragmentManager.popBackStack()
-                return true
+                true
             }
             else -> {
-                return false
+                false
             }
         }
     }

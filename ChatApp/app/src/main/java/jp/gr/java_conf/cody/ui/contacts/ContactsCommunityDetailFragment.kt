@@ -210,7 +210,7 @@ class ContactsCommunityDetailFragment : Fragment() {
                     MyChatManager.setmContext(context)
                     MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            Toast.makeText(context, "You have been exited from community", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "You have been exited from communityModel", Toast.LENGTH_LONG).show()
                             fragmentManager.popBackStack()
                             fragmentManager.beginTransaction().remove(this@ContactsCommunityDetailFragment).commit()
                         }

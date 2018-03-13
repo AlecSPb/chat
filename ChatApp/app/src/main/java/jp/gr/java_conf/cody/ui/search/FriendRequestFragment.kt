@@ -1,15 +1,19 @@
 package jp.gr.java_conf.cody.ui.search
 
-import android.support.v7.app.AppCompatActivity
+
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
+import android.view.*
 import android.widget.Toast
 import com.example.circulardialog.CDialog
 import com.example.circulardialog.extras.CDConstants
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
+
 import jp.gr.java_conf.cody.R
+import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMemberList
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.currentUser
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.foundUserList
@@ -18,32 +22,53 @@ import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.model.UserModel
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadImageFromUrl
 import jp.gr.java_conf.cody.util.NetUtils
-import kotlinx.android.synthetic.main.activity_friend_request.*
+import kotlinx.android.synthetic.main.fragment_friend_request.*
 
-class FriendRequestActivity : AppCompatActivity() {
+
+class FriendRequestFragment : Fragment() {
     var user: UserModel? = null
     var type: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_friend_request)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
 
-        type = intent.getStringExtra("type")
-        val pos = intent.getIntExtra("position", 0)
+        type = arguments.getString("type")
+        val pos = arguments.getInt("pos")
 
-        if (type == "search") {
+        if (type == AppConstants().SEARCH) {
             user = foundUserList[pos]
-        } else if (type == "communityMember") {
+        } else if (type == AppConstants().COMMUNITY_MEMBER) {
             user = communityMemberList[pos]
         }
+        return inflater!!.inflate(R.layout.fragment_friend_request, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setViews()
     }
 
     private fun setViews() {
+        //bottomNavigationView　非表示
+        val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
+        bottomNavigationView.visibility = View.GONE
+
         //actionbar
-        this.setSupportActionBar(tool_bar)
-        this.supportActionBar?.setDisplayShowTitleEnabled(false)
-        this.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val activity: AppCompatActivity = activity as AppCompatActivity
+        activity.setSupportActionBar(tool_bar)
+        activity.supportActionBar?.setDisplayShowTitleEnabled(false)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setHasOptionsMenu(true)
+
+        // back buttonイベント
+        view?.isFocusableInTouchMode = true
+        view?.setOnKeyListener { _, keyCode, keyEvent ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_UP) {
+                fragmentManager.popBackStack()
+                fragmentManager.beginTransaction().remove(this).commit()
+            }
+            return@setOnKeyListener true
+        }
 
         if (user != null) {
             // 名前
@@ -147,16 +172,17 @@ class FriendRequestActivity : AppCompatActivity() {
                     if (!isRequested) {
                         request_button.text = getString(R.string.send_friend_request)
                         request_button.setOnClickListener {
-                            if (NetUtils(this).isOnline()) {
-                                MyChatManager.setmContext(this)
+                            if (NetUtils(context).isOnline()) {
+                                MyChatManager.setmContext(context)
                                 MyChatManager.sendFriendRequest(object : NotifyMeInterface {
                                     override fun handleData(obj: Any, requestCode: Int?) {
-                                        finish()
-                                        Toast.makeText(this@FriendRequestActivity, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
+                                        fragmentManager.beginTransaction().remove(this@FriendRequestFragment).commit()
+                                        fragmentManager.popBackStack()
+                                        Toast.makeText(context, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
                                     }
                                 }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
                             } else {
-                                CDialog(this)
+                                CDialog(context)
                                         .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)
                                         .setAnimation(CDConstants.SCALE_FROM_BOTTOM_TO_TOP)
                                         .setDuration(2000)
@@ -173,20 +199,29 @@ class FriendRequestActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             android.R.id.home -> {
-                finish()
-                return true
+                fragmentManager.beginTransaction().remove(this).commit()
+                fragmentManager.popBackStack()
+                true
+            }
+            else -> {
+                false
             }
         }
-        return super.onOptionsItemSelected(item)
     }
 
+    companion object {
 
-    override fun onBackPressed() {
-        finish()
-        super.onBackPressed()
+        fun newInstance(type: String, pos: Int): FriendRequestFragment {
+            val fragment = FriendRequestFragment()
+            val args = Bundle()
+            args.putString("type", type)
+            args.putInt("pos", pos)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
-}
+}// Required empty public constructor

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -122,10 +123,12 @@ class SearchCommunityLocationFragment : Fragment() {
             search_location_recycler_view.visibility = View.VISIBLE
             search_location_recycler_view.layoutManager = LinearLayoutManager(context)
             val adapter = SearchCommunityLocationAdapter(foundCommunityListByLocation) { position ->
-                val intent = Intent(context, CommunityJoinRequestActivity::class.java)
-                intent.putExtra("position", position)
-                intent.putExtra("type", AppConstants().SEARCH_LOCATION)
-                activity.startActivity(intent)
+                val communityJoinRequestFragment = CommunityJoinRequestFragment.newInstance(AppConstants().POPULAR_COMMUNITY, position)
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, communityJoinRequestFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
             }
             search_location_recycler_view.adapter = adapter
         }

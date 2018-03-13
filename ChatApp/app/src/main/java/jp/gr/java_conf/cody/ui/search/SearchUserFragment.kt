@@ -4,6 +4,7 @@ package jp.gr.java_conf.cody.ui.search
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.adapter.SearchUserAdapter
+import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.foundUserList
 import kotlinx.android.synthetic.main.fragment_search_user.*
 
@@ -34,10 +36,12 @@ class SearchUserFragment : Fragment() {
             search_user_recycler_view.visibility = View.VISIBLE
             search_user_recycler_view.layoutManager = LinearLayoutManager(context)
             val adapter = SearchUserAdapter(foundUserList) { position ->
-                val intent = Intent(context, FriendRequestActivity::class.java)
-                intent.putExtra("position", position)
-                intent.putExtra("type", "search")
-                activity.startActivity(intent)
+                val friendRequestFragment = FriendRequestFragment.newInstance(AppConstants().SEARCH, position)
+                val fragmentManager: FragmentManager = activity.supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment, friendRequestFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
             }
             search_user_recycler_view.adapter = adapter
         }
