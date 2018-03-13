@@ -12,6 +12,13 @@
 
     <string name="edit_toolbar">編集</string>
 
+    <string name="location_search">活動場所で検索</string>
+    <string name="filter">絞り込む</string>
+    <string name="filter_selected">フィルター:" "</string>
+    <string name="member_count_filter">メンバーが二人以上</string>
+    <string name="activity_filter">過去に活動したことがある</string>
+    <string name="community_search">コミュニティ</string>
+    <string name="user_search">ユーザ</string>
     <string name="empty">検索結果： 0件</string>
 
     <string name="community_title">コミュニティ</string>
@@ -60,6 +67,8 @@
     <string name="experience3">いくつかアプリを作ったことがある</string>
     <string name="experience4">実務経験あり</string>
 
+    <string name="popular_community">人気のコミュニティ</string>
+    <string name="empty_community">communityがありません communityを作りましょう</string>
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
     <string name="description">コミュニティの説明</string>

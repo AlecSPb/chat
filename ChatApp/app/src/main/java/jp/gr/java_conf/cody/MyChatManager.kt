@@ -34,6 +34,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import jp.gr.java_conf.cody.constants.AppConstants
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityActivityFilter
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityFeatureFilter
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMemberCountFilter
 import jp.gr.java_conf.cody.constants.FirebaseConstants
 import jp.gr.java_conf.cody.constants.NetworkConstants
 import jp.gr.java_conf.cody.constants.PrefConstants
@@ -832,33 +835,58 @@ object MyChatManager {
     }
 
     fun searchCommunityLocation(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
-        val listener = object : ValueEventListener {
-            override fun onCancelled(databaseError: DatabaseError) {}
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
+        foundCommunityListByLocation.clear()
 
-                    foundCommunityListByLocation.clear()
-                    dataSnapshot.children.forEach { it ->
-                        it.getValue<CommunityModel>(CommunityModel::class.java)?.let {
-                            // 自分が所属しているコミュニティは除外
-                            var isMyCommunity = false
-                            if (myCommunities.size != 0) {
-                                for (community: CommunityModel in myCommunities) {
-                                    isMyCommunity = (community.communityId == it.communityId)
-                                    if (isMyCommunity) break
+        if (searchWords != "") {
+            communityRef?.orderByChild(FirebaseConstants().LOCATION)?.startAt(searchWords)?.endAt(searchWords + "\uf8ff")?.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(dataSnapshot: DatabaseError?) {}
+                override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                    if (!dataSnapshot?.exists()!!) {
+                        callback?.handleData(true, requestType)
+                    } else {
+                        dataSnapshot.children.forEach { it ->
+                            val community = it?.getValue<CommunityModel>(CommunityModel::class.java)
+                            if (community != null) {
+                                var isMyCommunity = false
+                                if (myCommunities.size != 0) {
+                                    for (myCommunity: CommunityModel in myCommunities) {
+                                        isMyCommunity = (myCommunity.communityId == community.communityId)
+                                        if (isMyCommunity) break
+                                    }
+                                }
+                                if (!isMyCommunity) {
+                                    // filter
+                                    if (communityFeatureFilter == 0 || community.feature == communityFeatureFilter) {
+                                        if (communityMemberCountFilter) {
+                                            if (community.memberCount!! >= 2) {
+                                                if (communityActivityFilter) {
+                                                    if (community.lastActivity != null) {
+                                                        foundCommunityListByLocation.add(community)
+                                                    }
+                                                } else {
+                                                    foundCommunityListByLocation.add(community)
+                                                }
+                                            }
+                                        } else {
+                                            if (communityActivityFilter) {
+                                                if (community.lastActivity != null) {
+                                                    foundCommunityListByLocation.add(community)
+                                                }
+                                            } else {
+                                                foundCommunityListByLocation.add(community)
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            if (searchWords == it.location && !isMyCommunity) {
-                                foundCommunityListByLocation.add(it)
-                            }
                         }
+                        callback?.handleData(true, requestType)
                     }
-                    callback?.handleData(true, requestType)
                 }
-            }
+            })
+        } else {
+            callback?.handleData(true, requestType)
         }
-
-        communityRef?.addListenerForSingleValueEvent(listener)
     }
 
     fun searchUserName(callback: NotifyMeInterface?, searchWords: String, requestType: Int?) {
@@ -993,7 +1021,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1014,7 +1042,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1035,7 +1063,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1056,7 +1084,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1077,7 +1105,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1098,7 +1126,7 @@ object MyChatManager {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(userModel?.uid)?.updateChildren(updateMap)
                     }
                     callback?.handleData(true, requestType)
@@ -1109,14 +1137,14 @@ object MyChatManager {
         })
     }
 
-    fun updateProfileImage(callback: NotifyMeInterface?,imageUri: String, requestType: Int) {
+    fun updateProfileImage(callback: NotifyMeInterface?, imageUri: String, requestType: Int) {
         userRef?.child(currentUser?.uid)?.child(FirebaseConstants().IMAGE_URL)?.setValue(imageUri)
 
         userRef?.child(currentUser?.uid)?.child(FirebaseConstants().FRIENDS)?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    dataSnapshot.children.forEach{ it ->
+                    dataSnapshot.children.forEach { it ->
                         friendRef?.child(it.key)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.child(FirebaseConstants().IMAGE_URL)?.setValue(imageUri)
                     }
                     callback?.handleData(true, requestType)
@@ -1311,7 +1339,7 @@ object MyChatManager {
     }
 
     fun sendMessageToAFriend(callback: NotifyMeInterface?, requestType: Int?, friendId: String?,
-                                messageModel: MessageModel?) {
+                             messageModel: MessageModel?) {
 
         val messageKey = messageRef?.child(friendId)?.push()?.key
         messageModel?.messageId = messageKey

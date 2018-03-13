@@ -31,6 +31,12 @@ class DataConstants {
         var foundCommunityListByLocation: MutableList<CommunityModel> = mutableListOf()
         var foundUserList: MutableList<UserModel> = mutableListOf()
 
+        // filter
+        var filterCount: Int = 0
+        var communityFeatureFilter: Int = 0
+        var communityMemberCountFilter: Boolean = false
+        var communityActivityFilter: Boolean = false
+
         // Request
         var myFriendRequests: MutableList<UserModel> = mutableListOf()
         var myCommunityRequests: MutableList<CommunityModel> = mutableListOf()
@@ -47,7 +53,5 @@ class DataConstants {
         var friendList: MutableList<FriendModel> = mutableListOf()
         var communityMemberList: MutableList<UserModel> = mutableListOf()
 
-        // community活動履歴
-        var communityActivity: MutableMap<String, CommunityActivityModel> = mutableMapOf()
     }
 }

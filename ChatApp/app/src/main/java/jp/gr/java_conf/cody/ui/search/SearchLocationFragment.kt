@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import jp.gr.java_conf.cody.R
-import jp.gr.java_conf.cody.adapter.SearchLocationAdapter
+import jp.gr.java_conf.cody.adapter.SearchCommunityLocationAdapter
 import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.foundCommunityListByLocation
 import kotlinx.android.synthetic.main.fragment_search_location.*
@@ -33,7 +33,7 @@ class SearchLocationFragment : Fragment() {
         } else {
             search_location_recycler_view.visibility = View.VISIBLE
             search_location_recycler_view.layoutManager = LinearLayoutManager(context)
-            val adapter = SearchLocationAdapter(foundCommunityListByLocation) { position ->
+            val adapter = SearchCommunityLocationAdapter(foundCommunityListByLocation) { position ->
                 val intent = Intent(context, CommunityJoinRequestActivity::class.java)
                 intent.putExtra("position", position)
                 intent.putExtra("type", AppConstants().SEARCH_LOCATION)

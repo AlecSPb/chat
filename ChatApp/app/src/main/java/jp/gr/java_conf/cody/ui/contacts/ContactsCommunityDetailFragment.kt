@@ -146,7 +146,7 @@ class ContactsCommunityDetailFragment : Fragment() {
             activity_empty_text_view.visibility = View.VISIBLE
         }
 
-        if (communityModel.members[currentUser?.uid!!]?.admin!!) {
+        if (communityModel.members[currentUser?.uid!!]?.admin != null && communityModel.members[currentUser?.uid!!]?.admin!!) {
             activity_post_button.visibility = View.VISIBLE
             activity_post_button.setOnClickListener {
                 val communityActivityPostFragment = CommunityActivityPostFragment.newInstance(id)

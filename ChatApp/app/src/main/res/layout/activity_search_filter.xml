@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="jp.gr.java_conf.cody.ui.search.SearchFilterActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/filter_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginEnd="@dimen/dp_18"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:layout_marginRight="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_18"
+        android:paddingBottom="@dimen/dp_32">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/feature_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_22"
+                android:text="@string/feature"
+                android:textColor="@color/profile"
+                android:textSize="@dimen/sp_18" />
+
+            <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
+                android:id="@+id/feature_toggle_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:tbgChildSpacing="auto"
+                app:tbgChildSpacingForLastRow="align"
+                app:tbgRowSpacing="14dp">
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/feature_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature_default"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/feature1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature1"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/feature2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature2"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/feature3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature3"/>
+
+                <com.nex3z.togglebuttongroup.button.LabelToggle
+                    android:id="@+id/feature4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature4"/>
+
+            </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
+
+            <View
+                android:id="@+id/member_count_title_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/dp_22"
+                android:background="@color/inactive_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24">
+
+                <TextView
+                    android:id="@+id/member_count_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/member_count_switch"
+                    android:layout_toStartOf="@+id/member_count_switch"
+                    android:text="@string/member_count_filter"
+                    android:textColor="@color/profile"
+                    android:textSize="@dimen/sp_18" />
+
+                <com.github.angads25.toggle.LabeledSwitch
+                    android:id="@+id/member_count_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:layout_marginEnd="@dimen/dp_24"
+                    android:textSize="14sp"
+                    app:on="false"
+                    app:colorOn="#00c4a6"
+                    app:colorBorder="#00c4a6"/>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/activity_title_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/dp_22"
+                android:background="@color/inactive_gray" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_24">
+
+                <TextView
+                    android:id="@+id/activity_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/activity_switch"
+                    android:layout_toStartOf="@+id/activity_switch"
+                    android:text="@string/activity_filter"
+                    android:textColor="@color/profile"
+                    android:textSize="@dimen/sp_18" />
+
+                <com.github.angads25.toggle.LabeledSwitch
+                    android:id="@+id/activity_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/dp_24"
+                    android:layout_marginEnd="@dimen/dp_24"
+                    android:textSize="14sp"
+                    app:on="false"
+                    app:colorOn="#00c4a6"
+                    app:colorBorder="#00c4a6"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/filter_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_16"
+        android:layout_alignParentBottom="true"
+        android:background="@color/sky_blue"
+        android:text="@string/filter"
+        android:textColor="@color/white" />
+</RelativeLayout>
