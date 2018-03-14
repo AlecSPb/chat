@@ -7,6 +7,7 @@
     <string name="contacts">コンタクト</string>
     <string name="profile">プロフィール</string>
 
+    <string name="sign_in_error">サインインに失敗しました</string>
     <string name="intro1_title">プロフィール</string>
     <string name="intro1_content">まずプロフィールを完成させましょう。¥nプロフィールが充実しているほどコミュニティに参加しやすくなります</string>
     <string name="intro2_title">コミュニティ</string>
