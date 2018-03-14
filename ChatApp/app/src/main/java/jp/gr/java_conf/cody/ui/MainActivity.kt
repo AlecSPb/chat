@@ -2,10 +2,12 @@ package jp.gr.java_conf.cody.ui
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.WindowManager
+import com.stephentuso.welcome.WelcomeHelper
 import jp.gr.java_conf.cody.BottomNavigationViewHelper
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
@@ -22,12 +24,17 @@ import jp.gr.java_conf.cody.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
     private var isFirst = false
+    private var intro: WelcomeHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         isFirst = intent.getBooleanExtra("isFirst", false)
+
+        intro = WelcomeHelper(this, IntroActivity::class.java)
+        intro!!.show(savedInstanceState)
+
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = MainViewModel(this, this)
@@ -36,6 +43,11 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
 
         initialFetchData()
         setViews()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        intro?.onSaveInstanceState(outState)
     }
 
     private fun initialFetchData() {
@@ -50,7 +62,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 fetchData()
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
     }
 
     private fun fetchData() {
@@ -59,42 +71,42 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 Log.d("fetch current user", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my communities", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyFriends(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my friends", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyCommunityRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
 
         MyChatManager.fetchMyFriendRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
 
         MyChatManager.fetchFriendRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
     }
 
     private fun setViews() {

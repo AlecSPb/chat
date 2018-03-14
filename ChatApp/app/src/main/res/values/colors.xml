@@ -19,6 +19,13 @@
     <color name="grey_brown_two">#ff3d3d3d</color>
     <color name="light_blue">#ff88A8D8</color>
     <color name="light_blue2">#ff207d94</color>
+    
+    <color name="intro_blue">#B0E0E6</color>
+    <color name="intro1">#4acac2</color>
+    <color name="intro2">#89c7de</color>
+    <color name="intro3">#40b7ad</color>
+    <color name="intro4">#57c6d4</color>
+    <color name="intro_brown">#BE956A</color>
 
     <color name="passcode_color">#FFF6F6F6</color>
     <color name="profile_blue">#ff007AFF</color>
