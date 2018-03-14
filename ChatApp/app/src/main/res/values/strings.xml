@@ -7,6 +7,15 @@
     <string name="contacts">コンタクト</string>
     <string name="profile">プロフィール</string>
 
+    <string name="intro1_title">プロフィール</string>
+    <string name="intro1_content">まずプロフィールを完成させましょう。¥nプロフィールが充実しているほどコミュニティに参加しやすくなります</string>
+    <string name="intro2_title">コミュニティ</string>
+    <string name="intro2_content">コミュニティに参加してみましょう。¥n入りたいコミュニティがない場合は自分のコミュニティを作ってみましょう。</string>
+    <string name="intro3_title">トーク</string>
+    <string name="intro3_content">トークをしてイベントに参加したり、実際に会って交流を深めましょう</string>
+    <string name="intro4_title">開発</string>
+    <string name="intro4_content">作りたいサービスやアプリを決めたら、チームで開発しましょう</string>
+
     <string name="dialog_talk">トーク</string>
     <string name="dialog_detail">詳細</string>
 
@@ -106,7 +115,7 @@
     <string name="programming_language">プログラミング言語</string>
     <string name="programming_language_content">普段使っているプログラミング言語を教えてください。</string>
     <string name="self_introduction">自己紹介</string>
-    <string name="self_introduction_content">Codyでは他のユーザーにあなたがどのような人なのか知ってもらうことが重要です。\n\nどのようなことに興味があるか教えてください。\nまた、作りたい物があればそれも教えてください。</string>
+    <string name="self_introduction_content">他のユーザーに向けて自己紹介しましょう。\n\nどのようなことに興味があるか教えてください。\nまた、作りたい物があればそれも教えてください。</string>
     <string name="my_apps">過去に作ったアプリ</string>
     <string name="my_apps_content">これまでに作ったアプリを教えてください。\ngithubのアカウントを持っていれば、githubのurlも教えてください。</string>
 
