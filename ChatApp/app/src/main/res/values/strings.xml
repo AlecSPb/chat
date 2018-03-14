@@ -8,9 +8,9 @@
     <string name="profile">プロフィール</string>
 
     <string name="intro1_title">プロフィール</string>
-    <string name="intro1_content">まずプロフィールを完成させましょう。プロフィールが充実しているほどコミュニティに参加しやすくなります</string>
+    <string name="intro1_content">まずプロフィールを完成させましょう。¥nプロフィールが充実しているほどコミュニティに参加しやすくなります</string>
     <string name="intro2_title">コミュニティ</string>
-    <string name="intro2_content">コミュニティに参加してみましょう。入りたいコミュニティがない場合は自分のコミュニティを作ってみましょう</string>
+    <string name="intro2_content">コミュニティに参加してみましょう。¥n入りたいコミュニティがない場合は自分のコミュニティを作ってみましょう。</string>
     <string name="intro3_title">トーク</string>
     <string name="intro3_content">トークをしてイベントに参加したり、実際に会って交流を深めましょう</string>
     <string name="intro4_title">開発</string>
