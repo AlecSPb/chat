@@ -135,7 +135,9 @@
     <string name="email">cody1dev@gmail.com</string>
     <string name="privacy_policy_setting">プライバシーポリシー</string>
     <string name="privacy_policy_content">
-        画像/メディア/ファイルへのアクセスは、プロフィール画像を設定する際に利用しています。\n\n
+        ・ 本アプリで取得したデータについては開発者が取得することは致しません。\n\n
+        ・ アプリ内で閲覧、検索、共有した情報について、我々が追跡や収集、外部への転送はいたしません。\n\n
+        ・ 画像/メディア/ファイルへのアクセスは、プロフィール画像を設定する際に利用しています。
         
     </string>
     <string name="license_setting">ライセンス</string>
