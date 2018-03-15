@@ -1,11 +1,19 @@
 package jp.gr.java_conf.cody.ui
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import com.example.circulardialog.CDialog
+import com.example.circulardialog.extras.CDConstants
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import jp.gr.java_conf.cody.BottomNavigationViewHelper
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
@@ -16,8 +24,10 @@ import jp.gr.java_conf.cody.contract.MainActivityContract
 import jp.gr.java_conf.cody.databinding.ActivityMainBinding
 import jp.gr.java_conf.cody.ui.profile.ProfileFragment
 import jp.gr.java_conf.cody.ui.search.SearchFragment
+import jp.gr.java_conf.cody.util.NetUtils
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import jp.gr.java_conf.cody.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
@@ -34,8 +44,39 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        initialFetchData()
         setViews()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            if (currentUser != null) {
+                if (NetUtils(this).isOnline()) {
+                    Toast.makeText(this, getString(R.string.cannot_login), Toast.LENGTH_SHORT).show()
+
+                    // progress
+                    progress_view.visibility = View.VISIBLE
+                    avi.visibility = View.VISIBLE
+                    avi.show()
+
+                    MyChatManager.setmContext(this)
+                    MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            initialFetchData()
+                        }
+
+                    }, currentUser, NetworkConstants().LOGIN_REQUEST)
+                }
+            }
+        } else {
+            // progress
+            progress_view.visibility = View.VISIBLE
+            avi.visibility = View.VISIBLE
+            avi.show()
+
+            initialFetchData()
+        }
     }
 
     private fun initialFetchData() {
@@ -57,6 +98,9 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch current user", "success")
+
+                progress_view.visibility = View.GONE
+                avi.hide()
             }
 
         } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
@@ -64,6 +108,9 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my communities", "success")
+
+                progress_view.visibility = View.GONE
+                avi.hide()
             }
 
         } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)

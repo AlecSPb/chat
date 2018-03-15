@@ -6,32 +6,52 @@
             type="jp.gr.java_conf.cody.viewmodel.MainViewModel" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.go26.chatapp.ui.MainActivity">
+        android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/navigation">
+            android:layout_height="match_parent">
 
+            <FrameLayout
+                android:id="@+id/fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/windowBackground"
+                app:itemTextColor="@color/bottom_navigation_item_color"
+                app:itemIconTint="@color/bottom_navigation_item_color"
+                app:menu="@menu/navigation"
+                app:onNavigationItemSelected="@{viewModel::onNavigationItemSelected}" />
         </FrameLayout>
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
+        <View
+            android:id="@+id/progress_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="?android:attr/windowBackground"
-            app:itemTextColor="@color/bottom_navigation_item_color"
-            app:itemIconTint="@color/bottom_navigation_item_color"
-            app:menu="@menu/navigation"
-            app:onNavigationItemSelected="@{viewModel::onNavigationItemSelected}" />
+            android:layout_height="match_parent"
+            android:background="#B3ffffff"
+            android:visibility="gone" />
 
-    </RelativeLayout>
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/AVLoadingIndicatorView"
+            app:indicatorName="BallPulseIndicator"
+            app:indicatorColor="@color/light_blue2"
+            android:visibility="gone" />
+
+    </LinearLayout>
 </layout>

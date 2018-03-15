@@ -203,7 +203,6 @@ class CommunityJoinRequestFragment : Fragment() {
                 }
 
                 if (!isRequested) {
-                    request_button.text = getString(R.string.send_community_request)
                     request_button.setOnClickListener {
                         if (NetUtils(context).isOnline()) {
                             MyChatManager.setmContext(context)
@@ -211,7 +210,7 @@ class CommunityJoinRequestFragment : Fragment() {
                                 override fun handleData(obj: Any, requestCode: Int?) {
                                     fragmentManager.beginTransaction().remove(this@CommunityJoinRequestFragment).commit()
                                     fragmentManager.popBackStack()
-                                    Toast.makeText(context, "参加リクエストを送信しました", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, getString(R.string.sent_community_request), Toast.LENGTH_SHORT).show()
                                 }
                             }, currentUser, communityModel!!, NetworkConstants().SEND_COMMUNITY_JOIN_REQUEST)
                         } else {

@@ -10,9 +10,10 @@
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/community_member__recycler_view"
+        android:id="@+id/community_member_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"/>
 
 </RelativeLayout>

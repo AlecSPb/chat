@@ -508,10 +508,12 @@ object MyChatManager {
         }
     }
 
-    fun fetchCommunityMember(callback: NotifyMeInterface?, communityModel: CommunityModel?, requestType: Int?) {
-        communityMemberList.clear()
-        val memberCount = communityModel?.memberCount
+    fun fetchCommunityMember(callback: NotifyMeInterface?, communityId: String?, requestType: Int?) {
+        var communityModel: CommunityModel?
+        var memberCount: Int? = 0
         var now = 0
+
+        communityMemberList.clear()
 
         val listener = object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {}
@@ -525,9 +527,18 @@ object MyChatManager {
             }
         }
 
-        for (member in communityModel?.members?.values!!) {
-            userRef?.child(member.uid)?.addListenerForSingleValueEvent(listener)
-        }
+        // communityをfetchし、メンバーの情報を取得
+        communityRef?.child(communityId)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(dataSnapshot: DatabaseError?) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                communityModel = dataSnapshot?.getValue<CommunityModel>(CommunityModel::class.java)
+                memberCount = communityModel?.memberCount
+
+                for (member in communityModel?.members?.values!!) {
+                    userRef?.child(member.uid)?.addListenerForSingleValueEvent(listener)
+                }
+            }
+        })
     }
 
     fun fetchFriendRequests(callback: NotifyMeInterface?, userModel: UserModel?, requestType: Int?) {

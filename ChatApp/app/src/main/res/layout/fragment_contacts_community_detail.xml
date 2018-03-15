@@ -199,6 +199,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/move_activity_history"
+                android:textSize="@dimen/sp_16"
                 android:visibility="gone"/>
 
             <TextView
@@ -238,6 +239,7 @@
                 android:layout_marginTop="@dimen/dp_16"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/community_member_button"
+                android:textSize="@dimen/sp_16"
                 style="?android:attr/buttonBarButtonStyle"
                 android:visibility="gone" />
 

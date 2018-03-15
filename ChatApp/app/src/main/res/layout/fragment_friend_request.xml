@@ -205,9 +205,11 @@
                 android:id="@+id/request_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/send_friend_request"
+                android:textSize="@dimen/sp_16"
                 android:layout_marginTop="@dimen/dp_22"
                 android:layout_gravity="center_horizontal"
-                style="?android:attr/buttonBarButtonStyle"
+                android:theme="@style/RequestButtonStyle"
                 android:visibility="gone"/>
         </LinearLayout>
 

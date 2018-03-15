@@ -1,7 +1,6 @@
 package jp.gr.java_conf.cody.ui.contacts
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -17,20 +16,17 @@ import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.adapter.CommunityMemberAdapter
 import jp.gr.java_conf.cody.constants.AppConstants
-import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
 import jp.gr.java_conf.cody.constants.NetworkConstants
-import jp.gr.java_conf.cody.model.CommunityModel
 import jp.gr.java_conf.cody.ui.search.FriendRequestFragment
 import kotlinx.android.synthetic.main.fragment_community_member.*
 
 
 class CommunityMemberFragment : Fragment() {
-    private var communityModel: CommunityModel? = null
+    private var communityId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val communityId = arguments.getString("communityId")
-        communityModel = communityMap!![communityId]
+        communityId = arguments.getString("communityId")
 
         return inflater!!.inflate(R.layout.fragment_community_member, container, false)
     }
@@ -63,11 +59,12 @@ class CommunityMemberFragment : Fragment() {
                         fragmentTransaction.addToBackStack(null)
                         fragmentTransaction.commit()
                     }
-                    community_member__recycler_view.layoutManager = LinearLayoutManager(context)
-                    community_member__recycler_view.adapter = communityMemberAdapter
+                    community_member_recycler_view.visibility = View.VISIBLE
+                    community_member_recycler_view.layoutManager = LinearLayoutManager(context)
+                    community_member_recycler_view.adapter = communityMemberAdapter
                 }
             }
-        }, communityModel, NetworkConstants().FETCH_COMMUNITY_MEMBER)
+        }, communityId, NetworkConstants().FETCH_COMMUNITY_MEMBER)
 
     }
 

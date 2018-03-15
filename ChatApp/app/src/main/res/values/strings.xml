@@ -56,6 +56,8 @@
     <string name="in_request">申請中</string>
     <string name="community_request">参加リクエスト</string>
     <string name="send_community_request">リクエストを送る</string>
+    <string name="sent_community_request">参加リクエストを送信しました</string>
+    <string name="sent_friend_request">フレンドリクエストを送信しました</string>
 
     <string name="age_title">年齢</string>
     <string name="age_content">歳</string>
@@ -148,5 +150,6 @@
     <string name="circular_dialogs">CircularDialogs</string>
 
     <string name="connection_alert">インターネットに\n接続されていません</string>
+    <string name="cannot_login">セッションが切れています</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
