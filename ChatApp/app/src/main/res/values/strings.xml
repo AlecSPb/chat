@@ -135,9 +135,12 @@
     <string name="email">cody1dev@gmail.com</string>
     <string name="privacy_policy_setting">プライバシーポリシー</string>
     <string name="privacy_policy_content">
-        ・ 本アプリで取得したデータについては開発者が取得することは致しません。\n\n
-        ・ アプリ内で閲覧、検索、共有した情報について、我々が追跡や収集、外部への転送はいたしません。\n\n
-        ・ 画像/メディア/ファイルへのアクセスは、プロフィール画像を設定する際に利用しています。
+        ・ 本アプリで取得したデータについては開発者が取得することは致しません。\n\n\n
+        ・ 画像/メディア/ファイルへのアクセスは、プロフィール画像を設定する際に利用しています。\n\n\n
+        ・ 本アプリは、サービスのご利用状況を把握するためにGoogle Analyticsを利用しています。\n\n
+        Google Analyticsの利用により収集されたデータは、Google社のプライバシーポリシーに基づいて管理されます。\n
+        Google Analyticsの利用規約・プライバシーポリシーについてはGoogle Analyticsのホームページ(http://www.google.co.jp/intl/ja/policies/privacy/) でご確認ください。\n\n
+        なお、Google Analyticsのサービス利用による損害については、開発者は責任を負わないものとします。
         
     </string>
     <string name="license_setting">ライセンス</string>
