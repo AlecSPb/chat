@@ -137,7 +137,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                 avi.hide()
                 avi.visibility = View.GONE
 
-                Toast.makeText(this, "signin failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.sign_in_error), Toast.LENGTH_SHORT).show()
                 viewModel.setLoginButtonEnabled(true)
             }
         }
@@ -149,6 +149,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         avi.hide()
         avi.visibility = View.GONE
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
+        viewModel.setLoginButtonEnabled(true)
     }
 
     override fun firebaseLogin(userModel: UserModel) {
@@ -176,5 +177,6 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         avi.visibility = View.GONE
 
         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+        viewModel.setLoginButtonEnabled(true)
     }
 }

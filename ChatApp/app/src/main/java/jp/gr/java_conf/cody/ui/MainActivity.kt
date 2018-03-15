@@ -1,19 +1,16 @@
 package jp.gr.java_conf.cody.ui
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import com.example.circulardialog.CDialog
-import com.example.circulardialog.extras.CDConstants
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.stephentuso.welcome.WelcomeHelper
 import jp.gr.java_conf.cody.BottomNavigationViewHelper
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
@@ -32,12 +29,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
     private var isFirst = false
+    private var intro: WelcomeHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         isFirst = intent.getBooleanExtra("isFirst", false)
+
+        intro = WelcomeHelper(this, IntroActivity::class.java)
+        intro!!.show(savedInstanceState)
+
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = MainViewModel(this, this)
@@ -55,11 +57,6 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 if (NetUtils(this).isOnline()) {
                     Toast.makeText(this, getString(R.string.cannot_login), Toast.LENGTH_SHORT).show()
 
-                    // progress
-                    progress_view.visibility = View.VISIBLE
-                    avi.visibility = View.VISIBLE
-                    avi.show()
-
                     MyChatManager.setmContext(this)
                     MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
@@ -70,13 +67,13 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 }
             }
         } else {
-            // progress
-            progress_view.visibility = View.VISIBLE
-            avi.visibility = View.VISIBLE
-            avi.show()
-
             initialFetchData()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        intro?.onSaveInstanceState(outState)
     }
 
     private fun initialFetchData() {
@@ -91,57 +88,51 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
                 fetchData()
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, true)
     }
 
     private fun fetchData() {
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch current user", "success")
-
-                progress_view.visibility = View.GONE
-                avi.hide()
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyCommunities(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my communities", "success")
-
-                progress_view.visibility = View.GONE
-                avi.hide()
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyFriends(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch my friends", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
+        }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)
 
         MyChatManager.fetchMyCommunityRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
 
         MyChatManager.fetchMyFriendRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
 
         MyChatManager.fetchFriendRequests(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch requests", "success")
             }
 
-        } ,currentUser, NetworkConstants().FETCH_REQUESTS)
+        }, currentUser, NetworkConstants().FETCH_REQUESTS)
     }
 
     private fun setViews() {

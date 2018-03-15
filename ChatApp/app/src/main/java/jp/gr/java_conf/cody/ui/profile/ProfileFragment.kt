@@ -100,7 +100,10 @@ class ProfileFragment : Fragment() {
             notices.addNotice(Notice(getString(R.string.google_gson), "", getString(R.string.google_gson_copyright), ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.indicator), "", getString(R.string.indicator_copyright), ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.circular_dialogs), "", "", ApacheSoftwareLicense20()))
-
+            notices.addNotice(Notice(getString(R.string.toggle), "", getString(R.string.toggle_copyright), ApacheSoftwareLicense20()))
+            notices.addNotice(Notice(getString(R.string.toggle_button_group), "", "", ApacheSoftwareLicense20()))
+            notices.addNotice(Notice(getString(R.string.welcome), "", getString(R.string.welcome_copyright), ApacheSoftwareLicense20()))
+            
             LicensesDialogFragment.Builder(context)
                     .setNotices(notices)
                     .setShowFullLicenseText(false)
