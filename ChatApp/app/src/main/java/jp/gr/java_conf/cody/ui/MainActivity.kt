@@ -6,7 +6,10 @@ import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.stephentuso.welcome.WelcomeHelper
 import jp.gr.java_conf.cody.BottomNavigationViewHelper
 import jp.gr.java_conf.cody.MyChatManager
@@ -18,8 +21,10 @@ import jp.gr.java_conf.cody.contract.MainActivityContract
 import jp.gr.java_conf.cody.databinding.ActivityMainBinding
 import jp.gr.java_conf.cody.ui.profile.ProfileFragment
 import jp.gr.java_conf.cody.ui.search.SearchFragment
+import jp.gr.java_conf.cody.util.NetUtils
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import jp.gr.java_conf.cody.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainActivityContract {
     private var bottomNavigationView: BottomNavigationView? = null
@@ -41,8 +46,29 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        initialFetchData()
         setViews()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            if (currentUser != null) {
+                if (NetUtils(this).isOnline()) {
+                    Toast.makeText(this, getString(R.string.cannot_login), Toast.LENGTH_SHORT).show()
+
+                    MyChatManager.setmContext(this)
+                    MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            initialFetchData()
+                        }
+
+                    }, currentUser, NetworkConstants().LOGIN_REQUEST)
+                }
+            }
+        } else {
+            initialFetchData()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {

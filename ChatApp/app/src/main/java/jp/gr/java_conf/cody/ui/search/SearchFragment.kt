@@ -67,13 +67,6 @@ class SearchFragment : Fragment() {
         bottomNavigationView.visibility = View.VISIBLE
 
         search_button.setOnClickListener {
-//            val searchRootFragment = SearchRootFragment.newInstance()
-//            val fragmentManager = activity.supportFragmentManager
-//            val fragmentTransaction = fragmentManager.beginTransaction()
-//            fragmentTransaction.replace(R.id.fragment, searchRootFragment)
-//            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//            fragmentTransaction.addToBackStack(null)
-//            fragmentTransaction.commit()
             val searchCommunityLocationFragment = SearchCommunityLocationFragment.newInstance()
             val fragmentManager = activity.supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

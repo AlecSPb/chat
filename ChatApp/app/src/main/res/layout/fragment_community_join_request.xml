@@ -177,6 +177,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/move_activity_history"
+                android:textSize="@dimen/sp_16"
                 android:visibility="gone" />
 
             <TextView
@@ -217,6 +218,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/community_member_button"
+                android:textSize="@dimen/sp_16"
                 android:visibility="gone" />
 
             <View
@@ -239,11 +241,13 @@
 
             <Button
                 android:id="@+id/request_button"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_22"
+                android:text="@string/send_community_request"
+                android:textSize="@dimen/sp_16"
+                android:theme="@style/RequestButtonStyle"
                 android:visibility="gone" />
         </LinearLayout>
 

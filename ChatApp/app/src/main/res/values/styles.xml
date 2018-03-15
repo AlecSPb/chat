@@ -39,7 +39,7 @@
         <item name="colorControlHighlight">@color/inactive_gray</item>
     </style>
 
-    <style name="FilteredButtonStyle" parent="Theme.AppCompat">
+    <style name="RequestButtonStyle" parent="Theme.AppCompat">
         <!--ボタンの色-->
         <item name="colorButtonNormal">@color/light_blue</item>
         <!--ボタンをプレスしている時、シークバーをプレスしている時の色-->

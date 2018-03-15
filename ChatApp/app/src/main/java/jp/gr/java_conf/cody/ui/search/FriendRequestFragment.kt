@@ -170,7 +170,6 @@ class FriendRequestFragment : Fragment() {
                     }
 
                     if (!isRequested) {
-                        request_button.text = getString(R.string.send_friend_request)
                         request_button.setOnClickListener {
                             if (NetUtils(context).isOnline()) {
                                 MyChatManager.setmContext(context)
@@ -178,7 +177,7 @@ class FriendRequestFragment : Fragment() {
                                     override fun handleData(obj: Any, requestCode: Int?) {
                                         fragmentManager.beginTransaction().remove(this@FriendRequestFragment).commit()
                                         fragmentManager.popBackStack()
-                                        Toast.makeText(context, "フレンドリクエストを送信しました", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, getString(R.string.sent_friend_request), Toast.LENGTH_SHORT).show()
                                     }
                                 }, currentUser!!, user!!, NetworkConstants().SEND_FRIEND_REQUEST)
                             } else {
