@@ -209,7 +209,13 @@
                 android:textSize="@dimen/sp_16"
                 android:layout_marginTop="@dimen/dp_22"
                 android:layout_gravity="center_horizontal"
-                android:theme="@style/RequestButtonStyle"
+                android:theme="@style/BlueButtonStyle"
+                android:paddingTop="@dimen/dp_16"
+                android:paddingBottom="@dimen/dp_16"
+                android:paddingStart="@dimen/dp_40"
+                android:paddingLeft="@dimen/dp_40"
+                android:paddingEnd="@dimen/dp_40"
+                android:paddingRight="@dimen/dp_40"
                 android:visibility="gone"/>
         </LinearLayout>
 

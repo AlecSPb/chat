@@ -41,7 +41,11 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<FriendC
         }
 
         if (friend != null) {
-            holder.friendName.text = friend.name
+            val name = friend.name?.split(Regex("\\s+"))
+            val first = name!![0]
+            val last = name[1]
+            val lastToFirst = last + " " + first
+            holder.friendName.text = lastToFirst
             loadRoundImage(holder.profileImage, friend.imageUrl!!)
 
             holder.layout.setOnClickListener({

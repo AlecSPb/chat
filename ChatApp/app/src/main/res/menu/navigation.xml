@@ -10,7 +10,7 @@
     <item
         android:id="@+id/navigation_contacts"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/contacts" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/navigation_chat"

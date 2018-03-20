@@ -59,7 +59,11 @@ class FriendRequestsFragment : Fragment() {
         }
 
         // 名前
-        name_text_view.text = user?.name
+        val name = user?.name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        name_text_view.text = lastToFirst
 
         // 自己紹介
         if (user?.selfIntroduction != null) {

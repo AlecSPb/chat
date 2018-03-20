@@ -23,7 +23,11 @@ class CommunityRequestsAdapter(private val context: Context, private val communi
             RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_request, parent, false))
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
-        holder.userName.text = communityRequestList[position].second.name
+        val name = communityRequestList[position].second.name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        holder.userName.text = lastToFirst
 
         loadRoundImage(holder.profileImage, communityRequestList[position].second.imageUrl!!)
 

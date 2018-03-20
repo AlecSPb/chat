@@ -166,6 +166,12 @@
                     android:gravity="top|start"
                     android:visibility="gone"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_22"
+                    android:background="@color/inactive_gray"/>
+
                 <TextView
                     android:id="@+id/requests_content_text_view"
                     android:layout_width="wrap_content"

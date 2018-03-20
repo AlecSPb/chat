@@ -77,13 +77,13 @@ class ContactsFragment : Fragment() {
         //bottomNavigationView　表示
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
         bottomNavigationView.visibility = View.VISIBLE
+        bottomNavigationView.menu.findItem(R.id.navigation_contacts).isChecked = true
 
         //actionbar
         val toolbar: Toolbar? = view?.findViewById(R.id.toolbar)
         val activity: AppCompatActivity = activity as AppCompatActivity
         activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.setDisplayShowTitleEnabled(true)
-        activity.supportActionBar?.title = getString(R.string.contacts)
+        activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
     }
 

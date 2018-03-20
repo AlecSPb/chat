@@ -16,121 +16,135 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/profile_image_view"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="@dimen/dp_16"
-                app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
-
-
-            <EditText
-                android:id="@+id/community_name_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLength="25"
-                android:layout_marginRight="@dimen/dp_16"
-                android:layout_marginEnd="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_24"
-                android:layout_toRightOf="@+id/profile_image_view"
-                android:layout_toEndOf="@+id/profile_image_view"
-                android:hint="@string/community_name" />
-
-            <EditText
-                android:id="@+id/location_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/community_name_edit_text"
-                android:inputType="text"
-                android:maxLength="10"
-                android:layout_marginTop="@dimen/dp_5"
-                android:layout_toRightOf="@+id/profile_image_view"
-                android:layout_toEndOf="@+id/profile_image_view"
-                android:hint="@string/location" />
-
             <RelativeLayout
-                android:id="@+id/feature_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/location_edit_text"
-                android:layout_toRightOf="@+id/profile_image_view"
-                android:layout_toEndOf="@+id/profile_image_view"
-                android:layout_marginTop="@dimen/dp_12">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/feature_text_view"
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/profile_image_view"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="@dimen/dp_16"
+                    app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
+
+
+                <EditText
+                    android:id="@+id/community_name_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_24"
+                    android:layout_toRightOf="@+id/profile_image_view"
+                    android:layout_toEndOf="@+id/profile_image_view"
+                    android:hint="@string/community_name" />
+
+                <EditText
+                    android:id="@+id/location_edit_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/feature"/>
+                    android:layout_below="@+id/community_name_edit_text"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_toRightOf="@+id/profile_image_view"
+                    android:layout_toEndOf="@+id/profile_image_view"
+                    android:hint="@string/location" />
+
+                <RelativeLayout
+                    android:id="@+id/feature_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/location_edit_text"
+                    android:layout_toRightOf="@+id/profile_image_view"
+                    android:layout_toEndOf="@+id/profile_image_view"
+                    android:layout_marginTop="@dimen/dp_12">
+
+                    <TextView
+                        android:id="@+id/feature_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feature"/>
+
+                    <Button
+                        android:id="@+id/feature_button"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_12"
+                        android:layout_marginStart="@dimen/dp_12"
+                        android:layout_toRightOf="@+id/feature_text_view"
+                        android:layout_toEndOf="@+id/feature_text_view"
+                        android:text="@string/setting"
+                        android:textSize="@dimen/sp_16" />
+
+                </RelativeLayout>
+
+
+                <EditText
+                    android:id="@+id/description_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/description_text_border"
+                    android:layout_below="@+id/feature_layout"
+                    android:gravity="top|start"
+                    android:textSize="15sp"
+                    android:maxLength="225"
+                    android:maxLines="13"
+                    android:minLines="13"
+                    android:padding="@dimen/dp_16"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:layout_marginEnd="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:layout_toRightOf="@+id/profile_image_view"
+                    android:layout_toEndOf="@+id/profile_image_view"
+                    android:hint="@string/description" />
 
                 <Button
-                    android:id="@+id/feature_button"
-                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/invite_friend_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp_12"
-                    android:layout_marginStart="@dimen/dp_12"
-                    android:layout_toRightOf="@+id/feature_text_view"
-                    android:layout_toEndOf="@+id/feature_text_view"
-                    android:text="@string/setting"
-                    android:textSize="@dimen/sp_16" />
+                    android:layout_below="@id/description_edit_text"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="@dimen/dp_16"
+                    android:layout_marginRight="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:layout_marginBottom="@dimen/dp_8"
+                    android:theme="@style/ButtonStyle"
+                    android:text="@string/friend_invite"/>
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/participants_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/invite_friend_button"
+                    android:layout_toRightOf="@+id/profile_image_view"
+                    android:layout_toEndOf="@+id/profile_image_view"/>
+
+                <Button
+                    android:id="@+id/create_community_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/dp_16"
+                    android:paddingBottom="@dimen/dp_16"
+                    android:paddingStart="@dimen/dp_40"
+                    android:paddingLeft="@dimen/dp_40"
+                    android:paddingEnd="@dimen/dp_40"
+                    android:paddingRight="@dimen/dp_40"
+                    android:layout_marginTop="@dimen/dp_18"
+                    android:layout_below="@+id/participants_recycler_view"
+                    android:layout_centerHorizontal="true"
+                    android:theme="@style/BlueButtonStyle"
+                    android:textColor="@color/white" />
             </RelativeLayout>
-
-
-            <EditText
-                android:id="@+id/description_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/description_text_border"
-                android:layout_below="@+id/feature_layout"
-                android:gravity="top|start"
-                android:textSize="15sp"
-                android:maxLength="225"
-                android:maxLines="13"
-                android:minLines="13"
-                android:padding="@dimen/dp_16"
-                android:layout_marginRight="@dimen/dp_16"
-                android:layout_marginEnd="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_16"
-                android:layout_toRightOf="@+id/profile_image_view"
-                android:layout_toEndOf="@+id/profile_image_view"
-                android:hint="@string/description" />
-
-            <Button
-                android:id="@+id/invite_friend_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/description_edit_text"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginLeft="@dimen/dp_16"
-                android:layout_marginRight="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:layout_marginBottom="@dimen/dp_8"
-                android:text="@string/friend_invite"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/participants_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/invite_friend_button" />
-
-            <Button
-                android:id="@+id/create_community_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_16"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:background="@color/sky_blue"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+        </ScrollView>
 
         <View
             android:id="@+id/progress_view"

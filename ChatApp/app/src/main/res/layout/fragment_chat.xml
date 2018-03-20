@@ -22,7 +22,6 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/chat_gray"
             android:orientation="vertical">
 
 
@@ -33,9 +32,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:background="#00000000"
                 android:padding="10dp"
                 android:scaleType="centerInside"
+                android:background="@color/background"
                 android:src="@drawable/ic_send" />
 
             <View
@@ -49,6 +48,7 @@
                 android:id="@+id/chat_messages_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#F0F8FF"
                 android:layout_above="@id/line">
 
             </android.support.v7.widget.RecyclerView>
@@ -60,8 +60,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_toLeftOf="@+id/send_button"
                 android:layout_toStartOf="@id/send_button"
@@ -76,17 +74,5 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/no_messages_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="No Messages to show, Start a chat."
-            android:textColor="#FDF5E6"
-            android:textSize="18sp"
-            android:visibility="gone" />
     </LinearLayout>
 </layout>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Cody</string>
-    <string name="home">Home</string>
+    <string name="home">ホーム</string>
     <string name="chat">トーク</string>
     <string name="search">検索</string>
     <string name="community">Community</string>
@@ -9,15 +9,18 @@
 
     <string name="sign_in_error">サインインに失敗しました</string>
     <string name="intro1_title">プロフィール</string>
-    <string name="intro1_content">まずプロフィールを完成させましょう。¥nプロフィールが充実しているほどコミュニティに参加しやすくなります</string>
+    <string name="intro1_content">まずはプロフィールを完成させましょう\nプロフィールが充実しているほどコミュニティに参加しやすくなります</string>
     <string name="intro2_title">コミュニティ</string>
-    <string name="intro2_content">コミュニティに参加してみましょう。¥n入りたいコミュニティがない場合は自分のコミュニティを作ってみましょう。</string>
+    <string name="intro2_content">コミュニティに参加してみましょう\n入りたいコミュニティがない場合は自分のコミュニティを作ってみましょう</string>
     <string name="intro3_title">トーク</string>
     <string name="intro3_content">トークをしてイベントに参加したり、実際に会って交流を深めましょう</string>
     <string name="intro4_title">開発</string>
     <string name="intro4_content">作りたいサービスやアプリを決めたら、チームで開発しましょう</string>
 
     <string name="dialog_talk">トーク</string>
+    <string name="empty_chat_room">トークがありません</string>
+    <string name="no_message">メッセージがありません</string>
+
     <string name="dialog_detail">詳細</string>
 
     <string name="edit_toolbar">編集</string>
@@ -50,7 +53,7 @@
     <string name="feature1">初心者歓迎</string>
     <string name="feature2">経験者募集</string>
     <string name="feature3">少数精鋭</string>
-    <string name="feature4">学生募集</string>
+    <string name="feature4">大学生募集</string>
 
     <string name="friend_invite">友達を招待する</string>
     <string name="invite">招待</string>
@@ -83,6 +86,7 @@
     <string name="empty_community">communityがありません communityを作りましょう</string>
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
+    <string name="community_name_content">コミュニティ名を30字以内で入力してください</string>
     <string name="description">コミュニティの説明</string>
     <string name="edit_description">コミュニティの説明を編集</string>
     <string name="description_content">

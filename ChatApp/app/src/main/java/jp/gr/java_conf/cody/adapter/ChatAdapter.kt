@@ -51,7 +51,12 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
                 val name = member.name
                 if (name != null && type == AppConstants().COMMUNITY_CHAT) {
                     viewHolder.name.visibility = View.VISIBLE
-                    viewHolder.name.text = name
+
+                    val nameList = name.split(Regex("\\s+"))
+                    val first = nameList[0]
+                    val last = nameList[1]
+                    val lastToFirst = last + " " + first
+                    viewHolder.name.text = lastToFirst
                 } else {
                     viewHolder.name.visibility = View.GONE
                 }
@@ -72,7 +77,6 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
             e.printStackTrace()
         }
 
-//        viewHolder.rlName.layoutParams.width = viewHolder.message.layoutParams.width
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

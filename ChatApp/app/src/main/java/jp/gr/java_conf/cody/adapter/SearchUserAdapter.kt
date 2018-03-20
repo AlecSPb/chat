@@ -19,7 +19,11 @@ class SearchUserAdapter(private val foundUserList: MutableList<UserModel>, priva
             SearchViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_friend, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        holder.communityName.text = foundUserList[position].name
+        val name = foundUserList[position].name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        holder.communityName.text = lastToFirst
         MyViewUtils.loadRoundImage(holder.profileImage, foundUserList[position].imageUrl!!)
         holder.setUp(position)
     }

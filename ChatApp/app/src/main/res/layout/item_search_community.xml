@@ -22,7 +22,7 @@
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/profile_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"/>
 
             <TextView
@@ -35,7 +35,7 @@
                 android:layout_marginTop="@dimen/dp_24"
                 android:layout_marginBottom="@dimen/dp_16"
                 android:textColor="#3a3a3a"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <View
                 android:id="@+id/line"

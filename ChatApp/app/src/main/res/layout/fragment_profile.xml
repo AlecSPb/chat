@@ -6,7 +6,7 @@
     android:layout_marginLeft="@dimen/dp_30"
     android:layout_marginRight="@dimen/dp_30"
     android:layout_marginStart="@dimen/dp_30"
-    android:paddingBottom="@dimen/dp_32"
+    android:scrollbars="none"
     tools:context="jp.gr.java_conf.cody.ui.profile.ProfileFragment">
 
     <LinearLayout
@@ -128,7 +128,8 @@
             android:layout_marginTop="@dimen/dp_22"
             android:text="@string/logout_setting"
             android:textColor="@color/profile"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_18"
+            android:layout_marginBottom="@dimen/dp_18"/>
     </LinearLayout>
 
 </ScrollView>

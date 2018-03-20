@@ -16,33 +16,37 @@ import jp.gr.java_conf.cody.ui.search.SearchFragment
  */
 class MainViewModel(private val activity: AppCompatActivity, val view: MainActivityContract) {
     fun onNavigationItemSelected(item: MenuItem) : Boolean {
-        val fragmentManager = activity.supportFragmentManager
+        if (item.itemId != view.getBottomNavigationViewId()) {
+            val fragmentManager = activity.supportFragmentManager
 
-        if (currentUser != null) {
-            when (item.itemId) {
-                R.id.navigation_search -> {
-                    val searchFragment = SearchFragment.newInstance()
-                    fragmentManager.beginTransaction().replace(R.id.fragment, searchFragment).commit()
-                    return true
+            if (currentUser != null) {
+                when (item.itemId) {
+                    R.id.navigation_search -> {
+                        val searchFragment = SearchFragment.newInstance()
+                        fragmentManager.beginTransaction().replace(R.id.fragment, searchFragment).commit()
+                        return true
+                    }
+                    R.id.navigation_contacts -> {
+                        val contactsFragment = ContactsFragment.newInstance()
+                        fragmentManager.beginTransaction().replace(R.id.fragment, contactsFragment).commit()
+                        return true
+                    }
+                    R.id.navigation_chat -> {
+                        val chatRoomsFragment = ChatRoomsFragment.newInstance(false, ChatRoomModel())
+                        fragmentManager.beginTransaction().replace(R.id.fragment, chatRoomsFragment).commit()
+                        return true
+                    }
+                    R.id.navigation_profile -> {
+                        val profileFragment = ProfileFragment.newInstance(false)
+                        fragmentManager.beginTransaction().replace(R.id.fragment, profileFragment).commit()
+                        return true
+                    }
+                    else -> {
+                        return false
+                    }
                 }
-                R.id.navigation_contacts -> {
-                    val contactsFragment = ContactsFragment.newInstance()
-                    fragmentManager.beginTransaction().replace(R.id.fragment, contactsFragment).commit()
-                    return true
-                }
-                R.id.navigation_chat -> {
-                    val chatRoomsFragment = ChatRoomsFragment.newInstance(false, ChatRoomModel())
-                    fragmentManager.beginTransaction().replace(R.id.fragment, chatRoomsFragment).commit()
-                    return true
-                }
-                R.id.navigation_profile -> {
-                    val profileFragment = ProfileFragment.newInstance(false)
-                    fragmentManager.beginTransaction().replace(R.id.fragment, profileFragment).commit()
-                    return true
-                }
-                else -> {
-                    return false
-                }
+            } else {
+                return false
             }
         } else {
             return false

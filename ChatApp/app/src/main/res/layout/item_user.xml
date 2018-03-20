@@ -2,115 +2,78 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/rl_parent"
+        android:id="@+id/parent_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:orientation="vertical">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/profile_image_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+        <RelativeLayout
+            android:id="@+id/child_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/iv_selected"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="-16dp"
-            android:layout_toRightOf="@+id/profile_image_view"
-            android:visibility="gone"
-            app:srcCompat="@drawable/item_white_check" />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
 
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:layout_toEndOf="@+id/profile_image_view"
-            android:text="User Name"
-            android:textColor="@color/black" />
+            <LinearLayout
+                android:id="@+id/content_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_30"
+                android:layout_marginEnd="@dimen/dp_30"
+                android:layout_toRightOf="@+id/profile_image_view"
+                android:layout_toEndOf="@+id/profile_image_view"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_name"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@+id/profile_image_view"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Email ID"
-            android:textColor="@color/home_page_textcolor" />
+                <TextView
+                    android:id="@+id/user_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/black" />
 
-        <TextView
-            android:id="@+id/tv_unreadcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:background="@drawable/chat_count"
-            android:maxLength="3"
-            android:padding="@dimen/dp_2"
-            android:text="99+"
-            android:textColor="@color/white"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/message_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/home_page_textcolor" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/iv_overflow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_4"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_overflow_black_24dp" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/label_admin"
-            android:text="Admin"
-            android:visibility="gone"
-            android:textColor="@color/green"
-            android:layout_toStartOf="@+id/iv_overflow"
-            android:layout_marginTop="@dimen/dp_8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/unread_count_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/dp_8"
+                android:layout_marginEnd="@dimen/dp_8"
+                android:background="@drawable/chat_count"
+                android:maxLength="3"
+                android:padding="@dimen/dp_2"
+                android:textColor="@color/white"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="8dp"
-            android:layout_below="@+id/profile_image_view"
+            android:layout_below="@+id/child_layout"
             android:background="@color/inactive_gray"/>
-
-        <LinearLayout
-            android:id="@+id/ll_otheritems"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/iv_overflow"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_16"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tv_make_admin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_8"
-                android:text="Make Admin" />
-
-            <TextView
-                android:id="@+id/tv_remove_member"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/dp_8"
-                android:text="Remove Member" />
-
-        </LinearLayout>
 
     </RelativeLayout>
 </layout>

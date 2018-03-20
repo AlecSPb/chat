@@ -162,13 +162,20 @@ object MyChatManager {
                 override fun onComplete(databaseError: DatabaseError?, p1: Boolean, dataSnapshot: DataSnapshot?) {
                     try {
                         Log.d(TAG, "postTransaction:onComplete:" + databaseError)
-                        callback?.handleData(isFirst, requestType)
+                        if (requestType == NetworkConstants().LOGIN_REQUEST) {
+                            callback?.handleData(isFirst, requestType)
+                        } else {
+                            callback?.handleData(true, requestType)
+                        }
 //                        val user: UserModel? = dataSnapshot?.getValue<UserModel>(UserModel::class.java)
 //                        fetchCurrentUser(callback, user, requestType)
 //                        fetchMyCommunities(callback, requestType, userModel, true)
 
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        if (requestType == NetworkConstants().MAIN_LOGIN_REQUEST) {
+                            callback?.handleData(false, requestType)
+                        }
                     }
 
 
@@ -176,6 +183,9 @@ object MyChatManager {
             })
         } catch (e: Exception) {
             e.printStackTrace()
+            if (requestType == NetworkConstants().MAIN_LOGIN_REQUEST) {
+                callback?.handleData(false, requestType)
+            }
         }
 
     }
@@ -188,10 +198,12 @@ object MyChatManager {
             if (userRef != null && userModel?.uid != null) {
                 val listenerForSingle = object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError?) {
+                        Log.d(TAG, "fetchCurrentUser cancelled")
                         callback?.handleData(false, requestType)
                     }
 
                     override fun onDataChange(p0: DataSnapshot?) {
+                        Log.d(TAG, "fetchCurrentUser complete")
                         val user: UserModel? = p0?.getValue<UserModel>(UserModel::class.java)
                         user?.let {
                             it.online?.let {
@@ -775,8 +787,11 @@ object MyChatManager {
 
         // communityの数を取得
         val listener = object : ValueEventListener {
-            override fun onCancelled(databaseError: DatabaseError) {}
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(TAG, "fetchPopularCommunity cancelled")
+            }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.d(TAG, "fetchPopularCommunity complete")
                 if (dataSnapshot.exists()) {
                     communityCount = dataSnapshot.children.count()
                     queryPopularCommunity(callback, communityCount, requestType)
@@ -1252,6 +1267,11 @@ object MyChatManager {
             user.value.email = null
             user.value.imageUrl = null
             user.value.name = null
+            user.value.age = null
+            user.value.selfIntroduction = null
+            user.value.developmentExperience = null
+            user.value.myApps = null
+            user.value.programmingLanguage = null
             user.value.online = null
             user.value.friends.clear()
             user.value.myFriendRequests.clear()
@@ -1499,7 +1519,6 @@ object MyChatManager {
                 communityRef?.child(communityId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(communityMember)
 
                 lastMessageModel.readStatus = hashMapOf()
-                communityRef?.child(communityId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
         }
     }
@@ -1518,7 +1537,6 @@ object MyChatManager {
                 friendRef?.child(friendId)?.child(FirebaseConstants().MEMBERS)?.child(currentUser?.uid)?.updateChildren(me)
 
                 lastMessageModel.readStatus = hashMapOf()
-                friendRef?.child(friendId)?.child(FirebaseConstants().LAST_MESSAGE)?.setValue(lastMessageModel)
             }
         }
     }
@@ -1675,6 +1693,8 @@ object MyChatManager {
                     currentUserRef?.onDisconnect()?.setValue(false)
                     lastSeenRef?.onDisconnect()?.setValue(Calendar.getInstance().timeInMillis.toString())
                     currentUserRef?.setValue(true)
+                } else {
+                    currentUserRef?.setValue(false)
                 }
             }
 

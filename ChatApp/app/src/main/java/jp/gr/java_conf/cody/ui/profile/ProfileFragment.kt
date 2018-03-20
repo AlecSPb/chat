@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,12 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (currentUser == null) {
+            Log.d("Profile", "currentUser null")
+        } else {
+            Log.d("Profile", "currentUser not null")
+        }
         setViews()
     }
 
@@ -48,9 +55,14 @@ class ProfileFragment : Fragment() {
         //bottomNavigationView　表示
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
         bottomNavigationView.visibility = View.VISIBLE
+        bottomNavigationView.menu.findItem(R.id.navigation_profile).isChecked = true
 
         // 名前
-        name_text_view.text = currentUser?.name
+        val name = currentUser?.name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        name_text_view.text = lastToFirst
 
         // プロフィール画像
         loadRoundImage(profile_image_view, currentUser?.imageUrl!!)

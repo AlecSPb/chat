@@ -1,7 +1,6 @@
 package jp.gr.java_conf.cody.ui.search
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
@@ -41,6 +40,8 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews()
 
+        Log.d("test", "search Fragment")
+
         MyChatManager.setmContext(context)
         MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
@@ -51,6 +52,7 @@ class SearchFragment : Fragment() {
                     if (popularCommunityList.isEmpty()) {
                         empty_view.visibility = View.VISIBLE
                     } else {
+                        Log.d("test", "fetch success")
                         search_scroll_view.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
                         setAdapter()
@@ -62,9 +64,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun setViews() {
-        //bottomNavigationView　非表示
+        //bottomNavigationView　表示
         val bottomNavigationView: BottomNavigationView = activity.findViewById(R.id.navigation)
         bottomNavigationView.visibility = View.VISIBLE
+        bottomNavigationView.menu.findItem(R.id.navigation_search).isChecked = true
 
         search_button.setOnClickListener {
             val searchCommunityLocationFragment = SearchCommunityLocationFragment.newInstance()

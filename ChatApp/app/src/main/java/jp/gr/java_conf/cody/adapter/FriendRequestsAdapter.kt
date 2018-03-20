@@ -23,7 +23,11 @@ class FriendRequestsAdapter(private val context: Context, private val friendRequ
             RequestViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_friend_request, parent, false))
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
-        holder.userName.text = friendRequests[position].name
+        val name = friendRequests[position].name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        holder.userName.text = lastToFirst
         loadRoundImage(holder.profileImage, friendRequests[position].imageUrl!!)
 
         holder.layout.setOnClickListener {

@@ -9,6 +9,7 @@ class NetworkConstants {
 
 
     val LOGIN_REQUEST = 1001
+    val MAIN_LOGIN_REQUEST = 1002
     val USER_REMOVED = 1004
     val USER_ADDED = 1005
     val CREATE_COMMUNITY = 1006

@@ -61,7 +61,7 @@
                     android:layout_marginLeft="58dp"
                     android:layout_marginStart="58dp"
                     android:layout_marginBottom="@dimen/dp_12"
-                    android:theme="@style/FilterButtonStyle"
+                    android:theme="@style/ButtonStyle"
                     android:text="@string/filter" />
 
             </android.support.design.widget.CollapsingToolbarLayout>

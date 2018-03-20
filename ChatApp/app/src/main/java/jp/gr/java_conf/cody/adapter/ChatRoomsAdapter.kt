@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.database.Query
 import jp.gr.java_conf.cody.R
+import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.model.ChatRoomModel
 import jp.gr.java_conf.cody.ui.chat.ChatFragment
 import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadRoundImage
@@ -20,27 +21,35 @@ import jp.gr.java_conf.cody.util.MyViewUtils.Companion.loadRoundImage
 /**
  * Created by daigo on 2018/01/14.
  */
-class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerAdapter<ChatRoomModel, ChatRoomsAdapter.ViewHolder>(
+class ChatRoomsAdapter(val context: Context, ref: Query) : FirebaseRecyclerAdapter<ChatRoomModel, ChatRoomsAdapter.ViewHolder>(
         ChatRoomModel::class.java, R.layout.item_user,
         ChatRoomsAdapter.ViewHolder::class.java, ref)  {
 
     override fun populateViewHolder(viewHolder: ViewHolder?, model: ChatRoomModel?, position: Int) {
-        viewHolder?.tvName?.text = model?.name
+        if (model?.type == AppConstants().FRIEND_CHAT) {
+            val name = model.name?.split(Regex("\\s+"))
+            val first = name!![0]
+            val last = name[1]
+            val lastToFirst = last + " " + first
+            viewHolder?.name?.text = lastToFirst
+        } else {
+            viewHolder?.name?.text = model?.name
+        }
 
         if (model?.lastMessage != null && model.lastMessage != "") {
-            viewHolder?.tvEmail?.text = model.lastMessage
+            viewHolder?.message?.text = model.lastMessage
         } else {
-            viewHolder?.tvEmail?.text = "No messages in the communities"
+            viewHolder?.message?.text = context.getString(R.string.no_message)
         }
 
         if (model?.unreadCount!! > 0) {
-            viewHolder?.tvUnreadCount?.visibility = View.VISIBLE
-            viewHolder?.tvUnreadCount?.text = model.unreadCount.toString()
+            viewHolder?.unreadCount?.visibility = View.VISIBLE
+            viewHolder?.unreadCount?.text = model.unreadCount.toString()
         } else {
-            viewHolder?.tvUnreadCount?.visibility = View.GONE
+            viewHolder?.unreadCount?.visibility = View.GONE
         }
 
-        loadRoundImage(viewHolder?.ivProfile!!, model.imageUrl!!)
+        loadRoundImage(viewHolder?.profileImage!!, model.imageUrl!!)
 
         viewHolder.layout.setOnClickListener({
 
@@ -57,10 +66,10 @@ class ChatRoomsAdapter(val context: Context, var ref: Query) : FirebaseRecyclerA
             ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_user, parent, false))
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivProfile = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
-        var tvName = itemView.findViewById(R.id.tv_name) as TextView
-        var tvEmail = itemView.findViewById(R.id.tv_email) as TextView
-        var layout = itemView.findViewById(R.id.rl_parent) as RelativeLayout
-        var tvUnreadCount = itemView.findViewById(R.id.tv_unreadcount) as TextView
+        var profileImage = itemView.findViewById(R.id.profile_image_view) as AppCompatImageView
+        var name = itemView.findViewById(R.id.user_name_text_view) as TextView
+        var message = itemView.findViewById(R.id.message_text_view) as TextView
+        var layout = itemView.findViewById(R.id.parent_layout) as RelativeLayout
+        var unreadCount = itemView.findViewById(R.id.unread_count_text_view) as TextView
     }
 }

@@ -53,16 +53,20 @@ class ContactsFriendDetailFragment : Fragment() {
         val friend: UserModel? = myFriendsMap[id]
 
         // 名前
-        name_text_view.text = friend?.name
+        val name = friend?.name?.split(Regex("\\s+"))
+        val first = name!![0]
+        val last = name[1]
+        val lastToFirst = last + " " + first
+        name_text_view.text = lastToFirst
 
         // 自己紹介
-        if (friend?.selfIntroduction != null) {
+        if (friend.selfIntroduction != null) {
             self_introduction_text_view.visibility = View.VISIBLE
             self_introduction_text_view.text = friend.selfIntroduction
         }
 
         // 年齢
-        if (friend?.age != null) {
+        if (friend.age != null) {
             age_title_line.visibility = View.VISIBLE
 
             age_title_text_view.visibility = View.VISIBLE
@@ -75,7 +79,7 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         // 開発経験
-        if (friend?.developmentExperience != null) {
+        if (friend.developmentExperience != null) {
             experience_title_line.visibility = View.VISIBLE
 
             experience_title_text_view.visibility = View.VISIBLE
@@ -102,7 +106,7 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         //　使用言語
-        if (friend?.programmingLanguage != null) {
+        if (friend.programmingLanguage != null) {
             language_title_line.visibility = View.VISIBLE
 
             language_title_text_view.visibility = View.VISIBLE
@@ -113,7 +117,7 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         // 過去に作ったもの
-        if (friend?.myApps != null) {
+        if (friend.myApps != null) {
             my_apps_title_line.visibility = View.VISIBLE
 
             my_apps_title_text_view.visibility = View.VISIBLE
@@ -125,7 +129,7 @@ class ContactsFriendDetailFragment : Fragment() {
         }
 
         // profile画像
-        loadImageFromUrl(profile_image_view, friend?.imageUrl!!)
+        loadImageFromUrl(profile_image_view, friend.imageUrl!!)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -32,16 +32,16 @@
 
     </style>
 
-    <style name="FilterButtonStyle" parent="Theme.AppCompat.Light">
+    <style name="ButtonStyle" parent="Theme.AppCompat.Light">
         <!--ボタンの色-->
         <item name="colorButtonNormal">#FAFAFA</item>
         <!--ボタンをプレスしている時、シークバーをプレスしている時の色-->
         <item name="colorControlHighlight">@color/inactive_gray</item>
     </style>
 
-    <style name="RequestButtonStyle" parent="Theme.AppCompat">
+    <style name="BlueButtonStyle" parent="Theme.AppCompat">
         <!--ボタンの色-->
-        <item name="colorButtonNormal">@color/light_blue</item>
+        <item name="colorButtonNormal">@color/intro3</item>
         <!--ボタンをプレスしている時、シークバーをプレスしている時の色-->
         <item name="colorControlHighlight">@color/light_blue2</item>
     </style>

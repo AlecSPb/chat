@@ -254,7 +254,11 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                 val friendNameList: MutableList<String> = mutableListOf()
                 for (myFriend in myFriends) {
-                    friendNameList.add(myFriend.name!!)
+                    val nameList = myFriend.name?.split(Regex("\\s+"))
+                    val first = nameList!![0]
+                    val last = nameList[1]
+                    val lastToFirst = last + " " + first
+                    friendNameList.add(lastToFirst)
                 }
                 val items = friendNameList.toTypedArray()
                 AlertDialog.Builder(context)

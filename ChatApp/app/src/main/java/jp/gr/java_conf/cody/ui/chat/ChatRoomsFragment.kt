@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_chat_rooms.*
 
 class ChatRoomsFragment : Fragment() {
     var adapter: ChatRoomsAdapter? = null
-    var isBackStack: Boolean = false
+    private var isBackStack: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
