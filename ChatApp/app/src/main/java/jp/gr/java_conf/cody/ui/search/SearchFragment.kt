@@ -40,19 +40,15 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         setViews()
 
-        Log.d("test", "search Fragment")
-
         MyChatManager.setmContext(context)
         MyChatManager.fetchPopularCommunity(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
-                Log.d("fetch popular", "success")
 
                 val isValid = obj as Boolean
                 if (isValid) {
                     if (popularCommunityList.isEmpty()) {
                         empty_view.visibility = View.VISIBLE
                     } else {
-                        Log.d("test", "fetch success")
                         search_scroll_view.visibility = View.VISIBLE
                         popularCommunityList = popularCommunityList.sortedWith(compareByDescending(CommunityModel::memberCount)).toMutableList()
                         setAdapter()
