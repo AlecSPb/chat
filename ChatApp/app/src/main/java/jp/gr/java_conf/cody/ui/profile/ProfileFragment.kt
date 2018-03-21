@@ -130,13 +130,6 @@ class ProfileFragment : Fragment() {
         logout_text_view.setOnClickListener {
             // オンライン出ないとログアウトできないようにする
             if (NetUtils(context).isOnline()) {
-//                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                        .requestIdToken((R.string.default_web_client_id).toString())
-//                        .requestEmail()
-//                        .build()
-//
-//                val googleSignInClient = GoogleSignIn.getClient(this.activity, gso)
-
                 MyChatManager.logout(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         val intent = Intent(context, LoginActivity::class.java)

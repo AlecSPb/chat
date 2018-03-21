@@ -1247,7 +1247,7 @@ object MyChatManager {
             val auth = FirebaseAuth.getInstance()
             auth.signOut()
 
-            TwitterCore.getInstance().getSessionManager().clearActiveSession()
+            TwitterCore.getInstance().sessionManager.clearActiveSession()
 
             callback?.handleData(true, null)
         }
