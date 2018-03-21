@@ -33,6 +33,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.gson.Gson
+import com.twitter.sdk.android.core.TwitterCore
 import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityActivityFilter
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityFeatureFilter
@@ -1229,7 +1230,7 @@ object MyChatManager {
         userRef?.child(currentUser?.uid)?.child("deviceIds")?.setValue(deviceIdMap)
     }
 
-    fun logout(callback: NotifyMeInterface?, context: Context, googleSignInClient: GoogleSignInClient) {
+    fun logout(callback: NotifyMeInterface?, context: Context) {
         val deviceId = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
         val deviceIdMap: MutableMap<String, Any> = hashMapOf()
@@ -1246,7 +1247,7 @@ object MyChatManager {
             val auth = FirebaseAuth.getInstance()
             auth.signOut()
 
-            googleSignInClient.signOut()
+            TwitterCore.getInstance().getSessionManager().clearActiveSession()
 
             callback?.handleData(true, null)
         }

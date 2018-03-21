@@ -115,7 +115,9 @@ class ProfileFragment : Fragment() {
             notices.addNotice(Notice(getString(R.string.toggle), "", getString(R.string.toggle_copyright), ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.toggle_button_group), "", "", ApacheSoftwareLicense20()))
             notices.addNotice(Notice(getString(R.string.welcome), "", getString(R.string.welcome_copyright), ApacheSoftwareLicense20()))
-            
+            notices.addNotice(Notice(getString(R.string.twitter_kit), "", getString(R.string.twitter_kit_copyright), ApacheSoftwareLicense20()))
+
+
             LicensesDialogFragment.Builder(context)
                     .setNotices(notices)
                     .setShowFullLicenseText(false)
@@ -128,12 +130,12 @@ class ProfileFragment : Fragment() {
         logout_text_view.setOnClickListener {
             // オンライン出ないとログアウトできないようにする
             if (NetUtils(context).isOnline()) {
-                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken((R.string.default_web_client_id).toString())
-                        .requestEmail()
-                        .build()
-
-                val googleSignInClient = GoogleSignIn.getClient(this.activity, gso)
+//                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                        .requestIdToken((R.string.default_web_client_id).toString())
+//                        .requestEmail()
+//                        .build()
+//
+//                val googleSignInClient = GoogleSignIn.getClient(this.activity, gso)
 
                 MyChatManager.logout(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
@@ -142,7 +144,8 @@ class ProfileFragment : Fragment() {
                         context.startActivity(intent)
                         activity.finish()
                     }
-                }, context, googleSignInClient)
+                }, context)
+
             } else {
                 CDialog(context)
                         .createAlert(getString(R.string.connection_alert), CDConstants.WARNING, CDConstants.MEDIUM)

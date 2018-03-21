@@ -57,7 +57,12 @@ dependencies {
     compile 'com.github.hassanusman:CircularDialogs:1.2'
     compile 'com.nex3z:toggle-button-group:1.1.2'
     compile 'com.stephentuso:welcome:1.4.1'
-
+    compile('com.twitter.sdk.android:twitter-core:3.1.1') {
+        transitive = true
+    }
+    compile('com.twitter.sdk.android:twitter:3.1.1') {
+        transitive = true
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

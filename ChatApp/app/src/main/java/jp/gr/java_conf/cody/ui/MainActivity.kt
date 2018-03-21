@@ -1,6 +1,5 @@
 package jp.gr.java_conf.cody.ui
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -51,6 +50,8 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
 
         setViews()
         Log.d("Main", "onCreate")
+        initialFetchData()
+        setFragment()
 //        MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
 //            override fun handleData(obj: Any, requestCode: Int?) {
 //                if (requestCode == NetworkConstants().MAIN_LOGIN_REQUEST) {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
@@ -18,6 +19,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.twitter.sdk.android.core.*
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 import jp.gr.java_conf.cody.R
@@ -30,6 +32,10 @@ import jp.gr.java_conf.cody.util.NetUtils
 import jp.gr.java_conf.cody.util.SharedPrefManager
 import jp.gr.java_conf.cody.viewmodel.LoginActivityViewModel
 import kotlinx.android.synthetic.main.activity_login.*
+import com.google.firebase.auth.TwitterAuthProvider
+import com.twitter.sdk.android.core.TwitterSession
+
+
 
 
 class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener, LoginActivityContract {
@@ -40,6 +46,18 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Configure Twitter SDK
+        val authConfig = TwitterAuthConfig(
+                getString(R.string.twitter_consumer_key),
+                getString(R.string.twitter_consumer_secret))
+
+        val twitterConfig = TwitterConfig.Builder(this)
+                .twitterAuthConfig(authConfig)
+                .build()
+
+        Twitter.initialize(twitterConfig)
+
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
@@ -75,6 +93,19 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
                         .show()
             }
         }
+
+        twitterLoginButton.callback = object : Callback<TwitterSession>() {
+            override fun failure(exception: TwitterException?) {
+                Log.w("Login", "twitterLogin:failure", exception)
+            }
+
+            override fun success(result: Result<TwitterSession>?) {
+                twitterLoginButton.isEnabled = false
+                Log.d("Login", "twitterLogin:success" + result)
+                handleTwitterSession(result?.data!!)
+
+            }
+        }
     }
 
     override fun onStart() {
@@ -83,17 +114,13 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         if (currentUser != null) {
             if (NetUtils(this).isOnline()) {
                 // progress
-                progress_view.visibility = View.VISIBLE
-                avi.visibility = View.VISIBLE
-                avi.show()
+                showProgressDialog()
 
                 MyChatManager.setmContext(this)
                 MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         // progress
-                        progress_view.visibility = View.GONE
-                        avi.hide()
-                        avi.visibility = View.GONE
+                        hideProgressDialog()
 
                         val isFirst = obj as Boolean
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
@@ -104,11 +131,13 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
 
                 }, currentUser, NetworkConstants().LOGIN_REQUEST)
             } else {
-                viewModel.setLoginButtonEnabled(true)
+//                viewModel.setLoginButtonEnabled(true)
+                twitterLoginButton.isEnabled = true
             }
 
         } else {
-            viewModel.setLoginButtonEnabled(true)
+//            viewModel.setLoginButtonEnabled(true)
+            twitterLoginButton.isEnabled = true
         }
     }
 
@@ -117,25 +146,44 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
+    private fun handleTwitterSession(session: TwitterSession) {
+        Log.d("Login", "handleTwitterSession:" + session)
+        showProgressDialog()
+
+        val credential = TwitterAuthProvider.getCredential(
+                session.authToken.token,
+                session.authToken.secret)
+
+        viewModel.firebaseAuthWithTwitter(credential, auth)
+    }
+
+    private fun showProgressDialog() {
+        progress_view.visibility = View.VISIBLE
+        avi.visibility = View.VISIBLE
+        avi.show()
+    }
+
+    private fun hideProgressDialog() {
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         viewModel.setLoginButtonEnabled(false)
 
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                // progress
-                progress_view.visibility = View.VISIBLE
-                avi.visibility = View.VISIBLE
-                avi.show()
+                showProgressDialog()
 
                 val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
                 viewModel.firebaseAuthWithGoogle(account, auth)
             } catch (e: ApiException) {
-                // progress
-                progress_view.visibility = View.GONE
-                avi.hide()
-                avi.visibility = View.GONE
+                hideProgressDialog()
 
                 Toast.makeText(this, getString(R.string.sign_in_error), Toast.LENGTH_SHORT).show()
                 viewModel.setLoginButtonEnabled(true)
@@ -144,10 +192,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
-        // progress
-        progress_view.visibility = View.GONE
-        avi.hide()
-        avi.visibility = View.GONE
+        hideProgressDialog()
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show()
         viewModel.setLoginButtonEnabled(true)
     }
@@ -157,10 +202,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
         MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 val isFirst = obj as Boolean
-                // progress
-                progress_view.visibility = View.GONE
-                avi.hide()
-                avi.visibility = View.GONE
+                hideProgressDialog()
 
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.putExtra("isFirst", isFirst)
@@ -171,10 +213,7 @@ class LoginActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedLis
     }
 
     override fun toastSignInError(task: Task<AuthResult>) {
-        // progress
-        progress_view.visibility = View.GONE
-        avi.hide()
-        avi.visibility = View.GONE
+       hideProgressDialog()
 
         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
         viewModel.setLoginButtonEnabled(true)

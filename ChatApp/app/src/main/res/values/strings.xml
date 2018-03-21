@@ -172,6 +172,8 @@
     <string name="toggle_button_group">ToggleButtonGroup</string>
     <string name="welcome">Welcome</string>
     <string name="welcome_copyright">Copyright 2015-2017 Stephen Tuso</string>
+    <string name="twitter_kit">Twitter Kit for Android</string>
+    <string name="twitter_kit_copyright">Copyright 2017 Twitter, Inc.</string>
 
     <string name="connection_alert">インターネットに\n接続されていません</string>
     <string name="cannot_login">セッションが切れています</string>
