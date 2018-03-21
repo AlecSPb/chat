@@ -134,6 +134,7 @@
     <string name="community_member_button">メンバーを見る</string>
 
     <string name="leave">退会</string>
+    <string name="leave_toast">退会しました</string>
 
     <string name="edit_finish">完了</string>
     <string name="blank">空欄があります</string>

@@ -27,7 +27,7 @@
         android:layout_marginRight="@dimen/dp_50"
         android:layout_marginEnd="@dimen/dp_50"
         android:background="@drawable/description_text_border"
-        android:maxLength="7"
+        android:maxLength="14"
         android:inputType="text"
         android:padding="@dimen/dp_8"
         android:layout_gravity="center_horizontal"/>

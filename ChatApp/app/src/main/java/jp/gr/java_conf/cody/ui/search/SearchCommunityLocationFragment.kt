@@ -1,18 +1,15 @@
 package jp.gr.java_conf.cody.ui.search
 
 
-import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.Button
 import jp.gr.java_conf.cody.MyChatManager
 import jp.gr.java_conf.cody.NotifyMeInterface
 
@@ -56,16 +53,6 @@ class SearchCommunityLocationFragment : Fragment() {
         } else {
             filter_button.text = getString(R.string.filter)
         }
-        val searchWord = search_edit_text.text.toString()
-        MyChatManager.setmContext(context)
-        MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
-            override fun handleData(obj: Any, requestCode: Int?) {
-                val valid: Boolean = obj as Boolean
-                if (valid) {
-                    setAdapter()
-                }
-            }
-        }, searchWord, NetworkConstants().SEARCH_LOCATION)
     }
 
     private fun setViews() {
@@ -102,6 +89,7 @@ class SearchCommunityLocationFragment : Fragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val searchWord = p0.toString()
 
+                MyChatManager.setmContext(context)
                 MyChatManager.searchCommunityLocation(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
                         val valid: Boolean = obj as Boolean

@@ -50,6 +50,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     var mLinearLayoutManager: LinearLayoutManager? = null
     var type: String? = ""
     var scrollListener: RecyclerView.OnScrollListener? = null
+    var isAdmin: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -101,9 +102,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
         when (type) {
             AppConstants().COMMUNITY_CHAT -> {
 
-                // コミュニティ作成者は退会出来ない
+                setHasOptionsMenu(true)
+
                 if (communityMap?.get(id!!)?.members?.get(currentUser?.uid)?.admin == null) {
-                    setHasOptionsMenu(true)
+                } else {
+                    isAdmin = true
                 }
                 if (id != null) {
                     MyChatManager.fetchCommunityMembersDetails(object : NotifyMeInterface {
@@ -138,12 +141,23 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater!!.inflate(R.menu.chat_toolbar_item,menu)
-        for (i in 0 until menu?.size()!!) {
-            val item = menu.getItem(i)
-            val spanString = SpannableString(menu.getItem(i).title.toString())
-            spanString.setSpan(ForegroundColorSpan(Color.BLACK), 0, spanString.length, 0) //fix the color to white
-            item.title = spanString
+
+        if (!isAdmin) {
+            inflater!!.inflate(R.menu.chat_toolbar_item, menu)
+            for (i in 0 until menu?.size()!!) {
+                val item = menu.getItem(i)
+                val spanString = SpannableString(menu.getItem(i).title.toString())
+                spanString.setSpan(ForegroundColorSpan(Color.BLACK), 0, spanString.length, 0) //fix the color to white
+                item.title = spanString
+            }
+        } else {
+            inflater!!.inflate(R.menu.admin_chat_toolbar_item, menu)
+            for (i in 0 until menu?.size()!!) {
+                val item = menu.getItem(i)
+                val spanString = SpannableString(menu.getItem(i).title.toString())
+                spanString.setSpan(ForegroundColorSpan(Color.BLACK), 0, spanString.length, 0) //fix the color to white
+                item.title = spanString
+            }
         }
     }
 
@@ -162,7 +176,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 if (NetUtils(context).isOnline()) {
                     MyChatManager.removeMemberFromCommunity(object : NotifyMeInterface {
                         override fun handleData(obj: Any, requestCode: Int?) {
-                            Toast.makeText(context, "You have been exited from group", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, getString(R.string.leave_toast), Toast.LENGTH_LONG).show()
                             fragmentManager.popBackStack()
                             fragmentManager.beginTransaction().remove(this@ChatFragment).commit()
                         }
@@ -230,8 +244,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val cal: Calendar = Calendar.getInstance()
         val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
 
-        val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
-                readStatus = readStatusTemp)
+        val messageModel: MessageModel? = MessageModel(message = message, senderId = currentUser?.uid, senderName = currentUser?.name,
+                senderImage = currentUser?.imageUrl, timestamp = cal.timeInMillis.toString(), readStatus = readStatusTemp)
 
         MyChatManager.sendMessageToACommunity(object : NotifyMeInterface {
 
@@ -247,8 +261,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val cal: Calendar = Calendar.getInstance()
         val readStatusTemp: HashMap<String, Boolean> = hashMapOf()
 
-        val messageModel: MessageModel? = MessageModel(message, currentUser?.uid, cal.timeInMillis.toString(),
-                readStatus = readStatusTemp)
+        val messageModel: MessageModel? = MessageModel(message = message, senderId = currentUser?.uid, senderName = currentUser?.name,
+                timestamp = cal.timeInMillis.toString(), readStatus = readStatusTemp)
 
         MyChatManager.sendMessageToAFriend(object : NotifyMeInterface {
 
@@ -311,81 +325,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private fun isRecyclerViewAtTop(): Boolean {
         return if (chat_messages_recycler.childCount == 0) true else chat_messages_recycler.getChildAt(0).top == 0
     }
-
-//    protected override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-//
-//        val storageRef = storage.getReferenceFromUrl(NetworkConstants.URL_STORAGE_REFERENCE).child(NetworkConstants.FOLDER_STORAGE_IMG)
-//
-//        if (requestCode == IMAGE_GALLERY_REQUEST) {
-//            if (resultCode == RESULT_OK) {
-//                val selectedImageUri = data.data
-//                if (selectedImageUri != null) {
-//                    sendFileFirebase(storageRef, selectedImageUri)
-//                } else {
-//                    //URI IS NULL
-//                }
-//            }
-//        } else if (requestCode == IMAGE_CAMERA_REQUEST) {
-//            if (resultCode == RESULT_OK) {
-//                if (filePathImageCamera != null && filePathImageCamera!!.exists()) {
-//                    val imageCameraRef = storageRef.child(filePathImageCamera!!.getName() + "_camera")
-//                    sendFileFirebase(imageCameraRef, filePathImageCamera!!)
-//                } else {
-//                    //IS NULL
-//                }
-//            }
-//        } else if (requestCode == PLACE_PICKER_REQUEST) {
-//            if (resultCode == RESULT_OK) {
-//                val place = PlacePicker.getPlace(this, data)
-//                if (place != null) {
-//                    val latLng = place.latLng
-//                    val mapModel = LocationModel(latLng.latitude.toString() + "", latLng.longitude.toString() + "")
-//                    //val chatModel = MessageModel(tfUserModel.getUserId(), ffUserModel.getUserId(), ffUserModel, Calendar.getInstance().time.time.toString() + "", mapModel)
-//                    // mFirebaseDatabaseReference.child(deedId).child(CHAT_REFERENCE).child(seekerProviderKey).push().setValue(chatModel)
-//                } else {
-//                    //PLACE IS NULL
-//                }
-//            }
-//        }
-//
-//    }
-
-
-//    private fun sendFileFirebase(storageReference: StorageReference?, file: File) {
-//        if (storageReference != null) {
-//            val uploadTask = storageReference.putFile(Uri.fromFile(file))
-//            uploadTask.addOnFailureListener { e -> Log.e("", "onFailure sendFileFirebase " + e.message) }.addOnSuccessListener { taskSnapshot ->
-//                Log.i("", "onSuccess sendFileFirebase")
-//                val downloadUrl = taskSnapshot.downloadUrl
-//                val fileModel = FileModel("img", downloadUrl!!.toString(), file.name, file.length().toString() + "")
-//                //  val chatModel = MessageModel(tfUserModel.getUserId(), ffUserModel.getUserId(), ffUserModel, Calendar.getInstance().time.time.toString() + "", fileModel)
-//                //  mFirebaseDatabaseReference.child(deedId).child(CHAT_REFERENCE).child(seekerProviderKey).push().setValue(chatModel)
-//            }
-//        } else {
-//            //IS NULL
-//        }
-//
-//    }
-//
-//
-//    private fun sendFileFirebase(storageReference: StorageReference?, file: Uri) {
-//        if (storageReference != null) {
-//            val name = DateFormat.format("yyyy-MM-dd_hhmmss", Date()).toString()
-//            val imageGalleryRef = storageReference.child(name + "_gallery")
-//            val uploadTask = imageGalleryRef.putFile(file)
-//            uploadTask.addOnFailureListener { e -> Log.e("", "onFailure sendFileFirebase " + e.message) }.addOnSuccessListener { taskSnapshot ->
-//                Log.i("", "onSuccess sendFileFirebase")
-//                val downloadUrl = taskSnapshot.downloadUrl
-//                val fileModel = FileModel("img", downloadUrl!!.toString(), name, "")
-//                //   val chatModel = MessageModel(tfUserModel.getUserId(), ffUserModel.getUserId(), ffUserModel, Calendar.getInstance().time.time.toString() + "", fileModel)
-//                // mFirebaseDatabaseReference.child(deedId).child(CHAT_REFERENCE).child(seekerProviderKey).push().setValue(chatModel)
-//            }
-//        } else {
-//            //IS NULL
-//        }
-//
-//    }
-
 
     companion object {
 

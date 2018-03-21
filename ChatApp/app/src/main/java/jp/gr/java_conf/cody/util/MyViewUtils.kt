@@ -46,6 +46,7 @@ class MyViewUtils(val mContext: Context) {
                         .load(imageUrl)
                         .asBitmap()
                         .centerCrop()
+                        .placeholder(R.drawable.profile_image_background)
                         .into(object : BitmapImageViewTarget(view) {
                             override fun setResource(resource: Bitmap) {
                                 val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(view.context.resources, resource)

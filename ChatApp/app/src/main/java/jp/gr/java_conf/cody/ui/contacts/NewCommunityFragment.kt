@@ -37,6 +37,7 @@ import jp.gr.java_conf.cody.adapter.ParticipantsAdapter
 import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.friendList
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriends
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.selectedUserList
 import jp.gr.java_conf.cody.constants.NetworkConstants
@@ -99,7 +100,12 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         profile_image_view.setOnClickListener(this)
         feature_button.setOnClickListener(this)
         create_community_button.setOnClickListener(this)
-        invite_friend_button.setOnClickListener(this)
+
+        if (!friendList.isEmpty()) {
+            invite_friend_button.setOnClickListener(this)
+        } else {
+            invite_friend_button.visibility = View.GONE
+        }
 
         // focus
         new_community_layout.setOnTouchListener{ _, _ ->

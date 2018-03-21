@@ -76,12 +76,14 @@ class SearchFilterActivity : AppCompatActivity() {
 
         // memberCount
         member_count_switch.isOn = communityMemberCountFilter
+        memberCountFilter = communityMemberCountFilter
         member_count_switch.setOnToggledListener { _, isOn ->
             memberCountFilter = isOn
         }
 
         // activity
         activity_switch.isOn = communityActivityFilter
+        activityFilter = communityActivityFilter
         activity_switch.setOnToggledListener { _, isOn ->
             activityFilter = isOn
         }

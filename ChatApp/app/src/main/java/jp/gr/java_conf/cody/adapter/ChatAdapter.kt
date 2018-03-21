@@ -56,9 +56,9 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
                     viewHolder.name.visibility = View.GONE
                 }
             } else {
-                viewHolder.profileImage.visibility = View.GONE
+                loadRoundImage(viewHolder.profileImage, chatMessage.senderImage)
                 viewHolder.name.visibility = View.VISIBLE
-                viewHolder.name.text = "退会済み"
+                viewHolder.name.text = chatMessage.senderName
             }
             lp.gravity = Gravity.START
             viewHolder.message.layoutParams = lp

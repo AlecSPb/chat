@@ -36,10 +36,9 @@
                 android:enabled="false"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="100dp"/>
+                android:layout_marginBottom="70dp"/>
 
         </RelativeLayout>
-
 
         <View
             android:id="@+id/progress_view"

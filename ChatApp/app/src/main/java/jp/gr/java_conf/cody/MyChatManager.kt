@@ -1074,7 +1074,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1095,7 +1095,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1116,7 +1116,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1137,7 +1137,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1158,7 +1158,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
@@ -1176,7 +1176,7 @@ object MyChatManager {
                     }
                     callback?.handleData(true, requestType)
                 } else {
-                    callback?.handleData(false, requestType)
+                    callback?.handleData(true, requestType)
                 }
             }
         })
