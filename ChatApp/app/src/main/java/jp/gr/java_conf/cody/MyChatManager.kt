@@ -793,6 +793,7 @@ object MyChatManager {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.d(TAG, "fetchPopularCommunity complete")
+                popularCommunityList.clear()
                 if (dataSnapshot.exists()) {
                     communityCount = dataSnapshot.children.count()
                     queryPopularCommunity(callback, communityCount, requestType)
@@ -805,7 +806,6 @@ object MyChatManager {
     }
 
     private fun queryPopularCommunity(callback: NotifyMeInterface?, communityCount: Int, requestType: Int?) {
-        popularCommunityList.clear()
         var limit = 10
         var now = 0
 
