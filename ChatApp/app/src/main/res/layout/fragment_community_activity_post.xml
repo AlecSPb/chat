@@ -110,9 +110,13 @@
         android:id="@+id/post_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_18"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:layout_marginRight="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_18"
+        android:layout_marginBottom="@dimen/dp_16"
         android:layout_alignParentBottom="true"
-        android:background="@color/sky_blue"
+        android:theme="@style/BlueButtonStyle"
         android:text="@string/post"
         android:textColor="@color/white" />
 </RelativeLayout>
