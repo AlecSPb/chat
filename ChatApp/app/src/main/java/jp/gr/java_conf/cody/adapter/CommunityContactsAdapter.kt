@@ -39,7 +39,7 @@ class CommunityContactsAdapter(val context: Context) : RecyclerView.Adapter<Comm
         val memberCount = "メンバー: " + communityList[position].memberCount?.toString() + "人"
         holder.memberCount.text = memberCount
 
-        loadRoundImage(holder.profileImage, communityList[position].imageUrl!!)
+        loadRoundImage(holder.profileImage, communityList[position].imageUrl)
 
 
         holder.layout.setOnClickListener({

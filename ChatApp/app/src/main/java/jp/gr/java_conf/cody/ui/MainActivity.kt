@@ -7,7 +7,6 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.WindowManager
-import android.widget.Toast
 import com.stephentuso.welcome.WelcomeHelper
 import jp.gr.java_conf.cody.BottomNavigationViewHelper
 import jp.gr.java_conf.cody.MyChatManager
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         setViews()
-        Log.d("Main", "onCreate")
+
         initialFetchData()
         setFragment()
 //        MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
@@ -94,7 +93,6 @@ class MainActivity : AppCompatActivity(), MainActivityContract {
         MyChatManager.fetchCurrentUser(object : NotifyMeInterface {
             override fun handleData(obj: Any, requestCode: Int?) {
                 Log.d("fetch current user", "success")
-                Toast.makeText(this@MainActivity, "fetch currentUser complete", Toast.LENGTH_LONG).show()
             }
 
         }, currentUser, NetworkConstants().FETCH_CURRENT_USER_AND_COMMUNITIES_AND_FRIENDS, false)

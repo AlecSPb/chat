@@ -456,7 +456,7 @@ object MyChatManager {
                                                 // lastMessageが変わったらchatRoomを作る
                                                 if (friendModel.lastMessage?.timestamp != null) {
                                                     if (friendModel.lastMessage?.timestamp!! >= friendModel.members[currentUser?.uid]?.joinTime!!) {
-                                                        val chatRoomModel = ChatRoomModel(friendModel.friendId!!, friend.name!!, friend.imageUrl!!,
+                                                        val chatRoomModel = ChatRoomModel(friendModel.friendId!!, friend.name!!, friend.imageUrl,
                                                                 friendModel.lastMessage?.message!!, friendModel.members[currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
                                                         userRef?.child(currentUser?.uid)?.child(FirebaseConstants().CHAT_ROOMS)?.child(chatRoomModel.id)?.setValue(chatRoomModel)
                                                     }
@@ -1291,7 +1291,7 @@ object MyChatManager {
             userRef?.child(user.value.uid)?.child(FirebaseConstants().COMMUNITY)?.child(communityId)?.setValue(true)
         }
 
-        callback?.handleData(true, requestType)
+        callback?.handleData(communityId!!, requestType)
     }
 
     private fun createFriend(callback: NotifyMeInterface?, friendModel: FriendModel, requestType: Int?) {

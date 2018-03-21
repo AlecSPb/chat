@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -35,6 +36,7 @@ import jp.gr.java_conf.cody.R
 import jp.gr.java_conf.cody.adapter.ParticipantsAdapter
 import jp.gr.java_conf.cody.constants.AppConstants
 import jp.gr.java_conf.cody.constants.DataConstants
+import jp.gr.java_conf.cody.constants.DataConstants.Companion.communityMap
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.myFriends
 import jp.gr.java_conf.cody.constants.DataConstants.Companion.selectedUserList
 import jp.gr.java_conf.cody.constants.NetworkConstants
@@ -135,31 +137,35 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         var isValid = true
         var errorMessage = "Validation Error"
 
-        val communityName: String = community_name_edit_text.text.toString()
-
-        if (communityName.isBlank()) {
+        if (resultUri == null) {
             isValid = false
-            errorMessage = "Community name is blank"
-        }
-        if (communityName.length < 3) {
-            isValid = false
-            errorMessage = "Community name should be more than 2 characters"
+            errorMessage = getString(R.string.image_error)
         }
 
         val location: String = location_edit_text.text.toString()
         if (location.isBlank()) {
             isValid = false
-            errorMessage = "location is blank"
+            errorMessage = getString(R.string.blank_error)
         }
 
         val description: String = description_edit_text.text.toString()
         if (description.isBlank()) {
             isValid = false
-            errorMessage = "description is blank"
+            errorMessage = getString(R.string.blank_error)
         }
 
-        val communityImage = "https://cdn1.iconfinder.com/data/icons/google_jfk_icons_by_carlosjj/128/groups.png"
-        val newCommunity = CommunityModel(communityName, communityImage, communityDeleted = false,
+        val communityName: String = community_name_edit_text.text.toString()
+        if (communityName.length < 3) {
+            isValid = false
+            errorMessage = getString(R.string.name_length_error)
+        }
+
+        if (communityName.isBlank()) {
+            isValid = false
+            errorMessage = getString(R.string.blank_error)
+        }
+
+        val newCommunity = CommunityModel(communityName, communityDeleted = false,
                 community = true, description = description, location = location, feature = feature_position)
 
         val adminUserModel: UserModel? = SharedPrefManager.getInstance(context).savedUserModel
@@ -184,16 +190,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
         MyChatManager.setmContext(context)
 
         if (isValid) {
-            if (resultUri != null) {
-                sendFileFirebase(storageRef, resultUri!!, newCommunity)
-            } else {
-                MyChatManager.createCommunity(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
-                        Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()
-                        activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
-                    }
-                }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
-            }
+            sendFileFirebase(storageRef, resultUri!!, newCommunity)
         } else {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
@@ -254,11 +251,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                 val friendNameList: MutableList<String> = mutableListOf()
                 for (myFriend in myFriends) {
-                    val nameList = myFriend.name?.split(Regex("\\s+"))
-                    val first = nameList!![0]
-                    val last = nameList[1]
-                    val lastToFirst = last + " " + first
-                    friendNameList.add(lastToFirst)
+                    friendNameList.add(myFriend.name!!)
                 }
                 val items = friendNameList.toTypedArray()
                 AlertDialog.Builder(context)
@@ -389,8 +382,7 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
     private fun sendFileFirebase(storageReference: StorageReference?, file: Uri, newCommunity: CommunityModel) {
         if (storageReference != null) {
 
-            progress_view.visibility = View.VISIBLE
-            avi.show()
+            showProgressDialog()
 
             val imageGalleryRef = storageReference.child(DataConstants.currentUser?.uid!!)
             val uploadTask = imageGalleryRef.putFile(file)
@@ -402,14 +394,49 @@ class NewCommunityFragment : Fragment(), View.OnClickListener {
 
                 MyChatManager.createCommunity(object : NotifyMeInterface {
                     override fun handleData(obj: Any, requestCode: Int?) {
-                        progress_view.visibility = View.GONE
-                        avi.hide()
-                        Toast.makeText(context, "Community has been created successful", Toast.LENGTH_SHORT).show()
-                        activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
+                        val communityId = obj as String
+                        if (communityMap!![communityId] != null) {
+                            hideProgressDialog()
+                            Toast.makeText(context, getString(R.string.complete_create_community), Toast.LENGTH_SHORT).show()
+                            activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
+                        } else {
+                            var count = 0
+                            val handler = Handler()
+
+                            handler.postDelayed(object : Runnable {
+                                override fun run() {
+                                    count ++
+                                    if (count > 30) {
+                                        hideProgressDialog()
+                                        Toast.makeText(context, getString(R.string.update_failed), Toast.LENGTH_SHORT).show()
+                                        return
+                                    }
+                                    if (communityMap!![communityId] != null) {
+                                        hideProgressDialog()
+                                        Toast.makeText(context, getString(R.string.complete_create_community), Toast.LENGTH_SHORT).show()
+                                        activity.supportFragmentManager.beginTransaction().replace(R.id.fragment, ContactsFragment.newInstance()).commit()
+                                    } else {
+                                        handler.postDelayed(this, 100)
+                                    }
+                                }
+                            }, 100)
+                        }
                     }
                 }, newCommunity, NetworkConstants().CREATE_COMMUNITY)
             }
         }
+    }
+
+    private fun showProgressDialog() {
+        progress_view.visibility = View.VISIBLE
+        avi.visibility = View.VISIBLE
+        avi.show()
+    }
+
+    private fun hideProgressDialog() {
+        progress_view.visibility = View.GONE
+        avi.hide()
+        avi.visibility = View.GONE
     }
 
     companion object {

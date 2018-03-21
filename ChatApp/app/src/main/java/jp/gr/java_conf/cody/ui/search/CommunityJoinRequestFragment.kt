@@ -175,7 +175,7 @@ class CommunityJoinRequestFragment : Fragment() {
             }
 
             // profile画像
-            loadImageFromUrl(profile_image_view, communityModel?.imageUrl!!)
+            loadImageFromUrl(profile_image_view, communityModel?.imageUrl)
 
 
             // 自分が所属しているコミュニティの場合、申請ボタン非表示

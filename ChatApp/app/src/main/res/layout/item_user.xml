@@ -17,6 +17,7 @@
                 android:id="@+id/profile_image_view"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:src="@drawable/profile_image_background"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"/>
 

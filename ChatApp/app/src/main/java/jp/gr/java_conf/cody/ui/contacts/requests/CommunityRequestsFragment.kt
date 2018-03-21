@@ -131,10 +131,10 @@ class CommunityRequestsFragment : Fragment() {
         }
 
         // profile画像
-        loadRoundImage(profile_image_view, user?.imageUrl!!)
+        loadRoundImage(profile_image_view, user?.imageUrl)
 
         // request
-        val content = user?.name + "さんから" +  community?.name + "へ参加リクエストが来ています。承認しますか？"
+        val content = user?.name + "さんから参加リクエストが来ています。承認しますか？"
         requests_content_text_view.text = content
         request_confirm_button.setOnClickListener {
             if (NetUtils(context).isOnline()) {

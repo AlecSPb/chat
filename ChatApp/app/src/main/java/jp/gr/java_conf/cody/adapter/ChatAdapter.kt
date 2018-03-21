@@ -46,17 +46,12 @@ class ChatAdapter(var type: String?, var context: Context, ref: Query, itemsPerP
             val member = userMap?.get(chatMessage.senderId!!)
             // 退会した人はnull
             if (member != null) {
-                loadRoundImage(viewHolder.profileImage, member.imageUrl!!)
+                loadRoundImage(viewHolder.profileImage, member.imageUrl)
 
                 val name = member.name
                 if (name != null && type == AppConstants().COMMUNITY_CHAT) {
                     viewHolder.name.visibility = View.VISIBLE
-
-                    val nameList = name.split(Regex("\\s+"))
-                    val first = nameList[0]
-                    val last = nameList[1]
-                    val lastToFirst = last + " " + first
-                    viewHolder.name.text = lastToFirst
+                    viewHolder.name.text = name
                 } else {
                     viewHolder.name.visibility = View.GONE
                 }

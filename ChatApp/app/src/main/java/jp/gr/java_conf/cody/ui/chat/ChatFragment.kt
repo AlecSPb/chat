@@ -48,18 +48,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
     var progressBar: ProgressBar? = null
     var mFirebaseDatabaseReference: DatabaseReference? = null
     var mLinearLayoutManager: LinearLayoutManager? = null
-    var storage = FirebaseStorage.getInstance()
     var type: String? = ""
     var scrollListener: RecyclerView.OnScrollListener? = null
-
-    val IMAGE_GALLERY_REQUEST = 1
-    val IMAGE_CAMERA_REQUEST = 2
-    val PLACE_PICKER_REQUEST = 3
-
-    var communityIsPresent: Boolean = false
-
-    //File
-    var filePathImageCamera: File? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

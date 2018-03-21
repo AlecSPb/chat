@@ -23,13 +23,9 @@ class ParticipantsAdapter(var callback: NotifyMeInterface, var type: String) : R
         val user = DataConstants.selectedUserList[position]
 
         try {
-            val name = user.name?.split(Regex("\\s+"))
-            val first = name!![0]
-            val last = name[1]
-            val lastToFirst = last + " " + first
-            holder.userName.text = lastToFirst
+            holder.userName.text = user.name
 
-            loadRoundImage(holder.profileImage, user.imageUrl!!)
+            loadRoundImage(holder.profileImage, user.imageUrl)
 
         } catch (e: Exception) {
             e.printStackTrace()

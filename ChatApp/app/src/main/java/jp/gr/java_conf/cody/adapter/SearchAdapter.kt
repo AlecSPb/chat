@@ -30,7 +30,7 @@ class SearchAdapter(val context: Context, private val itemClick: (Int) -> Unit) 
         val memberCount = "メンバー: " + popularCommunityList[position].memberCount?.toString() + "人"
         holder.memberCount.text = memberCount
 
-        MyViewUtils.loadImageFromUrl(holder.profileImage, popularCommunityList[position].imageUrl!!)
+        MyViewUtils.loadImageFromUrl(holder.profileImage, popularCommunityList[position].imageUrl)
 
         holder.setUp(position)
     }

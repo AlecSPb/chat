@@ -30,7 +30,7 @@ class SearchCommunityNameAdapter(private val foundCommunityList: MutableList<Com
         }
         val memberCount = "メンバー: " + foundCommunityList[position].memberCount?.toString() + "人"
         holder.memberCount.text = memberCount
-        MyViewUtils.loadRoundImage(holder.profileImage, foundCommunityList[position].imageUrl!!)
+        MyViewUtils.loadRoundImage(holder.profileImage, foundCommunityList[position].imageUrl)
 
         holder.setUp(position)
     }

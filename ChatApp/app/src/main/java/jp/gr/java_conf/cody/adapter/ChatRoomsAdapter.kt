@@ -27,11 +27,8 @@ class ChatRoomsAdapter(val context: Context, ref: Query) : FirebaseRecyclerAdapt
 
     override fun populateViewHolder(viewHolder: ViewHolder?, model: ChatRoomModel?, position: Int) {
         if (model?.type == AppConstants().FRIEND_CHAT) {
-            val name = model.name?.split(Regex("\\s+"))
-            val first = name!![0]
-            val last = name[1]
-            val lastToFirst = last + " " + first
-            viewHolder?.name?.text = lastToFirst
+            val name = model.name
+            viewHolder?.name?.text = name
         } else {
             viewHolder?.name?.text = model?.name
         }
@@ -49,7 +46,7 @@ class ChatRoomsAdapter(val context: Context, ref: Query) : FirebaseRecyclerAdapt
             viewHolder?.unreadCount?.visibility = View.GONE
         }
 
-        loadRoundImage(viewHolder?.profileImage!!, model.imageUrl!!)
+        loadRoundImage(viewHolder?.profileImage!!, model.imageUrl)
 
         viewHolder.layout.setOnClickListener({
 

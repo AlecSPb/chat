@@ -174,7 +174,7 @@ class ContactsCommunityDetailFragment : Fragment() {
         }
 
         // profile画像
-        loadImageFromUrl(profile_image_view, communityModel.imageUrl!!)
+        loadImageFromUrl(profile_image_view, communityModel.imageUrl)
 
     }
 

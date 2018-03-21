@@ -191,16 +191,6 @@
                 android:background="@color/inactive_gray"
                 android:visibility="gone"/>
 
-            <TextView
-                android:id="@+id/request_title_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/friend_request"
-                android:textColor="@color/profile"
-                android:textSize="@dimen/sp_18"
-                android:layout_marginTop="@dimen/dp_22"
-                android:visibility="gone" />
-
             <Button
                 android:id="@+id/request_button"
                 android:layout_width="wrap_content"

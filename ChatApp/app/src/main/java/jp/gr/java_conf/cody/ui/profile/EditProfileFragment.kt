@@ -87,11 +87,7 @@ class EditProfileFragment : Fragment() {
         }
 
         // 名前
-        val name = currentUser?.name?.split(Regex("\\s+"))
-        val first = name!![0]
-        val last = name[1]
-        val lastToFirst = last + " " + first
-        name_text_view.text = lastToFirst
+        name_text_view.text = currentUser?.name
 
         // 自己紹介
         if (currentUser?.selfIntroduction != null) {
@@ -147,7 +143,7 @@ class EditProfileFragment : Fragment() {
         }
 
         // profile画像
-        loadImageFromUrl(profile_image_view, currentUser?.imageUrl!!)
+        loadImageFromUrl(profile_image_view, currentUser?.imageUrl)
 
         setButtonClickListener()
     }

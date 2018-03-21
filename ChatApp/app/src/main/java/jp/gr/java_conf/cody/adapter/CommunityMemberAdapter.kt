@@ -20,12 +20,9 @@ class CommunityMemberAdapter(val context: Context, private val itemClick: (Int) 
             CommunityMemberViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_community_member, parent, false), itemClick)
 
     override fun onBindViewHolder(holder: CommunityMemberViewHolder, position: Int) {
-        val name = communityMemberList[position].name?.split(Regex("\\s+"))
-        val first = name!![0]
-        val last = name[1]
-        val lastToFirst = last + " " + first
-        holder.name.text = lastToFirst
-        loadRoundImage(holder.profileImage, communityMemberList[position].imageUrl!!)
+        val name = communityMemberList[position].name
+        holder.name.text = name
+        loadRoundImage(holder.profileImage, communityMemberList[position].imageUrl)
 
         holder.setUp(position)
     }

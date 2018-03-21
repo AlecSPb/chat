@@ -75,29 +75,33 @@ class LoginActivity : AppCompatActivity(), LoginActivityContract {
     override fun onStart() {
         super.onStart()
 
-        if (currentUser != null) {
-            if (NetUtils(this).isOnline()) {
-                // progress
-                showProgressDialog()
+        if (auth?.currentUser != null) {
+            if (currentUser != null) {
+                if (NetUtils(this).isOnline()) {
+                    // progress
+                    showProgressDialog()
 
-                MyChatManager.setmContext(this)
-                MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
-                    override fun handleData(obj: Any, requestCode: Int?) {
-                        // progress
-                        hideProgressDialog()
+                    MyChatManager.setmContext(this)
+                    MyChatManager.loginCreateAndUpdate(object : NotifyMeInterface {
+                        override fun handleData(obj: Any, requestCode: Int?) {
+                            // progress
+                            hideProgressDialog()
 
-                        val isFirst = obj as Boolean
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        intent.putExtra("isFirst", isFirst)
-                        startActivity(intent)
-                        finish()
-                    }
+                            val isFirst = obj as Boolean
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            intent.putExtra("isFirst", isFirst)
+                            startActivity(intent)
+                            finish()
+                        }
 
-                }, currentUser, NetworkConstants().LOGIN_REQUEST)
+                    }, currentUser, NetworkConstants().LOGIN_REQUEST)
+                } else {
+                    twitterLoginButton.isEnabled = true
+                }
+
             } else {
                 twitterLoginButton.isEnabled = true
             }
-
         } else {
             twitterLoginButton.isEnabled = true
         }

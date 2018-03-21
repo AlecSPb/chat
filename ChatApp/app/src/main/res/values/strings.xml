@@ -49,6 +49,10 @@
 
 
     <string name="create_community">コミュニティ作成</string>
+    <string name="complete_create_community">コミュニティを作成しました!</string>
+    <string name="blank_error">空欄があります</string>
+    <string name="name_length_error">コミュニティ名は3文字以上にしてください</string>
+    <string name="image_error">コミュニティの画像を設定してください</string>
     <string name="feature_default">設定しない</string>
     <string name="feature1">初心者歓迎</string>
     <string name="feature2">経験者募集</string>
@@ -83,7 +87,7 @@
     <string name="experience4">実務経験あり</string>
 
     <string name="popular_community">人気のコミュニティ</string>
-    <string name="empty_community">communityがありません communityを作りましょう</string>
+    <string name="empty_community">communityがありません\n\n 自分のコミュニティを作ってみましょう!</string>
     <string name="community_name">コミュニティ名</string>
     <string name="edit_community_name">コミュニティ名を編集</string>
     <string name="community_name_content">コミュニティ名を30字以内で入力してください</string>
@@ -117,8 +121,7 @@
     <string name="edit_programming_language">プログラミング言語を編集</string>
     <string name="edit_my_apps">過去に作ったアプリを編集</string>
 
-    <string name="first_name">名</string>
-    <string name="last_name">姓</string>
+    <string name="name">名前</string>
     <string name="programming_language">プログラミング言語</string>
     <string name="programming_language_content">普段使っているプログラミング言語を教えてください。</string>
     <string name="self_introduction">自己紹介</string>
@@ -129,6 +132,8 @@
 
     <string name="community_member">メンバー</string>
     <string name="community_member_button">メンバーを見る</string>
+
+    <string name="leave">退会</string>
 
     <string name="edit_finish">完了</string>
     <string name="blank">空欄があります</string>

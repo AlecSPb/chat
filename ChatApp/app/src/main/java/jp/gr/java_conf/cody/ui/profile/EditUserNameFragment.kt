@@ -54,10 +54,7 @@ class EditUserNameFragment : Fragment() {
             return@setOnKeyListener true
         }
 
-        val firstName = currentUser?.name?.split(Regex("\\s+"))!![0]
-        val lastName = currentUser?.name?.split(Regex("\\s+"))!![1]
-        first_name_edit_text.setText(firstName)
-        last_name_edit_text.setText(lastName)
+        name_edit_text.setText(currentUser?.name)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -79,14 +76,11 @@ class EditUserNameFragment : Fragment() {
 
                     val userModel = UserModel(uid = currentUser?.uid)
 
-                    val firstName = first_name_edit_text.text.toString()
-                    val lastName = last_name_edit_text.text.toString()
-                    var name: String? = null
-                    if (firstName.isBlank() || lastName.isBlank()) {
+                    var name: String = name_edit_text.text.toString()
+                    if (name.isBlank() || name == "") {
                         isValid = false
                         errorMessage = getString(R.string.blank)
                     } else {
-                        name = firstName + " " + lastName
                         userModel.name = name
                     }
 

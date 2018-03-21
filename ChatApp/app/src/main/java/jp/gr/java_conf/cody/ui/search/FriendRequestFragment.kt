@@ -72,11 +72,7 @@ class FriendRequestFragment : Fragment() {
 
         if (user != null) {
             // 名前
-            val name = user?.name?.split(Regex("\\s+"))
-            val first = name!![0]
-            val last = name[1]
-            val lastToFirst = last + " " + first
-            name_text_view.text = lastToFirst
+            name_text_view.text = user?.name
 
             // 自己紹介
             if (user?.selfIntroduction != null) {
@@ -145,7 +141,7 @@ class FriendRequestFragment : Fragment() {
             }
 
             // profile画像
-            loadImageFromUrl(profile_image_view, user?.imageUrl!!)
+            loadImageFromUrl(profile_image_view, user?.imageUrl)
 
             // フレンド申請
             // 自分を除く
@@ -161,7 +157,6 @@ class FriendRequestFragment : Fragment() {
 
                 if (!isMyFriend) {
                     request_title_line.visibility = View.VISIBLE
-                    request_title_text_view.visibility = View.VISIBLE
                     request_button.visibility = View.VISIBLE
 
                     var isRequested = false

@@ -43,11 +43,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (currentUser == null) {
-            Log.d("Profile", "currentUser null")
-        } else {
-            Log.d("Profile", "currentUser not null")
-        }
         setViews()
     }
 
@@ -58,14 +53,10 @@ class ProfileFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.navigation_profile).isChecked = true
 
         // 名前
-        val name = currentUser?.name?.split(Regex("\\s+"))
-        val first = name!![0]
-        val last = name[1]
-        val lastToFirst = last + " " + first
-        name_text_view.text = lastToFirst
+        name_text_view.text = currentUser?.name
 
         // プロフィール画像
-        loadRoundImage(profile_image_view, currentUser?.imageUrl!!)
+        loadRoundImage(profile_image_view, currentUser?.imageUrl)
 
         if (isFirst && currentUser?.selfIntroduction == null && currentUser?.programmingLanguage == null && currentUser?.myApps == null) {
             first_text_view.visibility = View.VISIBLE

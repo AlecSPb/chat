@@ -59,11 +59,7 @@ class FriendRequestsFragment : Fragment() {
         }
 
         // 名前
-        val name = user?.name?.split(Regex("\\s+"))
-        val first = name!![0]
-        val last = name[1]
-        val lastToFirst = last + " " + first
-        name_text_view.text = lastToFirst
+        name_text_view.text = user?.name
 
         // 自己紹介
         if (user?.selfIntroduction != null) {
@@ -130,7 +126,7 @@ class FriendRequestsFragment : Fragment() {
         }
 
         // profile画像
-        loadRoundImage(profile_image_view, user?.imageUrl!!)
+        loadRoundImage(profile_image_view, user?.imageUrl)
         val content = user?.name + "さんからフレンドリクエストが来ています。承認しますか？"
         requests_content_text_view.text = content
 

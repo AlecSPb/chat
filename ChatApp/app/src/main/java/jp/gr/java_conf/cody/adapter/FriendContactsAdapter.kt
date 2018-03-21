@@ -41,12 +41,9 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<FriendC
         }
 
         if (friend != null) {
-            val name = friend.name?.split(Regex("\\s+"))
-            val first = name!![0]
-            val last = name[1]
-            val lastToFirst = last + " " + first
-            holder.friendName.text = lastToFirst
-            loadRoundImage(holder.profileImage, friend.imageUrl!!)
+            val name = friend.name
+            holder.friendName.text = name
+            loadRoundImage(holder.profileImage, friend.imageUrl)
 
             holder.layout.setOnClickListener({
                 MyChatManager.setmContext(context)
@@ -57,7 +54,7 @@ class FriendContactsAdapter(val context: Context) : RecyclerView.Adapter<FriendC
                         .setItems(list, { _, pos ->
                             when (pos) {
                                 0 -> {
-                                    val chatRoomModel = ChatRoomModel(friendList[position].friendId!!, friend.name!!, friend.imageUrl!!,
+                                    val chatRoomModel = ChatRoomModel(friendList[position].friendId!!, friend.name!!, friend.imageUrl,
                                             friendList[position].lastMessage?.message!!, friendList[position].members[DataConstants.currentUser?.uid]?.unreadCount!!, AppConstants().FRIEND_CHAT)
                                     MyChatManager.hasChatRoom(object : NotifyMeInterface {
                                         override fun handleData(obj: Any, requestCode: Int?) {
