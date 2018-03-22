@@ -25,4 +25,15 @@
   **[] $VALUES;
   public *;
 }
+-keep public class Store {}
+# Bottom Navigation Helper
+-keep class android.support.design.internal.BottomNavigationItemView{ *; }
+-keep class android.support.design.internal.BottomNavigationMenuView{ *; }
 -dontwarn com.squareup.picasso.**
+# Add this global rule
+-keepattributes Signature
+-keep class com.firebase.** { *; }
+# This rule will properly ProGuard all the model classes in
+# the package com.yourcompany.models. Modify to fit the structure
+# of your app.
+-keepclassmembers class jp.gr.java_conf.cody.model.** { *; }
